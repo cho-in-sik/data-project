@@ -1,5 +1,7 @@
 import React from 'react';
 import App from './App';
+import Join from './pages/Join/Join';
+import Login from './pages/Login/Login';
 import MyPage from './pages/User/MyPage';
 import UserDelete from './pages/User/UserDelete';
 import UserInfo from './pages/User/UserInfo';
@@ -16,6 +18,8 @@ export function Router() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />} />
+        <Route path="/join" element={<Join />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/MyPage" element={<MyPage />} />
         <Route path="/uservolunteer" element={<UserVolunteer />} />
         <Route path="/userinfo" element={<UserInfo />} />
