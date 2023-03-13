@@ -1,0 +1,24 @@
+[
+    {
+        "id": "1",
+        "name" : "안정민",
+        "email" : "ajm@ajm.com",
+        "password" : "1234",
+        "address" : "서울시 서울구",
+        "phoneNumber" : "01012341234",
+        "nickname" : "안정",
+        "profileImage" : "",
+        "type" : ""
+    },
+    {
+        "id": "2",
+        "name" : "김정민",
+        "email" : "kjm@kjm.com",
+        "password" : "1234",
+        "address" : "서울시 서울구",
+        "phoneNumber" : "01012341234",
+        "nickname" : "김정",
+        "profileImage" : "",
+        "type" : ""
+    }
+]

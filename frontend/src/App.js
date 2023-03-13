@@ -1,5 +1,5 @@
 import React from 'react';
-import MyPage from '../src/pages/MyPage';
+import MyPage from './pages/User/MyPage';
 
 function App() {
   return <div className="App">Hello World!</div>;
