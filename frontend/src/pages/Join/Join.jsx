@@ -233,6 +233,7 @@ const Join = () => {
 export default Join;
 
 const JoinBox = styled.div`
+  position: relative;
   width: 30%;
   min-width: 520px;
   background: #eee;

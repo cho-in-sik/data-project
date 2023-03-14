@@ -8,31 +8,32 @@ import Header from '../../components/Header/Header';
 function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
-  const [pw, setPw] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
 
   const handlePwChange = (e) => {
-    setPw(e.target.value);
+    setPassword(e.target.value);
   };
 
   const handleClick = async () => {
-    if (email === '' || pw === '') {
+    if (email === '' || password === '') {
       alert('이메일과 패스워드를 입력해주세요.');
       return false;
     }
-    alert('로그인에 성공했습니다.');
-    navigate('/MyPage');
     try {
-      const res = await axios.post('http://localhost:3000/api/v1/users', {
+      const res = await axios.post('http://localhost:3000/api/v1/auth/login', {
         email,
-        pw,
+        password,
       });
       console.log(res);
-      localStorage.setItem('token', res.data.token);
-      navigate('/MyPage');
+      if (res.statusText === 'OK') {
+        navigate('/MyPage');
+      } else {
+        alert('아이디와 비밀번호를 확인하세요.');
+      }
     } catch (e) {
       console.log(e);
     }
@@ -54,7 +55,12 @@ function Login() {
           </LoginItem>
           <LoginItem>
             <p>비밀번호</p>
-            <input type="text" name="pw" value={pw} onChange={handlePwChange} />
+            <input
+              type="password"
+              name="password"
+              value={password}
+              onChange={handlePwChange}
+            />
           </LoginItem>
         </LoginWrapper>
         <button onClick={handleClick}>로그인</button>
@@ -64,10 +70,8 @@ function Login() {
     </BackGround>
   );
 }
-
-export default Login;
-
 const LoginBox = styled.div`
+  position: relative;
   width: 30%;
   min-width: 520px;
   background: #eee;
@@ -138,3 +142,5 @@ const LoginItem = styled.div`
     font-size: 0.8rem;
   }
 `;
+
+export default Login;

@@ -41,6 +41,7 @@ const Header = () => {
 const PositionHeader = styled.header`
   background-color: white;
   margin-top: -10px;
+
   position: relative;
 
   top: 0px;

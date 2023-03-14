@@ -13,10 +13,10 @@ const MyPage = (props) => {
   const navigate = useNavigate();
   return (
     <div>
-      <Header />
       <BackGround>
+        <Header />
         <MypageBox>
-          <MyVolunteer onClick={() => navigate('/myvolunteer')}>
+          <MyVolunteer onClick={() => navigate('/myvolunteers')}>
             <FontAwesomeIcon icon={faHandshakeAngle} size="10x" />
             <Span>봉사 관리</Span>
           </MyVolunteer>
@@ -35,6 +35,7 @@ const MyPage = (props) => {
 };
 
 const MypageBox = styled.div`
+  margin-top: 80px;
   width: 80%;
   height: 550px;
   background-color: white;

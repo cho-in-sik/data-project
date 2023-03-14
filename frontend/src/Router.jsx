@@ -12,6 +12,7 @@ import CommunityFormPage from './pages/Community/CommunityForm';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import MyVolunteers from './pages/MyVolunteer/MyVolunteers';
+import VolunteerDetail from './pages/MyVolunteer/VolunteerDetail';
 
 export function Router() {
   return (
@@ -20,11 +21,12 @@ export function Router() {
         <Route path="/" element={<App />} />
         <Route path="/join" element={<Join />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/MyPage" element={<MyPage />} />
+        <Route path="/mypage" element={<MyPage />} />
         <Route path="/uservolunteer" element={<UserVolunteer />} />
         <Route path="/userinfo" element={<UserInfo />} />
         <Route path="/userdelete" element={<UserDelete />} />
         <Route path="/myvolunteers" element={<MyVolunteers />} />
+        <Route path="/volunteerdetail" element={<VolunteerDetail />} />
         <Route path="/community/all" element={<CommunityList />} />
         <Route path="/community/:id" element={<CommunityDetailPage />} />
         <Route path="/community" element={<CommunityFormPage />} />

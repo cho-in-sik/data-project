@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import BackGround from '../../components/Background/Background';
 import Header from '../../components/Header/Header';
 
 const UserDelete = (props) => {
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleClick = async (e) => {
     e.preventDefault();
@@ -30,34 +32,33 @@ const UserDelete = (props) => {
       //회원 탈퇴시 토큰 제거
       // localStorage.removeItem('ACCESS_TOKEN');
       alert('회원 탈퇴 되었습니다.');
-      window.location.href = '/';
+      navigate('/');
     } catch (error) {
-      console.log(error);
+      console.error(error);
       alert('비밀번호를 확인해주세요.');
     }
   };
 
   return (
-    <>
+    <BackGround>
       <Header />
-      <BackGround>
-        <WithdrawBox>
-          <PasswordSpan>
-            서비스 탈퇴를 위해 비밀번호를 입력해 주세요.
-          </PasswordSpan>
-          <PasswordInput
-            onChange={(e) => setPassword(e.target.value)}
-            value={password}
-            type={'password'}
-          />
-          <WithdrawButton onClick={handleClick}>회원 탈퇴</WithdrawButton>
-        </WithdrawBox>
-      </BackGround>
-    </>
+      <WithdrawBox>
+        <PasswordSpan>
+          서비스 탈퇴를 위해 비밀번호를 입력해 주세요.
+        </PasswordSpan>
+        <PasswordInput
+          onChange={(e) => setPassword(e.target.value)}
+          value={password}
+          type="password"
+        />
+        <WithdrawButton onClick={handleClick}>회원 탈퇴</WithdrawButton>
+      </WithdrawBox>
+    </BackGround>
   );
 };
 
 const WithdrawBox = styled.div`
+  margin-top: 200px;
   width: 40%;
   height: 250px;
   background-color: white;

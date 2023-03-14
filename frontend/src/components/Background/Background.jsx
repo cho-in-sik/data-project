@@ -6,8 +6,10 @@ const BackGround = styled.div`
   position: relative;
 
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
+
   ::before {
     content: '';
     background-image: url(${background1});
