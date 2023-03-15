@@ -9,6 +9,10 @@ import UserVolunteer from './pages/User/UserVolunteer';
 import CommunityList from './pages/Community/CommunityList';
 import CommunityDetailPage from './pages/Community/CommunityDetail';
 import CommunityFormPage from './pages/Community/CommunityForm';
+import AdminMain from './pages/Admin/AdminMain';
+import AdminUser from './pages/Admin/AdminUser';
+import AdminVolunteer from './pages/Admin/AdminVolunteer';
+import AdminCommunity from './pages/Admin/AdminCommunity';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import MyVolunteers from './pages/MyVolunteer/MyVolunteers';
@@ -30,6 +34,10 @@ export function Router() {
         <Route path="/community/all" element={<CommunityList />} />
         <Route path="/community/:id" element={<CommunityDetailPage />} />
         <Route path="/community" element={<CommunityFormPage />} />
+        <Route path="/admin" element={<AdminMain />} />
+        <Route path="/admin/user" element={<AdminUser />} />
+        <Route path="/admin/volunteer" element={<AdminVolunteer />} />
+        <Route path="/admin/community" element={<AdminCommunity />} />
       </Routes>
     </BrowserRouter>
   );
