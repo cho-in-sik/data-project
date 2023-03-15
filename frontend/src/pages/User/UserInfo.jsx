@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Header from '../../components/Header/Header.jsx';
 import styled from 'styled-components';
 import BackGround from '../../components/Background/Background';
@@ -42,6 +42,7 @@ const UserInfo = (props) => {
   const addressRef = useRef();
 
   const navigate = useNavigate();
+  const { userId } = useParams();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -81,7 +82,7 @@ const UserInfo = (props) => {
 
     const submitHandler = async () => {
       try {
-        await axios.patch(`http://localhost:3000/api/v1/users/:userId`, {
+        await axios.patch(`http://localhost:3000/api/v1/users/${userId}`, {
           ...formData,
         });
         alert('정보수정에 성공했습니다.');

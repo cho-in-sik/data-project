@@ -24,7 +24,16 @@ const MyVolunteer = ({
     <VolunteerDetail
       onClick={() => navigate('/volunteerdetail', { state: data })}
     >
-      <VolunteerMessage>{title}</VolunteerMessage>
+      <VolunteerMessage
+        style={{
+          backgroundColor: '#74DD63',
+          padding: '8px 12px',
+          borderRadius: '10px',
+          color: 'white',
+        }}
+      >
+        {title}
+      </VolunteerMessage>
       <VolunteerMessage>{volunteerTime}</VolunteerMessage>
       <VolunteerMessage>{address}</VolunteerMessage>
       <VolunteerMessage>{author}</VolunteerMessage>

@@ -1,11 +1,13 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import img from '../../assets/images/66112.jpg';
 import axios from 'axios';
+import BackGround from '../../components/Background/Background';
 
-const VolunteerDetail = ({ data }) => {
+const VolunteerDetail = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   //useLocation 으로 navigate로 온 상태 받기
   const title = location.state.title;
@@ -24,14 +26,7 @@ const VolunteerDetail = ({ data }) => {
   };
 
   return (
-    <div
-      style={{
-        marginTop: '50px',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
+    <BackGround>
       <VolunteerDetailBox>
         <ContentDiv>
           <HeadDiv>
@@ -57,28 +52,46 @@ const VolunteerDetail = ({ data }) => {
                 참여자:{' '}
                 <div
                   style={{
-                    display: 'flex',
-                    flexDirection: 'column',
                     marginTop: '-8px',
                     marginLeft: '10px',
                   }}
                 >
                   {participation.map((person, i) => (
-                    <span style={{ marginBottom: '10px' }}>{person}</span>
+                    <div
+                      key={i}
+                      style={{
+                        display: 'flex',
+                        height: '60%',
+                      }}
+                    >
+                      <span>{person}</span>
+                      <button
+                        onClick={() => console.log()}
+                        style={{
+                          height: '30px',
+                          width: '30px',
+                          marginTop: '5px',
+                        }}
+                      >
+                        X
+                      </button>
+                    </div>
                   ))}
                 </div>
               </span>
             </SpanDiv>
           </BodyBox>
         </ContentDiv>
-        <div style={{ height: '10%' }}>{content}</div>
+        <DescriptionBox>봉사소개: {content}</DescriptionBox>
         <ChatDiv>댓글 div</ChatDiv>
       </VolunteerDetailBox>
-    </div>
+    </BackGround>
   );
 };
 
 const VolunteerDetailBox = styled.div`
+  margin-top: 50px;
+  position: relative;
   width: 1000px;
   height: 700px;
   background-color: whitesmoke;
@@ -135,6 +148,13 @@ const SpanDiv = styled.div`
     padding: 8px;
     border-radius: 5px;
   }
+`;
+
+const DescriptionBox = styled.div`
+  height: 10%;
+  font-size: 18px;
+  margin-top: 30px;
+  margin-left: 30px;
 `;
 
 export default VolunteerDetail;

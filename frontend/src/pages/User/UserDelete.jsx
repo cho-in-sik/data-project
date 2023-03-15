@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import BackGround from '../../components/Background/Background';
 import Header from '../../components/Header/Header';
@@ -8,7 +8,7 @@ import Header from '../../components/Header/Header';
 const UserDelete = (props) => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-
+  const { userId } = useParams();
   const handleClick = async (e) => {
     e.preventDefault();
 
@@ -16,7 +16,7 @@ const UserDelete = (props) => {
 
     try {
       const res = await axios.delete(
-        `http://localhost:3000/api/v1/users/:userId`,
+        `http://localhost:3000/api/v1/users/${userId}`,
         {
           data: { ...formData },
         },

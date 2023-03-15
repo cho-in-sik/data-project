@@ -39,7 +39,7 @@ const list = [
     title: '인천봉사',
     volunteerTime: '2023-12-12',
     address: '고등학교',
-    participation: ['조인식 ', '안정민'],
+    participation: ['조인식 ', '안정민', '최중현'],
     author: '운영자',
     content:
       '안녕하세요 어디어디 봉사하는 모임입니다. 잘부탁드립니다 파이팅파이팅',

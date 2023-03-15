@@ -12,26 +12,31 @@ const Header = () => {
     <PositionHeader>
       <ContentHeader>
         <Logo onClick={() => navigate('/')}>
-          <img src={logo} style={{ width: '110px', height: '90px' }} />
+          <img
+            src={logo}
+            style={{ width: '110px', height: '90px' }}
+            alt="logo"
+          />
         </Logo>
         <Spacer />
         {!isLoggedIn && (
           <>
             <img
+              alt="backgroundimg"
               src={baseimg}
               style={{ width: '45px', height: '45px', borderRadius: '50%' }}
             />
-            <Span>조인식님</Span>
+            <Span onClick={() => navigate('/mypage')}>조인식님</Span>
           </>
         )}
 
         {!isLoggedIn ? (
-          <Span onClick={() => navigate('/')}>로그인</Span>
+          <Span onClick={() => navigate('/login')}>로그인</Span>
         ) : (
           <Span onClick={() => navigate('/')}>로그아웃</Span>
         )}
 
-        <Span onClick={() => navigate('/')}>커뮤니티</Span>
+        <Span onClick={() => navigate('/community/all')}>커뮤니티</Span>
         <Span onClick={() => navigate('/')}>봉사신청</Span>
       </ContentHeader>
     </PositionHeader>
