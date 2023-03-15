@@ -14,55 +14,72 @@ import {
   CommunityListTableTitle,
   CommunityListTableAuthor,
 } from './styles/CommunityListStyle';
-//아이콘 임시 추가
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUsers } from '@fortawesome/free-solid-svg-icons';
+import Header from '../../components/Header/Header';
 
-// 게시판 목록
 function CommunityList() {
-  const [communities, setCommunities] = useState([]);
+  const [boards, setBoards] = useState([]);
 
   useEffect(() => {
-    axios
-      .get('/data/community.json')
-      .then((response) => {
-        setCommunities(response.data.communities);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    async function fetchData() {
+      try {
+        const response = await axios.get(
+          'http://localhost:3000/api/v1/board/all',
+        );
+        // 가져온 데이터를 setBoards 함수를 사용하여 boards 상태에 저장
+        setBoards(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchData();
   }, []);
 
   return (
-    <Container>
-      <Title>
-        <FontAwesomeIcon icon={faUsers} style={{ color: '#47b781' }} /> 봉사자
-        커뮤니티
-      </Title>
-      <CommunityListTable>
-        <CommunityListTableHeader>
-          <CommunityListTableHeaderTitle>제목</CommunityListTableHeaderTitle>
-          <CommunityListTableHeaderAuthor>
-            작성자
-          </CommunityListTableHeaderAuthor>
-        </CommunityListTableHeader>
-        <CommunityListTableBody>
-          {communities.map((community) => (
-            <CommunityListTableRow key={community._id}>
-              <CommunityListTableTitle>
-                <DetailLink to={`/community/${community._id}`}>
-                  {community.title}
-                </DetailLink>
-              </CommunityListTableTitle>
-              <CommunityListTableAuthor>
-                {community.author}
-              </CommunityListTableAuthor>
-            </CommunityListTableRow>
-          ))}
-        </CommunityListTableBody>
-        <WriteButton to="/community">게시글 작성하기</WriteButton>
-      </CommunityListTable>
-    </Container>
+    <>
+      <Header />
+      <Container>
+        <Title>
+          <FontAwesomeIcon icon={faUsers} style={{ color: '#47b781' }} /> 봉사자
+          커뮤니티
+        </Title>
+        <CommunityListTable>
+          <CommunityListTableHeader>
+            <CommunityListTableHeaderTitle>제목</CommunityListTableHeaderTitle>
+            <CommunityListTableHeaderAuthor>
+              작성자
+            </CommunityListTableHeaderAuthor>
+          </CommunityListTableHeader>
+          <CommunityListTableBody>
+            {/* 게시물이 존재할 경우 */}
+            {boards && boards.length > 0 ? (
+              boards.map((board) => (
+                <CommunityListTableRow key={board._id}>
+                  <CommunityListTableTitle>
+                    <DetailLink to={`/board/${board._id}`}>
+                      {board.title}
+                    </DetailLink>
+                  </CommunityListTableTitle>
+                  <CommunityListTableAuthor>
+                    {board.author}
+                  </CommunityListTableAuthor>
+                </CommunityListTableRow>
+              ))
+            ) : (
+              // 게시물이 존재하지 않을 경우
+              <CommunityListTableRow>
+                <CommunityListTableTitle>
+                  게시글이 없습니다.
+                </CommunityListTableTitle>
+                <CommunityListTableAuthor />
+              </CommunityListTableRow>
+            )}
+          </CommunityListTableBody>
+        </CommunityListTable>
+        <WriteButton to="/board">게시글 작성하기</WriteButton>
+      </Container>
+    </>
   );
 }
 
