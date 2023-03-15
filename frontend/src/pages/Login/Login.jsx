@@ -23,6 +23,7 @@ function Login() {
       alert('이메일과 패스워드를 입력해주세요.');
       return false;
     }
+    debugger;
     try {
       const res = await axios.post('http://localhost:3000/api/v1/auth/login', {
         email,

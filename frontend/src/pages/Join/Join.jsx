@@ -36,6 +36,10 @@ const Join = () => {
   const nicknamePattern = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9]{2,10}$/i;
   const validNickname = nickname === '' || nicknamePattern.test(nickname);
 
+  // 휴대폰 번호는 2 or 3자리 숫자 - 3 or 4자리 숫자 - 4자리 숫자로 구성
+  const phoneNumberPattern = /^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}$/i;
+  const validPhoneNumber = phone === '' || phoneNumberPattern.test(phone);
+
   // 비밀번호 : 영문숫자특수문자혼합 8자리 이상
   const passwordPattern =
     /^(?=.*?[0-9])(?=.*?[#?!@$ %^&*-])(?=.*?[A-Za-z]).{8,}$/i;
@@ -88,20 +92,27 @@ const Join = () => {
         nickname: '',
       });
       inputRef.current[2].focus();
+    } else if (!validPhoneNumber) {
+      alert('올바른 전화번호가 아닙니다.');
+      setInputs({
+        ...inputs,
+        phone: '',
+      });
+      inputRef.current[3].focus();
     } else if (!validPw) {
       alert('비밀번호는 4자 이상, 20자 미만입니다.');
       setInputs({
         ...inputs,
         pw: '',
       });
-      inputRef.current[3].focus();
+      inputRef.current[4].focus();
     } else if (!validPwConfirm) {
       alert('비밀번호 확인이 일치하지 않습니다.');
       setInputs({
         ...inputs,
         pwConfirm: '',
       });
-      inputRef.current[4].focus();
+      inputRef.current[5].focus();
     } else if (validBlank) {
       alert('모든 항목을 입력해주세요.');
       return false;
@@ -126,8 +137,17 @@ const Join = () => {
       type: '',
     };
     try {
-      const res = await axios.post('http://localhost:3000/api/v1/users', data);
-      console.log(res.data);
+      const res = await axios.post(
+        'http://localhost:3000/api/v1/users/join',
+        data,
+      );
+      if (res.statusText === 'Created') {
+        alert('회원가입이 완료되었습니다.');
+        navigate('/login');
+      } else {
+        alert('잘못된 값이 입력되어 요청에 실패했습니다.');
+        return false;
+      }
     } catch (e) {
       console.log(e);
     }
@@ -183,6 +203,9 @@ const Join = () => {
               onChange={handleChange}
               ref={(i) => (inputRef.current[3] = i)}
             />
+            {validPhoneNumber ? null : (
+              <span> * 하이픈(-)을 포함한 전화번호를 입력하세요.</span>
+            )}
           </JoinItem>
           <JoinItem>
             <p>비밀번호</p>
