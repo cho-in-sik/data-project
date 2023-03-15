@@ -12,7 +12,7 @@ const list = [
     title: '서울봉사',
     volunteerTime: '2023-03-12',
     address: '놀이터',
-    participation: '조인식 ',
+    participation: ['조인식 '],
     author: '운영자',
     content:
       '안녕하세요 어디어디 봉사하는 모임입니다. 잘부탁드립니다 파이팅파이팅',
@@ -21,7 +21,7 @@ const list = [
     title: '광주봉사',
     volunteerTime: '2024-08-12',
     address: '초등학교',
-    participation: '안정민 ',
+    participation: ['안정민 '],
     author: '운영자',
     content:
       '안녕하세요 어디어디 봉사하는 모임입니다. 잘부탁드립니다 파이팅파이팅',
@@ -30,7 +30,7 @@ const list = [
     title: '부산봉사',
     volunteerTime: '2021-03-12',
     address: '중학교',
-    participation: '최중현 ',
+    participation: ['최중현 '],
     author: '운영자',
     content:
       '안녕하세요 어디어디 봉사하는 모임입니다. 잘부탁드립니다 파이팅파이팅',
@@ -57,7 +57,7 @@ const list = [
     title: '대전봉사',
     volunteerTime: '2000-03-12',
     address: '공원',
-    participation: '조인식 ',
+    participation: ['조인식 '],
     author: '운영자',
     content:
       '안녕하세요 어디어디 봉사하는 모임입니다. 잘부탁드립니다 파이팅파이팅',
@@ -66,7 +66,7 @@ const list = [
     title: '제주도봉사',
     volunteerTime: '2023-03-12',
     address: '공원2',
-    participation: '조인식 ',
+    participation: ['조인식 '],
     author: '운영자',
     content:
       '안녕하세요 어디어디 봉사하는 모임입니다. 잘부탁드립니다 파이팅파이팅',
@@ -75,7 +75,7 @@ const list = [
     title: '서울봉사',
     volunteerTime: '2023-03-12',
     address: '놀이터',
-    participation: '조인식 ',
+    participation: ['조인식 '],
     author: '운영자',
     content:
       '안녕하세요 어디어디 봉사하는 모임입니다. 잘부탁드립니다 파이팅파이팅',
@@ -84,7 +84,7 @@ const list = [
     title: '울산봉사',
     volunteerTime: '2023-03-12',
     address: '공원3',
-    participation: '조인 ',
+    participation: ['조인 '],
     author: '운영자',
     content:
       '안녕하세요 어디어디 봉사하는 모임입니다. 잘부탁드립니다 파이팅파이팅',
@@ -119,6 +119,8 @@ const MyVolunteers = (props) => {
                   volunteerTime={value.volunteerTime}
                   address={value.address}
                   author={value.author}
+                  content={value.content}
+                  participation={value.participation}
                 />
               );
             })}

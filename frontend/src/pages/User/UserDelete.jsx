@@ -16,7 +16,7 @@ const UserDelete = (props) => {
 
     try {
       const res = await axios.delete(
-        `https://ee01f75c-7547-42d4-b77b-5fc613f782d7.mock.pstmn.io/userdelete`,
+        `http://localhost:3000/api/v1/users/:userId`,
         {
           data: { ...formData },
         },

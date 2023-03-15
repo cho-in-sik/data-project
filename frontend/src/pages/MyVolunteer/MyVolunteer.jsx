@@ -2,9 +2,24 @@ import React from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
-const MyVolunteer = ({ title, volunteerTime, address, author }) => {
+const MyVolunteer = ({
+  title,
+  volunteerTime,
+  address,
+  author,
+  content,
+  participation,
+}) => {
   const navigate = useNavigate();
-  const data = { title, volunteerTime, address, author };
+  const data = {
+    title,
+    volunteerTime,
+    address,
+    author,
+    content,
+    participation,
+  };
+
   return (
     <VolunteerDetail
       onClick={() => navigate('/volunteerdetail', { state: data })}

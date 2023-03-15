@@ -2,13 +2,26 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import img from '../../assets/images/66112.jpg';
+import axios from 'axios';
 
 const VolunteerDetail = ({ data }) => {
   const location = useLocation();
 
+  //useLocation 으로 navigate로 온 상태 받기
   const title = location.state.title;
   const volunteerTime = location.state.volunteerTime;
   const address = location.state.address;
+  const content = location.state.content;
+  const participation = location.state.participation;
+  console.log(participation);
+
+  const handleClick = async () => {
+    try {
+      await axios.delete('');
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div
@@ -23,7 +36,7 @@ const VolunteerDetail = ({ data }) => {
         <ContentDiv>
           <HeadDiv>
             <span>{title}</span>
-            <button>참가취소</button>
+            <button onClick={handleClick}>참가취소</button>
           </HeadDiv>
           <BodyBox>
             <ImgBox>
@@ -39,16 +52,26 @@ const VolunteerDetail = ({ data }) => {
               <span
                 style={{
                   display: 'flex',
-                  flexDirection: 'column',
                 }}
               >
-                참여자: <span>조인식</span>
-                <span>안정민</span>
+                참여자:{' '}
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    marginTop: '-8px',
+                    marginLeft: '10px',
+                  }}
+                >
+                  {participation.map((person, i) => (
+                    <span style={{ marginBottom: '10px' }}>{person}</span>
+                  ))}
+                </div>
               </span>
             </SpanDiv>
           </BodyBox>
         </ContentDiv>
-        <div style={{ height: '10%' }}>봉사 내용</div>
+        <div style={{ height: '10%' }}>{content}</div>
         <ChatDiv>댓글 div</ChatDiv>
       </VolunteerDetailBox>
     </div>
@@ -80,6 +103,7 @@ const HeadDiv = styled.div`
     color: white;
     font-size: 20px;
     background-color: #ff5065;
+    cursor: pointer;
   }
 `;
 const BodyBox = styled.div`
@@ -108,7 +132,6 @@ const SpanDiv = styled.div`
     height: 80px;
   }
   & span span {
-    background-color: white;
     padding: 8px;
     border-radius: 5px;
   }

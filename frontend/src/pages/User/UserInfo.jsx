@@ -81,7 +81,9 @@ const UserInfo = (props) => {
 
     const submitHandler = async () => {
       try {
-        await axios.patch(`http://localhost:3000/userinfo`, { ...formData });
+        await axios.patch(`http://localhost:3000/api/v1/users/:userId`, {
+          ...formData,
+        });
         alert('정보수정에 성공했습니다.');
         navigate('/');
       } catch (error) {
