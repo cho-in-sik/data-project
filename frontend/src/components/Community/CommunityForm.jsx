@@ -9,28 +9,28 @@ import {
   FormInput,
   FormTextarea,
   FormButton,
-  // FormError,
 } from './styles/CommunityFormStyle';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUsers } from '@fortawesome/free-solid-svg-icons';
-
+//게시글 작성 폼
 const CommunityPostForm = () => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [content, setContent] = useState('');
   const [image, setImage] = useState('');
-
+  // 페이지 이동을 위한 useNavigate 훅
   const navigate = useNavigate();
-
+  // 게시글 작성을 위한 함수
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     try {
+      // 게시글 작성 API 호출
       const response = await axios.post('http://localhost:3000/api/v1/board', {
         title,
         author,
         content,
         image,
-      });
+      }); // 게시글 작성 후 게시글 목록 페이지로 이동
       console.log(response.data);
       navigate('/board/all');
     } catch (error) {
@@ -79,6 +79,7 @@ const CommunityPostForm = () => {
         </FormGroup>
         <FormGroup>
           <FormLabel htmlFor="image">이미지</FormLabel>
+          {/* 이미지 삽입 기능은 추후에 */}
           <FormInput
             type="text"
             id="image"

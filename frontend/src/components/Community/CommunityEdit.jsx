@@ -12,22 +12,23 @@ import {
 } from './styles/CommunityFormStyle';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUsers } from '@fortawesome/free-solid-svg-icons';
-
+// 게시글 수정을 위한 함수
 const CommunityEditForm = () => {
-  const { id } = useParams();
+  const { id } = useParams(); //useParams() 훅을 사용하여 URL 파라미터를 가져옴
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [content, setContent] = useState('');
   const [image, setImage] = useState('');
 
   const navigate = useNavigate();
-
+  // 게시글 정보를 가져오기 위한 useEffect 훅
   useEffect(() => {
     async function fetchData() {
       try {
         const response = await axios.get(
           `http://localhost:3000/api/v1/board/${id}`,
         );
+        // 게시글 정보를 상태에 저장
         setTitle(response.data.title);
         setAuthor(response.data.author);
         setContent(response.data.content);
@@ -36,12 +37,12 @@ const CommunityEditForm = () => {
         console.error(error);
         // 오류 메시지 표시
         alert('게시글 불러오기에 실패했습니다.');
-        navigate('/board/all');
+        navigate('/board/all'); // 게시글 목록 페이지로 이동
       }
     }
     fetchData();
   }, [id, navigate]);
-
+  // handleFormSubmit 함수를 수정하여 게시글 수정 API 호출
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -55,7 +56,7 @@ const CommunityEditForm = () => {
         },
       );
       console.log(response.data);
-      navigate(`/board/${id}`);
+      navigate(`/board/${id}`); // 게시글 상세 페이지로 이동
     } catch (error) {
       console.error(error);
       // 오류 메시지 표시
