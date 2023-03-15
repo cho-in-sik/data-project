@@ -7,8 +7,9 @@ import UserDelete from './pages/User/UserDelete';
 import UserInfo from './pages/User/UserInfo';
 import UserVolunteer from './pages/User/UserVolunteer';
 import CommunityList from './pages/Community/CommunityList';
-import CommunityDetailPage from './pages/Community/CommunityDetail';
-import CommunityFormPage from './pages/Community/CommunityForm';
+import CommunityDetail from './pages/Community/CommunityDetail';
+import CommunityForm from './pages/Community/CommunityForm';
+import CommunityEdit from './pages/Community/CommunityEdit';
 import AdminMain from './pages/Admin/AdminMain';
 import AdminUser from './pages/Admin/AdminUser';
 import AdminVolunteer from './pages/Admin/AdminVolunteer';
@@ -31,9 +32,10 @@ export function Router() {
         <Route path="/userdelete" element={<UserDelete />} />
         <Route path="/myvolunteers" element={<MyVolunteers />} />
         <Route path="/volunteerdetail" element={<VolunteerDetail />} />
-        <Route path="/community/all" element={<CommunityList />} />
-        <Route path="/community/:id" element={<CommunityDetailPage />} />
-        <Route path="/community" element={<CommunityFormPage />} />
+        <Route path="/board/all" element={<CommunityList />} />
+        <Route path="/board/:id" element={<CommunityDetail />} />
+        <Route path="/board/edit/:id" element={<CommunityEdit />} />
+        <Route path="/board" element={<CommunityForm />} />
         <Route path="/admin" element={<AdminMain />} />
         <Route path="/admin/user" element={<AdminUser />} />
         <Route path="/admin/volunteer" element={<AdminVolunteer />} />
