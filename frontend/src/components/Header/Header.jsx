@@ -3,10 +3,26 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import logo from '../../assets/images/logo.png';
 import baseimg from '../../assets/images/baseimg.png';
+import { useSelector, useDispatch } from 'react-redux';
+import { initUser } from '../../redux/userSlice';
+import { persistor } from '../../redux/store';
 
 const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
+
+  // 로그아웃에 사용
+  const purge = async () => {
+    await persistor.purge(); // persistStore의 데이터 전부 날림
+  };
+
+  const logoutHandler = () => {
+    dispatch(initUser());
+    purge();
+    navigate('/');
+  };
 
   return (
     <PositionHeader>
@@ -19,21 +35,20 @@ const Header = () => {
           />
         </Logo>
         <Spacer />
-        {!isLoggedIn && (
+        {user.id === '' ? null : (
           <>
             <img
               alt="backgroundimg"
               src={baseimg}
               style={{ width: '45px', height: '45px', borderRadius: '50%' }}
             />
-            <Span onClick={() => navigate('/mypage')}>조인식님</Span>
+            <Span onClick={() => navigate('/mypage')}>{user.nickname}님</Span>
           </>
         )}
-
-        {!isLoggedIn ? (
-          <Span onClick={() => navigate('/login')}>로그인</Span>
+        {user.id !== '' ? (
+          <Span onClick={logoutHandler}>로그아웃</Span>
         ) : (
-          <Span onClick={() => navigate('/')}>로그아웃</Span>
+          <Span onClick={() => navigate('/login')}>로그인</Span>
         )}
 
         <Span onClick={() => navigate('/community/all')}>커뮤니티</Span>
