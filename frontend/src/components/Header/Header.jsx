@@ -8,10 +8,10 @@ import { initUser } from '../../redux/userSlice';
 import { persistor } from '../../redux/store';
 
 const Header = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const user = useSelector((state) => state.user);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user);
 
   // 로그아웃에 사용
   const purge = async () => {
@@ -35,7 +35,17 @@ const Header = () => {
           />
         </Logo>
         <Spacer />
-        {user.id === '' ? null : (
+
+        {user.id === '' ? null : user.userType === 'admin' ? (
+          <>
+            <img
+              alt="backgroundimg"
+              src={baseimg}
+              style={{ width: '45px', height: '45px', borderRadius: '50%' }}
+            />
+            <Span onClick={() => navigate('/admin')}>관리자님</Span>
+          </>
+        ) : (
           <>
             <img
               alt="backgroundimg"
