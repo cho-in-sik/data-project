@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   FormWrapper,
   FormTitle,
@@ -12,40 +12,63 @@ import {
 } from './styles/CommunityFormStyle';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUsers } from '@fortawesome/free-solid-svg-icons';
-//게시글 작성 폼
-const CommunityPostForm = () => {
+// 게시글 수정을 위한 함수
+const CommunityEditForm = () => {
+  const { id } = useParams(); //useParams() 훅을 사용하여 URL 파라미터를 가져옴
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [content, setContent] = useState('');
   const [image, setImage] = useState('');
-  // 페이지 이동을 위한 useNavigate 훅
+
   const navigate = useNavigate();
-  // 게시글 작성을 위한 함수
+  // 게시글 정보를 가져오기 위한 useEffect 훅
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await axios.get(
+          `http://localhost:3000/api/v1/board/${id}`,
+        );
+        // 게시글 정보를 상태에 저장
+        setTitle(response.data.title);
+        setAuthor(response.data.author);
+        setContent(response.data.content);
+        setImage(response.data.image);
+      } catch (error) {
+        console.error(error);
+        // 오류 메시지 표시
+        alert('게시글 불러오기에 실패했습니다.');
+        navigate('/board/all'); // 게시글 목록 페이지로 이동
+      }
+    }
+    fetchData();
+  }, [id, navigate]);
+  // handleFormSubmit 함수를 수정하여 게시글 수정 API 호출
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     try {
-      // 게시글 작성 API 호출
-      const response = await axios.post('http://localhost:3000/api/v1/board', {
-        title,
-        author,
-        content,
-        image,
-      }); // 게시글 작성 후 게시글 목록 페이지로 이동
+      const response = await axios.put(
+        `http://localhost:3000/api/v1/board/${id}`,
+        {
+          title,
+          author,
+          content,
+          image,
+        },
+      );
       console.log(response.data);
-      navigate('/board/all');
+      navigate(`/board/${id}`); // 게시글 상세 페이지로 이동
     } catch (error) {
       console.error(error);
       // 오류 메시지 표시
-      alert('게시글 작성에 실패했습니다.');
+      alert('게시글 수정에 실패했습니다.');
     }
   };
-
   return (
     <FormWrapper>
       <FormTitle>
         {' '}
         <FontAwesomeIcon icon={faUsers} style={{ color: '#47b781' }} /> 게시글
-        작성하기
+        수정하기
       </FormTitle>
       <form onSubmit={handleFormSubmit}>
         <FormGroup>
@@ -79,7 +102,6 @@ const CommunityPostForm = () => {
         </FormGroup>
         <FormGroup>
           <FormLabel htmlFor="image">이미지</FormLabel>
-          {/* 이미지 삽입 기능은 추후에 */}
           <FormInput
             type="text"
             id="image"
@@ -87,10 +109,10 @@ const CommunityPostForm = () => {
             onChange={(event) => setImage(event.target.value)}
           />
         </FormGroup>
-        <FormButton type="submit">작성</FormButton>
+        <FormButton type="submit">수정</FormButton>
       </form>
     </FormWrapper>
   );
 };
 
-export default CommunityPostForm;
+export default CommunityEditForm;
