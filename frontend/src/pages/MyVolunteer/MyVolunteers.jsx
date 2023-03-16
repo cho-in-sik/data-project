@@ -117,6 +117,7 @@ const MyVolunteers = (props) => {
   const [total, setTotal] = useState(20);
   const navigate = useNavigate();
   const items = 6;
+  const [volunteerState, setVolunteerState] = useState('');
 
   const handlePageChange = (page) => {
     return setPage(page);
@@ -124,18 +125,21 @@ const MyVolunteers = (props) => {
 
   //참여한 봉사내역
   const handleParticipatedVolunteer = () => {
-    const a = data
-      .slice(items * (page - 1), items * (page - 1) + items)
-      .filter((item) => item.userId !== user.id);
-    return a;
+    setVolunteerState('participate');
   };
+  //참여한 봉사만 필터하는 함수
+  const participateVolunteer = data
+    .slice(items * (page - 1), items * (page - 1) + items)
+    .filter((item) => item.userId !== user.id);
+
   //개설한 봉사내역
   const handleMadeVolunteer = () => {
-    const a = data
-      .slice(items * (page - 1), items * (page - 1) + items)
-      .filter((item) => item.userId === user.id);
-    return a;
+    setVolunteerState('made');
   };
+  //개설한 봉사만 필터하는 함수
+  const joinVolunteer = data
+    .slice(items * (page - 1), items * (page - 1) + items)
+    .filter((item) => item.userId === user.id);
 
   // 게시글 목록을 가져오는 함수
   // useEffect(() => {
@@ -169,7 +173,44 @@ const MyVolunteers = (props) => {
           <Span onClick={handleMadeVolunteer}>개설한 봉사내역</Span>
         </div>
         <VB>
-          {data
+          {volunteerState === ''
+            ? data
+                .slice(items * (page - 1), items * (page - 1) + items)
+                .map((value, i) => {
+                  return (
+                    <MyVolunteer
+                      key={i}
+                      title={value.title}
+                      volunteerTime={value.volunteerTime}
+                      address={value.address}
+                      author={value.author}
+                      content={value.content}
+                      participation={value.participation}
+                      meetingStatus={value.meetingStatus}
+                      userId={value.userId}
+                    />
+                  );
+                })
+            : (volunteerState === 'participate'
+                ? participateVolunteer
+                : joinVolunteer
+              ).map((value, i) => {
+                return (
+                  <MyVolunteer
+                    key={i}
+                    title={value.title}
+                    volunteerTime={value.volunteerTime}
+                    address={value.address}
+                    author={value.author}
+                    content={value.content}
+                    participation={value.participation}
+                    meetingStatus={value.meetingStatus}
+                    userId={value.userId}
+                  />
+                );
+              })}
+
+          {/* {data
             .slice(items * (page - 1), items * (page - 1) + items)
             .map((value, i) => {
               return (
@@ -185,7 +226,7 @@ const MyVolunteers = (props) => {
                   userId={value.userId}
                 />
               );
-            })}
+            })} */}
         </VB>
         <div>
           <Paging
