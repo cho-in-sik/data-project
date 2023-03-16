@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Header from '../../components/Header/Header';
 import BackGround from '../../components/Background/Background';
-
+import axios from 'axios';
 import MyVolunteer from './MyVolunteer';
 import Paging from '../../components/Pagination/Pagination';
 
@@ -94,12 +94,37 @@ const list = [
 const MyVolunteers = (props) => {
   const [data, setData] = useState(list);
   const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(20);
   const navigate = useNavigate();
   const items = 6;
 
   const handlePageChange = (page) => {
     return setPage(page);
   };
+
+  // 게시글 목록을 가져오는 함수
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await axios.get(
+          `http://localhost:3000/api/v1/board?page=${page}&perPage=${items}`,
+        );
+        const pageData = {
+          page: response.data.page,
+          perPage: response.data.perPage,
+          total: response.data.total,
+          totalPage: Response.data.totalPage,
+        };
+        // 응답 데이터에서 boards 배열만 추출하여 setData로 업데이트
+        setData(response.data.boards);
+        setTotal(pageData.total);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    fetchData();
+  }, [page, items]); //page, perPage가 변경될 때마다 useEffect가 실행
+
   return (
     <BackGround>
       <Header />
@@ -126,7 +151,11 @@ const MyVolunteers = (props) => {
             })}
         </VB>
         <div>
-          <Paging page={page} handlePageChange={handlePageChange} />
+          <Paging
+            page={page}
+            handlePageChange={handlePageChange}
+            total={total}
+          />
         </div>
       </VolunteerBox>
     </BackGround>
