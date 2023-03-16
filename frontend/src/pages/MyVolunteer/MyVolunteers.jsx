@@ -6,6 +6,7 @@ import BackGround from '../../components/Background/Background';
 import axios from 'axios';
 import MyVolunteer from './MyVolunteer';
 import Paging from '../../components/Pagination/Pagination';
+import { useSelector } from 'react-redux';
 
 const list = [
   {
@@ -13,85 +14,104 @@ const list = [
     volunteerTime: '2023-03-12',
     address: '놀이터',
     participation: ['조인식 '],
-    author: '운영자',
+    author: '조인식',
     content:
       '안녕하세요 어디어디 봉사하는 모임입니다. 잘부탁드립니다 파이팅파이팅',
+    meetingStatus: '모집중',
+    userId: 1,
   },
   {
     title: '광주봉사',
     volunteerTime: '2024-08-12',
     address: '초등학교',
     participation: ['안정민 '],
-    author: '운영자',
+    author: '조인식',
     content:
       '안녕하세요 어디어디 봉사하는 모임입니다. 잘부탁드립니다 파이팅파이팅',
+    meetingStatus: '모집완료',
+    userId: 2,
   },
   {
     title: '부산봉사',
     volunteerTime: '2021-03-12',
     address: '중학교',
     participation: ['최중현 '],
-    author: '운영자',
+    author: '조인식',
     content:
       '안녕하세요 어디어디 봉사하는 모임입니다. 잘부탁드립니다 파이팅파이팅',
+    meetingStatus: '모집중',
+    userId: 3,
   },
   {
     title: '인천봉사',
     volunteerTime: '2023-12-12',
     address: '고등학교',
     participation: ['조인식 ', '안정민', '최중현'],
-    author: '운영자',
+    author: '조인식',
     content:
       '안녕하세요 어디어디 봉사하는 모임입니다. 잘부탁드립니다 파이팅파이팅',
+    meetingStatus: '모집완료',
+    userId: 4,
   },
   {
     title: '대구봉사',
     volunteerTime: '2023-03-12',
     address: '횡단보도',
     participation: ['조인식 ', '최중현'],
-    author: '운영자',
+    author: '조인식',
     content:
       '안녕하세요 어디어디 봉사하는 모임입니다. 잘부탁드립니다 파이팅파이팅',
+    meetingStatus: '모집중',
+    userId: 5,
   },
   {
     title: '대전봉사',
     volunteerTime: '2000-03-12',
     address: '공원',
     participation: ['조인식 '],
-    author: '운영자',
+    author: '조인식',
     content:
       '안녕하세요 어디어디 봉사하는 모임입니다. 잘부탁드립니다 파이팅파이팅',
+    meetingStatus: '모집중',
+    userId: 6,
   },
   {
     title: '제주도봉사',
     volunteerTime: '2023-03-12',
     address: '공원2',
     participation: ['조인식 '],
-    author: '운영자',
+    author: '조인식',
     content:
       '안녕하세요 어디어디 봉사하는 모임입니다. 잘부탁드립니다 파이팅파이팅',
+    meetingStatus: '모집완료',
+    userId: 6,
   },
   {
     title: '서울봉사',
     volunteerTime: '2023-03-12',
     address: '놀이터',
     participation: ['조인식 '],
-    author: '운영자',
+    author: '조인식',
     content:
       '안녕하세요 어디어디 봉사하는 모임입니다. 잘부탁드립니다 파이팅파이팅',
+    meetingStatus: '모집중',
+    userId: 7,
   },
   {
     title: '울산봉사',
     volunteerTime: '2023-03-12',
     address: '공원3',
     participation: ['조인 '],
-    author: '운영자',
+    author: '조인식',
     content:
       '안녕하세요 어디어디 봉사하는 모임입니다. 잘부탁드립니다 파이팅파이팅',
+    meetingStatus: '모집완료',
+    userId: 8,
   },
 ];
 
 const MyVolunteers = (props) => {
+  const user = useSelector((state) => state.user);
   const [data, setData] = useState(list);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(20);
@@ -102,36 +122,51 @@ const MyVolunteers = (props) => {
     return setPage(page);
   };
 
+  //참여한 봉사내역
+  const handleParticipatedVolunteer = () => {
+    const a = data
+      .slice(items * (page - 1), items * (page - 1) + items)
+      .filter((item) => item.userId !== user.id);
+    return a;
+  };
+  //개설한 봉사내역
+  const handleMadeVolunteer = () => {
+    const a = data
+      .slice(items * (page - 1), items * (page - 1) + items)
+      .filter((item) => item.userId === user.id);
+    return a;
+  };
+
   // 게시글 목록을 가져오는 함수
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await axios.get(
-          `http://localhost:3000/api/v1/board?page=${page}&perPage=${items}`,
-        );
-        const pageData = {
-          page: response.data.page,
-          perPage: response.data.perPage,
-          total: response.data.total,
-          totalPage: Response.data.totalPage,
-        };
-        // 응답 데이터에서 boards 배열만 추출하여 setData로 업데이트
-        setData(response.data.boards);
-        setTotal(pageData.total);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    fetchData();
-  }, [page, items]); //page, perPage가 변경될 때마다 useEffect가 실행
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     try {
+  //       const response = await axios.get(
+  //         `http://localhost:3000/api/v1/board?page=${page}&perPage=${items}`,
+  //       );
+  //       const pageData = {
+  //         page: response.data.page,
+  //         perPage: response.data.perPage,
+  //         total: response.data.total,
+  //         totalPage: Response.data.totalPage,
+  //       };
+  //       // 응답 데이터에서 boards 배열만 추출하여 setData로 업데이트
+  //       setData(response.data.boards);
+  //       setTotal(pageData.total);
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   }
+  //   fetchData();
+  // }, [page, items]); //page, perPage가 변경될 때마다 useEffect가 실행
 
   return (
     <BackGround>
       <Header />
       <VolunteerBox>
         <div style={{ paddingTop: '50px', paddingBottom: '30px' }}>
-          <Span>참여한 봉사내역</Span>
-          <Span>개설한 봉사내역</Span>
+          <Span onClick={handleParticipatedVolunteer}>참여한 봉사내역</Span>
+          <Span onClick={handleMadeVolunteer}>개설한 봉사내역</Span>
         </div>
         <VB>
           {data
@@ -146,6 +181,8 @@ const MyVolunteers = (props) => {
                   author={value.author}
                   content={value.content}
                   participation={value.participation}
+                  meetingStatus={value.meetingStatus}
+                  userId={value.userId}
                 />
               );
             })}
@@ -174,8 +211,8 @@ const VolunteerBox = styled.div`
 const Span = styled.span`
   font-size: 25px;
   font-weight: 400;
-  font-family: Roboto;
   padding-left: 50px;
+  cursor: pointer;
 `;
 
 const VB = styled.div`
