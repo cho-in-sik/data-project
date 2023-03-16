@@ -88,6 +88,9 @@ const CommunityPostForm = () => {
           />
         </FormGroup>
         <FormButton type="submit">작성</FormButton>
+        <FormButton type="button" onClick={() => navigate('/board/all')}>
+          취소
+        </FormButton>
       </form>
     </FormWrapper>
   );

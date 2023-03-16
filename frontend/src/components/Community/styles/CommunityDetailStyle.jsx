@@ -1,19 +1,28 @@
 import styled from 'styled-components';
 
+export const Background = styled.div`
+  background-color: #f9f9f9;
+  height: 100%;
+`;
+
 export const CommunityDetailWrapper = styled.div`
   max-width: 800px;
   margin: 0 auto;
+  width: 70%;
+  height: 70%;
   padding: 20px;
-  background-color: #fff;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
-  margin-top: 20px;
+  background-color: white;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
+  margin-top: 40px;
 `;
 
 export const CommunityDetailHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  margin-bottom: 30px;
 `;
 
 export const CommunityDetailTitle = styled.h1`
