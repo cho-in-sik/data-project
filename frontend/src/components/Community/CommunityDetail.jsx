@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import CommentForm from './CommentForm';
+import Header from '../Header/Header';
 import {
   CommunityDetailWrapper,
   CommunityDetailHeader,
@@ -12,10 +13,7 @@ import {
   CommunityDetailDivider,
   CommunityDetailComments,
 } from './styles/CommunityDetailStyle';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUsers } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate, useParams } from 'react-router-dom';
-import Header from '../Header/Header';
 
 function CommunityDetail() {
   // 게시글의 id를 가져옴
@@ -56,25 +54,27 @@ function CommunityDetail() {
     }
   };
 
+  // 댓글 작성 후 댓글 목록을 업데이트하는 함수
+  const updateComments = (comments) => {
+    setCommunity({ ...community, comments });
+  };
+
   // 게시글이 로딩되지 않았을 때
   if (!community) {
-    return <div>Loading...</div>;
+    return <div>게시글 불러오는 중</div>;
   }
-
   return (
     <>
       <Header />
       <CommunityDetailWrapper>
         <CommunityDetailHeader>
-          <CommunityDetailTitle>
-            {' '}
-            <FontAwesomeIcon icon={faUsers} style={{ color: '#47b781' }} />{' '}
-            {community.title}
-          </CommunityDetailTitle>
+          <CommunityDetailTitle> {community.title}</CommunityDetailTitle>
           <CommunityDetailAuthor>
             작성자: {community.author}
           </CommunityDetailAuthor>
         </CommunityDetailHeader>
+
+        <CommunityDetailDivider />
         {community.image && community.image.length > 0 && (
           <CommunityDetailImage
             src={community.image[0].imageUrl}
@@ -101,8 +101,10 @@ function CommunityDetail() {
           ) : (
             <p>댓글이 없습니다.</p>
           )}
-          <CommentForm />
+          {/* 댓글 작성 폼 */}
+          <CommentForm boardId={id} updateComments={updateComments} />
         </CommunityDetailComments>
+        <button onClick={() => navigate('/board/all')}>목록으로</button>
       </CommunityDetailWrapper>
     </>
   );
