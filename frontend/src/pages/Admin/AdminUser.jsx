@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import Header from '../../components/Header/Header';
 import styled from 'styled-components';
 import BackGround from '../../components/Background/Background';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserGroup } from '@fortawesome/free-solid-svg-icons';
+import { faUserGroup, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 const AdminUser = (props) => {
+  const navigate = useNavigate();
   const data = [
     {
       id: '1',
@@ -18,7 +18,7 @@ const AdminUser = (props) => {
       nickname: '안정',
       profileImage: '',
       volHistory: [{ title: '서울초1' }, { title: '서울초2' }],
-      type: '',
+      userType: 'admin',
     },
     {
       id: '2',
@@ -30,7 +30,7 @@ const AdminUser = (props) => {
       nickname: '김정',
       volHistory: [{ title: '서울초1' }, { title: '서울초2' }],
       profileImage: '',
-      type: '',
+      userType: 'user',
     },
   ];
   const handleDelete = async () => {
@@ -50,7 +50,15 @@ const AdminUser = (props) => {
       <TableCell width="24%">
         {item.volHistory[0].title} 등 {item.volHistory.length}건
       </TableCell>
-      <TableCell width="5%">{item.userType}</TableCell>
+      <TableCell width="5%">
+        <select>
+          <option value="user">일반회원</option>
+          <option value="admin">관리자</option>
+          {/* <option value={item.userType} key={item.userType}>
+            {item.userType === 'admin' ? '관리자' : '일반회원'}
+          </option> */}
+        </select>
+      </TableCell>
       <TableCell width="8%">
         <button onClick={handleDelete}>회원탈퇴</button>
       </TableCell>
@@ -63,6 +71,13 @@ const AdminUser = (props) => {
         <Header />
         <AdminBox>
           <Title>
+            <FontAwesomeIcon
+              icon={faArrowLeft}
+              style={{ color: '#aaa', marginRight: '2rem', cursor: 'pointer' }}
+              onClick={() => {
+                navigate(-1);
+              }}
+            />
             <FontAwesomeIcon icon={faUserGroup} style={{ color: '#47b781' }} />
             <span>회원 관리</span>
           </Title>
@@ -109,10 +124,12 @@ const UserTable = styled.div`
   text-align: center;
   width: 95%;
   margin: 0 auto;
-  border: 1px solid;
 `;
 
 const TableHead = styled.div`
+  background-color: #eee;
+  border-top: 1px solid;
+  border-bottom: 1px solid;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -125,6 +142,11 @@ const TableRow = styled.div`
   justify-content: space-around;
   align-items: center;
   padding: 0.5rem;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #eee;
+  }
 `;
 
 const TableCell = styled.span`

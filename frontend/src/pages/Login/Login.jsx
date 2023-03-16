@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { loginUser } from '../../redux/userSlice';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
@@ -8,7 +7,6 @@ import BackGround from '../../components/Background/Background';
 import Header from '../../components/Header/Header';
 
 function Login() {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -32,10 +30,8 @@ function Login() {
         email,
         password,
       });
-      console.log(res);
-      dispatch(loginUser(res.data));
       if (res.statusText === 'OK') {
-        navigate('/MyPage');
+        navigate('/mypage');
       } else {
         alert('아이디와 비밀번호를 확인하세요.');
       }

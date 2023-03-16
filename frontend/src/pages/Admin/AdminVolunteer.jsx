@@ -4,9 +4,10 @@ import Header from '../../components/Header/Header';
 import styled from 'styled-components';
 import BackGround from '../../components/Background/Background';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faNoteSticky } from '@fortawesome/free-solid-svg-icons';
+import { faNoteSticky, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 const AdminUser = (props) => {
+  const navigate = useNavigate();
   const data = [
     {
       id: 1,
@@ -58,6 +59,13 @@ const AdminUser = (props) => {
         <Header />
         <AdminBox>
           <Title>
+            <FontAwesomeIcon
+              icon={faArrowLeft}
+              style={{ color: '#aaa', marginRight: '2rem', cursor: 'pointer' }}
+              onClick={() => {
+                navigate(-1);
+              }}
+            />
             <FontAwesomeIcon icon={faNoteSticky} style={{ color: '#47b781' }} />
             <span>모집글 관리</span>
           </Title>
@@ -101,10 +109,12 @@ const UserTable = styled.div`
   text-align: center;
   width: 95%;
   margin: 0 auto;
-  border: 1px solid;
 `;
 
 const TableHead = styled.div`
+  background-color: #eee;
+  border-top: 1px solid;
+  border-bottom: 1px solid;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -117,6 +127,11 @@ const TableRow = styled.div`
   justify-content: space-around;
   align-items: center;
   padding: 0.5rem;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #eee;
+  }
 `;
 
 const TableCell = styled.span`

@@ -1,28 +1,40 @@
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Header from '../../components/Header/Header';
 import styled from 'styled-components';
 import BackGround from '../../components/Background/Background';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faUsers, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 const AdminUser = (props) => {
-  const data = [
-    {
-      id: 1,
-      author: '안정민',
-      title: '000모임 늦지마세요~',
-      createdAt: '2023-03-14 13:22:15',
-    },
-  ];
+  const [posts, setPosts] = useState([]);
+  const [page, setPage] = useState(1);
+  const perPage = 10;
+  const navigate = useNavigate();
+  useEffect(() => {
+    const getAllPosts = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:3000/api/v1/board?page=${page}&perPage=${perPage}`,
+        );
+        setPosts(res.data.boards);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getAllPosts();
+  }, [page, perPage]);
+
   const handleDelete = async () => {
     return;
-    // const res = await axios.delete('http://localhost:3000/admin/', {
-    //   data: { token },
-    // });
-    // console.log(res);
+    /* const res = await axios.delete(
+      `http://localhost:3000/api/v1/board/delete`
+    )
+    console.log(res);
+    */
   };
-  const list = data.map((item) => (
+  const list = posts.map((item) => (
     <TableRow key={item.id}>
       <TableCell width="30%">{item.title}</TableCell>
       <TableCell width="15%">{item.createdAt}</TableCell>
@@ -39,8 +51,15 @@ const AdminUser = (props) => {
         <Header />
         <AdminBox>
           <Title>
+            <FontAwesomeIcon
+              icon={faArrowLeft}
+              style={{ color: '#aaa', marginRight: '2rem', cursor: 'pointer' }}
+              onClick={() => {
+                navigate(-1);
+              }}
+            />
             <FontAwesomeIcon icon={faUsers} style={{ color: '#47b781' }} />
-            <span>커뮤니티글 관리</span>
+            <span>커뮤니티 관리</span>
           </Title>
           <UserTable>
             <TableHead>
@@ -81,11 +100,13 @@ const UserTable = styled.div`
   text-align: center;
   width: 95%;
   margin: 0 auto;
-  border: 1px solid;
 `;
 
 const TableHead = styled.div`
   display: flex;
+  background-color: #eee;
+  border-top: 1px solid;
+  border-bottom: 1px solid;
   justify-content: space-around;
   align-items: center;
   padding: 0.5rem;
@@ -97,6 +118,11 @@ const TableRow = styled.div`
   justify-content: space-around;
   align-items: center;
   padding: 0.5rem;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #eee;
+  }
 `;
 
 const TableCell = styled.span`
