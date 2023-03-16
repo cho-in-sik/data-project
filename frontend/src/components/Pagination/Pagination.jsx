@@ -2,14 +2,14 @@ import Pagination from 'react-js-pagination';
 import styled from 'styled-components';
 import { useState } from 'react';
 
-const Paging = ({ page, handlePageChange }) => {
+const Paging = ({ page, handlePageChange, total }) => {
   return (
     <div>
       <PaginationBox>
         <Pagination
           activePage={page}
           itemsCountPerPage={6}
-          totalItemsCount={20}
+          totalItemsCount={total}
           pageRangeDisplayed={2}
           onChange={handlePageChange}
         />

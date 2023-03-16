@@ -4,18 +4,21 @@ import styled from 'styled-components';
 import img from '../../assets/images/66112.jpg';
 import axios from 'axios';
 import BackGround from '../../components/Background/Background';
+import { useSelector } from 'react-redux';
 
 const VolunteerDetail = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const user = useSelector((state) => state.user);
   //useLocation 으로 navigate로 온 상태 받기
   const title = location.state.title;
   const volunteerTime = location.state.volunteerTime;
   const address = location.state.address;
   const content = location.state.content;
   const participation = location.state.participation;
-  console.log(participation);
+  const userId = location.state.userId;
+  console.log(userId);
 
   const handleClick = async () => {
     try {
@@ -65,16 +68,19 @@ const VolunteerDetail = () => {
                       }}
                     >
                       <span>{person}</span>
-                      <button
-                        onClick={() => console.log()}
-                        style={{
-                          height: '30px',
-                          width: '30px',
-                          marginTop: '5px',
-                        }}
-                      >
-                        X
-                      </button>
+
+                      {user.id === userId && (
+                        <button
+                          onClick={() => console.log(1)}
+                          style={{
+                            height: '30px',
+                            width: '30px',
+                            marginTop: '5px',
+                          }}
+                        >
+                          X
+                        </button>
+                      )}
                     </div>
                   ))}
                 </div>

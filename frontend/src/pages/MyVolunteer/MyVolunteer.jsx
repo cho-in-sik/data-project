@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
@@ -9,6 +9,8 @@ const MyVolunteer = ({
   author,
   content,
   participation,
+  meetingStatus,
+  userId,
 }) => {
   const navigate = useNavigate();
   const data = {
@@ -18,12 +20,23 @@ const MyVolunteer = ({
     author,
     content,
     participation,
+    userId,
   };
+  //모집상태가 "모집완료" 이면 모집상태 색변경
+  const meetingStatusFinish = meetingStatus === '모집완료' && '#ff5065';
 
   return (
     <VolunteerDetail
       onClick={() => navigate('/volunteerdetail', { state: data })}
     >
+      <MeetingStatus
+        style={{
+          color: meetingStatusFinish,
+          borderColor: meetingStatusFinish,
+        }}
+      >
+        {meetingStatus}
+      </MeetingStatus>
       <VolunteerMessage
         style={{
           backgroundColor: '#74DD63',
@@ -42,6 +55,7 @@ const MyVolunteer = ({
 };
 
 const VolunteerDetail = styled.div`
+  position: relative;
   background-color: whitesmoke;
 
   width: 300px;
@@ -57,6 +71,20 @@ const VolunteerDetail = styled.div`
   align-items: center;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   cursor: pointer;
+`;
+const MeetingStatus = styled.span`
+  width: 50px;
+  height: 15px;
+  background-color: white;
+  position: absolute;
+  top: 22px;
+  left: 20px;
+  font-size: 14px;
+  border-radius: 5px;
+  padding: 5px;
+  text-align: center;
+  color: #2ccc63;
+  border: solid 1px #2ccc63;
 `;
 
 const VolunteerMessage = styled.div`
