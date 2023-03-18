@@ -1,69 +1,73 @@
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header/Header';
+import axios from 'axios';
 import styled from 'styled-components';
 import BackGround from '../../components/Background/Background';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserGroup, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 const AdminUser = (props) => {
+  const [data, setData] = useState([]);
+  const [page, setPage] = useState(1);
+  const perPage = 10;
+  const [userType, setUserType] = useState('');
   const navigate = useNavigate();
-  const data = [
-    {
-      id: '1',
-      name: '안정민',
-      email: 'ajm@ajm.com',
-      password: '1234',
-      address: '서울시 서울구',
-      phoneNumber: '01012341234',
-      nickname: '안정',
-      profileImage: '',
-      volHistory: [{ title: '서울초1' }, { title: '서울초2' }],
-      userType: 'admin',
-    },
-    {
-      id: '2',
-      name: '김정민',
-      email: 'kjm@kjm.com',
-      password: '1234',
-      address: '서울시 서울구',
-      phoneNumber: '01012341234',
-      nickname: '김정',
-      volHistory: [{ title: '서울초1' }, { title: '서울초2' }],
-      profileImage: '',
-      userType: 'user',
-    },
-  ];
-  const handleDelete = async () => {
-    return;
-    /* const res = await axios.delete('http://localhost:3000/admin/users/:id', {
-      data: { token },
+
+  // 전체 회원목록 조회
+  useEffect(() => {
+    const getAllUsers = async () => {
+      try {
+        const res = await axios.get(
+          `/api/v1/admin/users?page=${page}&perPage=${perPage}`,
+        );
+        setData(res.data.data.users);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getAllUsers();
+  }, [page, perPage]);
+
+  // 아래 두 이벤트함수를 실행했을 때 각각의 target 회원에 해당하는 id를 가져와서 서버로 요청을 해야할텐데 어떤 방법으로 해야할까요?
+
+  // 회원권한 onClick
+  const handleSelectChange = async (e) => {
+    // setUserType(e.target.value);
+    const res = await axios.put(`/api/v1/admin/users/:id`, {
+      userType: userType,
     });
-    console.log(res); */
   };
-  const list = data.map((item) => (
-    <TableRow key={item.id}>
-      <TableCell width="5%">{item.name}</TableCell>
-      <TableCell width="8%">{item.nickname}</TableCell>
-      <TableCell width="15%">{item.email}</TableCell>
-      <TableCell width="7%">{item.phoneNumber}</TableCell>
-      <TableCell width="25%">{item.address}</TableCell>
-      <TableCell width="24%">
+
+  // 회원탈퇴 onClick
+  const handleDelete = (e) => {
+    debugger;
+    console.log(e.target.value);
+  };
+
+  const list = data.map((item) => {
+    return (
+      <TableRow key={item._id}>
+        <TableCell width="5%">{item.name}</TableCell>
+        <TableCell width="8%">{item.nickname}</TableCell>
+        <TableCell width="15%">{item.email}</TableCell>
+        <TableCell width="7%">{item.phoneNumber}</TableCell>
+        <TableCell width="25%">{item.address}</TableCell>
+        {/* <TableCell width="24%">
         {item.volHistory[0].title} 등 {item.volHistory.length}건
-      </TableCell>
-      <TableCell width="5%">
-        <select>
-          <option value="user">일반회원</option>
-          <option value="admin">관리자</option>
-          {/* <option value={item.userType} key={item.userType}>
-            {item.userType === 'admin' ? '관리자' : '일반회원'}
-          </option> */}
-        </select>
-      </TableCell>
-      <TableCell width="8%">
-        <button onClick={handleDelete}>회원탈퇴</button>
-      </TableCell>
-    </TableRow>
-  ));
+      </TableCell> */}
+        <TableCell width="5%">
+          <select onChange={handleSelectChange} value={item.userType}>
+            <option value="admin">admin</option>
+            <option value="user">user</option>
+          </select>
+        </TableCell>
+        <TableCell width="8%">
+          <button onClick={handleDelete}>회원탈퇴</button>
+        </TableCell>
+      </TableRow>
+    );
+  });
 
   return (
     <div>
@@ -88,7 +92,7 @@ const AdminUser = (props) => {
               <TableCell width="15%">이메일</TableCell>
               <TableCell width="7%">전화번호</TableCell>
               <TableCell width="25%">주소</TableCell>
-              <TableCell width="24%">봉사내역</TableCell>
+              {/* <TableCell width="24%">봉사내역</TableCell> */}
               <TableCell width="5%">관리자</TableCell>
               <TableCell width="8%">회원 탈퇴</TableCell>
             </TableHead>
@@ -103,7 +107,7 @@ const AdminUser = (props) => {
 const AdminBox = styled.div`
   position: relative;
   width: 90%;
-  height: 550px;
+  height: auto;
   background-color: white;
   border-radius: 20px;
   padding: 1rem;

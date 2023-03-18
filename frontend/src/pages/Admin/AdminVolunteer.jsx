@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Header from '../../components/Header/Header';
@@ -6,9 +7,12 @@ import BackGround from '../../components/Background/Background';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faNoteSticky, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
+// /api/v1/recruitment/all
+
 const AdminUser = (props) => {
+  const [posts, setPosts] = useState([]);
   const navigate = useNavigate();
-  const data = [
+  /* const data = [
     {
       id: 1,
       author: '홍길',
@@ -31,7 +35,20 @@ const AdminUser = (props) => {
       participation: '3',
       meetingStatus: '모집중',
     },
-  ];
+  ]; */
+  useEffect(() => {
+    const getAllPosts = async () => {
+      debugger;
+      try {
+        const res = await axios.get('/api/v1/recruitment/all');
+        console.log(res);
+        // setPosts(res.data.boards);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getAllPosts();
+  }, []);
   const handleDelete = async () => {
     return;
     // const res = await axios.delete('http://localhost:3000/admin/', {
@@ -39,7 +56,7 @@ const AdminUser = (props) => {
     // });
     // console.log(res);
   };
-  const list = data.map((item) => (
+  const list = posts.map((item) => (
     <TableRow key={item.id}>
       <TableCell width="15%">{item.address}</TableCell>
       <TableCell width="15%">{item.volunteerTime}</TableCell>

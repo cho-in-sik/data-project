@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { loginUser } from '../../redux/userSlice';
+import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import styled from 'styled-components';
@@ -7,6 +8,7 @@ import BackGround from '../../components/Background/Background';
 import Header from '../../components/Header/Header';
 
 function Login() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -26,10 +28,12 @@ function Login() {
     }
 
     try {
-      const res = await axios.post('http://localhost:3000/api/v1/auth/login', {
+      const res = await axios.post('/api/v1/auth/login', {
         email,
         password,
       });
+      console.log(res);
+      dispatch(loginUser(res.data));
       if (res.statusText === 'OK') {
         navigate('/mypage');
       } else {
