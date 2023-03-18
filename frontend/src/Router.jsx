@@ -24,6 +24,11 @@ import AdminUser from './pages/Admin/AdminUser';
 import AdminVolunteer from './pages/Admin/AdminVolunteer';
 import AdminCommunity from './pages/Admin/AdminCommunity';
 
+//차트 (보기용)
+import TimeOfAccident from './pages/chart/TimeOfAccident';
+import PieMortality from './pages/chart/PieMortality';
+import TypeOfAccident from './pages/chart/TypeOfAccident';
+
 export function Router() {
   const user = useSelector((state) => state.user);
 
@@ -50,6 +55,11 @@ export function Router() {
           <Route path="/admin/volunteer" element={<AdminVolunteer />} />
           <Route path="/admin/community" element={<AdminCommunity />} />
         </Route>
+        {/* //지울것들 보기용도 */}
+        <Route path="/1" element={<TimeOfAccident />} />
+        <Route path="/2" element={<TypeOfAccident />} />
+        <Route path="/3" element={<PieMortality />} />
+
       </Routes>
     </BrowserRouter>
   );

@@ -1,9 +1,10 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import Header from '../../components/Header/Header.jsx';
 import styled from 'styled-components';
 import BackGround from '../../components/Background/Background';
+import { useSelector } from 'react-redux';
 
 //유효성 검사
 //오류메시지를 상태로 관리하기?
@@ -31,6 +32,21 @@ const passwordValidate = (pw) => {
 };
 
 const UserInfo = (props) => {
+  const user = useSelector((state) => state.user);
+  const [userInfo, setUserInfo] = useState();
+  useEffect(() => {
+    async function userData() {
+      try {
+        const res = await axios.get(`/api/v1/users/${user.id}`);
+        console.log(res.data.data);
+        setUserInfo(res.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    userData();
+  }, [user.id]);
+
   const [formValid, setFormValid] = useState([]);
   //상태관리
   const nameRef = useRef();
@@ -42,7 +58,6 @@ const UserInfo = (props) => {
   const addressRef = useRef();
 
   const navigate = useNavigate();
-  const { userId } = useParams();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -82,7 +97,7 @@ const UserInfo = (props) => {
 
     const submitHandler = async () => {
       try {
-        await axios.patch(`http://localhost:3000/api/v1/users/${userId}`, {
+        await axios.put(`/api/v1/users/${user.id}`, {
           ...formData,
         });
         alert('정보수정에 성공했습니다.');
@@ -106,19 +121,39 @@ const UserInfo = (props) => {
         <UserForm>
           <InfoItem style={{ marginTop: '50px' }}>
             <p>이름</p>
-            <input name="name" type="text" ref={nameRef} />
+            <input
+              name="name"
+              type="text"
+              ref={nameRef}
+              value={userInfo.name}
+            />
           </InfoItem>
           <InfoItem>
             <p>닉네임</p>
-            <input name="nickname" type="text" ref={nicknameRef} />
+            <input
+              name="nickname"
+              type="text"
+              ref={nicknameRef}
+              value={userInfo.nickname}
+            />
           </InfoItem>
           <InfoItem>
             <p>전화번호</p>
-            <input name="phonenumber" type="text" ref={phoneNumRef} />
+            <input
+              name="phonenumber"
+              type="text"
+              ref={phoneNumRef}
+              value={userInfo.phoneNumber}
+            />
           </InfoItem>
           <InfoItem>
             <p>이메일</p>
-            <input name="email" type="email" ref={emailRef} />
+            <input
+              name="email"
+              type="email"
+              ref={emailRef}
+              value={userInfo.email}
+            />
           </InfoItem>
           <InfoItem>
             <p>비밀번호</p>
@@ -130,7 +165,12 @@ const UserInfo = (props) => {
           </InfoItem>
           <InfoItem>
             <p>주소</p>
-            <input name="address" type="text" ref={addressRef} />
+            <input
+              name="address"
+              type="text"
+              ref={addressRef}
+              value={userInfo.address}
+            />
           </InfoItem>
 
           <span style={{ marginLeft: '30px' }}>{formValid}</span>
