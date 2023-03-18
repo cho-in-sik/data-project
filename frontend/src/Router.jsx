@@ -15,6 +15,7 @@ import CommunityForm from './pages/Community/CommunityForm';
 import CommunityEdit from './pages/Community/CommunityEdit';
 import MyVolunteers from './pages/MyVolunteer/MyVolunteers';
 import VolunteerDetail from './pages/MyVolunteer/VolunteerDetail';
+import RecruitmentMain from './components/Recruitment/RecruitmentMain';
 
 // 관리자 페이지
 import AdminRoute from './components/AdminRoute/AdminRoute';
@@ -38,10 +39,11 @@ export function Router() {
         <Route path="/userdelete" element={<UserDelete />} />
         <Route path="/myvolunteers" element={<MyVolunteers />} />
         <Route path="/volunteerdetail" element={<VolunteerDetail />} />
-        <Route path="/board/all" element={<CommunityList />} />
+        <Route path="/board" element={<CommunityList />} />
         <Route path="/board/:id" element={<CommunityDetail />} />
         <Route path="/board/edit/:id" element={<CommunityEdit />} />
-        <Route path="/board" element={<CommunityForm />} />
+        <Route path="/board/write" element={<CommunityForm />} />
+        <Route path="/recruitment/main" element={<RecruitmentMain />} />
         <Route element={<AdminRoute user={user} />}>
           <Route path="/admin" element={<AdminMain />} />
           <Route path="/admin/user" element={<AdminUser />} />
