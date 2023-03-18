@@ -1,22 +1,31 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import BackGround from '../../components/Background/Background';
 import Header from '../../components/Header/Header';
+import { useSelector, useDispatch } from 'react-redux';
+import { persistor } from '../../redux/store';
+import { initUser } from '../../redux/userSlice';
 
 const UserDelete = (props) => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const { userId } = useParams();
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
   const handleClick = async (e) => {
     e.preventDefault();
 
     const formData = { password };
 
+    const purge = async () => {
+      await persistor.purge(); // persistStore의 데이터 전부 날림
+    };
+
     try {
-      const res = await axios.delete(
-        `http://localhost:3000/api/v1/users/${userId}`,
+      await axios.delete(
+        `/api/v1/users/${user.id}`,
         {
           data: { ...formData },
         },
@@ -28,15 +37,16 @@ const UserDelete = (props) => {
         //   },
         // },
       );
-      alert(res);
-      //회원 탈퇴시 토큰 제거
-      // localStorage.removeItem('ACCESS_TOKEN');
+
       alert('회원 탈퇴 되었습니다.');
       navigate('/');
     } catch (error) {
       console.error(error);
       alert('비밀번호를 확인해주세요.');
     }
+    dispatch(initUser());
+    purge();
+    navigate('/');
   };
 
   return (

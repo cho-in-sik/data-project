@@ -6,6 +6,7 @@ import baseimg from '../../assets/images/baseimg.png';
 import { useSelector, useDispatch } from 'react-redux';
 import { initUser } from '../../redux/userSlice';
 import { persistor } from '../../redux/store';
+import axios from 'axios';
 
 const Header = () => {
   const user = useSelector((state) => state.user);
@@ -18,7 +19,12 @@ const Header = () => {
     await persistor.purge(); // persistStore의 데이터 전부 날림
   };
 
-  const logoutHandler = () => {
+  const logoutHandler = async (e) => {
+    try {
+      await axios.post('/api/v1/auth/logout');
+    } catch (error) {
+      console.error(error);
+    }
     dispatch(initUser());
     purge();
     navigate('/');
