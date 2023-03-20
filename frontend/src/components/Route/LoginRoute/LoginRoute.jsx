@@ -1,11 +1,11 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-// user.id !== ''이면 로그인, 회원가입 페이지 접근 제한하기
+// user.id가 확인되지 않으면 서비스 페이지 라우팅 제한하기.
 const LoginRoute = () => {
   const user = useSelector((state) => state.user);
-  if (user.id !== '') {
-    alert('이미 로그인되어 있습니다.');
+  if (user.id === '') {
+    // alert('로그인 후 이용 가능한 서비스입니다.');
     return <Navigate to="/" />;
   } else {
     return <Outlet />;

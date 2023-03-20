@@ -25,6 +25,7 @@ const AdminUser = (props) => {
         const res = await axios.get(
           `/api/v1/board?page=${page}&perPage=${perPage}`,
         );
+        console.log(res);
         setTotal(res.data.total);
         setPosts(res.data.boards);
       } catch (e) {
@@ -34,21 +35,26 @@ const AdminUser = (props) => {
     getAllPosts();
   }, [page, perPage]);
 
-  const handleDelete = async () => {
-    return;
-    /* const res = await axios.delete(
-      `http://localhost:3000/api/v1/board/delete`
-    )
+  const handleDelete = async (e) => {
+    debugger;
+    const id = e.target.parentElement.parentElement.firstChild.textContent;
+    const res = await axios.delete(`/api/v1/admin/users/${id}`);
     console.log(res);
-    */
+    if (res.data !== '') {
+      alert(res.data);
+    } else {
+      alert('오류가 발생했습니다.');
+      return false;
+    }
   };
   const list = posts.map((item) => (
     <TableRow key={item._id}>
+      <TableCell style={{ display: 'none' }}>{item._id}</TableCell>
       <TableCell width="30%">{item.title}</TableCell>
       <TableCell width="15%">{item.createdAt}</TableCell>
       <TableCell width="15%">{item.author}</TableCell>
       <TableCell width="10%">
-        <button onChange={handleDelete}>삭제</button>
+        <button onClick={handleDelete}>삭제</button>
       </TableCell>
     </TableRow>
   ));
@@ -84,8 +90,8 @@ const AdminUser = (props) => {
               itemsCountPerPage={perPage}
               totalItemsCount={total}
               pageRangeDisplayed={5}
-              nextPageText={'>'}
-              prevPageText={'<'}
+              nextPageText=">"
+              prevPageText="<"
               onChange={handlePageChange}
             />
           </PaginationBox>
@@ -98,10 +104,11 @@ const AdminUser = (props) => {
 const AdminBox = styled.div`
   position: relative;
   width: 90%;
-  height: 550px;
+  height: auto;
+  min-height: 70vh;
   background-color: white;
   border-radius: 20px;
-  padding: 1rem;
+  padding: 2rem;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   margin-top: 4rem;
 `;
@@ -118,7 +125,7 @@ const Title = styled.div`
 const UserTable = styled.div`
   text-align: center;
   width: 95%;
-  margin: 0 auto;
+  margin: 2rem auto;
 `;
 
 const TableHead = styled.div`
@@ -137,7 +144,6 @@ const TableRow = styled.div`
   justify-content: space-around;
   align-items: center;
   padding: 0.5rem;
-  cursor: pointer;
 
   &:hover {
     background-color: #eee;

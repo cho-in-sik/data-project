@@ -108,7 +108,7 @@ const AdminBox = styled.div`
   height: 550px;
   background-color: white;
   border-radius: 20px;
-  padding: 1rem;
+  padding: 2rem;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   margin-top: 4rem;
 `;
@@ -125,7 +125,7 @@ const Title = styled.div`
 const UserTable = styled.div`
   text-align: center;
   width: 95%;
-  margin: 0 auto;
+  margin: 2rem auto;
 `;
 
 const TableHead = styled.div`
@@ -144,7 +144,6 @@ const TableRow = styled.div`
   justify-content: space-around;
   align-items: center;
   padding: 0.5rem;
-  cursor: pointer;
 
   &:hover {
     background-color: #eee;

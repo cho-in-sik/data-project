@@ -13,13 +13,12 @@ const AdminUser = (props) => {
   const [page, setPage] = useState(1);
   const perPage = 10;
   const [total, setTotal] = useState(0);
-  const [userType, setUserType] = useState('');
+  const [UserType, setUserType] = useState('');
   const navigate = useNavigate();
 
   const handlePageChange = (page) => {
     setPage(page);
   };
-
   // 전체 회원목록 조회
   useEffect(() => {
     const getAllUsers = async () => {
@@ -40,21 +39,35 @@ const AdminUser = (props) => {
 
   // 회원권한 onClick
   const handleSelectChange = async (e) => {
-    // setUserType(e.target.value);
-    const res = await axios.put(`/api/v1/admin/users/:id`, {
-      userType: userType,
+    debugger;
+    setUserType(e.target.value);
+    const id = e.target.parentElement.parentElement.firstChild.textContent;
+    console.log(UserType);
+    const res = await axios.put(`/api/v1/admin/users/${id}`, {
+      userType: UserType,
     });
+    console.log(res);
   };
 
   // 회원탈퇴 onClick
-  const handleDelete = (e) => {
-    debugger;
-    console.log(e.target.value);
+  const handleDelete = async (e) => {
+    const id = e.target.parentElement.parentElement.firstChild.textContent;
+    const res = await axios.delete(`/api/v1/admin/users/${id}`);
+    console.log(res);
+    if (res.data !== '') {
+      alert(res.data);
+    } else {
+      alert('오류가 발생했습니다.');
+      return false;
+    }
   };
 
   const list = data.map((item) => {
     return (
       <TableRow key={item._id}>
+        <TableCell width="5%" style={{ display: 'none' }}>
+          {item._id}
+        </TableCell>
         <TableCell width="5%">{item.name}</TableCell>
         <TableCell width="8%">{item.nickname}</TableCell>
         <TableCell width="15%">{item.email}</TableCell>
@@ -111,8 +124,8 @@ const AdminUser = (props) => {
               itemsCountPerPage={perPage}
               totalItemsCount={total}
               pageRangeDisplayed={5}
-              nextPageText={'>'}
-              prevPageText={'<'}
+              nextPageText=">"
+              prevPageText="<"
               onChange={handlePageChange}
             />
           </PaginationBox>
@@ -129,7 +142,7 @@ const AdminBox = styled.div`
   min-height: 70vh;
   background-color: white;
   border-radius: 20px;
-  padding: 1rem;
+  padding: 2rem;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   margin-top: 4rem;
 `;
@@ -146,7 +159,7 @@ const Title = styled.div`
 const UserTable = styled.div`
   text-align: center;
   width: 95%;
-  margin: 0 auto;
+  margin: 2rem auto;
 `;
 
 const TableHead = styled.div`
@@ -165,7 +178,6 @@ const TableRow = styled.div`
   justify-content: space-around;
   align-items: center;
   padding: 0.5rem;
-  cursor: pointer;
 
   &:hover {
     background-color: #eee;
