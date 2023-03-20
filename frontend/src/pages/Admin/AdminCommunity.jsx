@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Header from '../../components/Header/Header';
+import Pagination from 'react-js-pagination';
 import styled from 'styled-components';
 import BackGround from '../../components/Background/Background';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,16 +10,22 @@ import { faUsers, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 const AdminUser = (props) => {
   const [posts, setPosts] = useState([]);
+  const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const perPage = 10;
   const navigate = useNavigate();
+
+  const handlePageChange = (page) => {
+    setPage(page);
+  };
+
   useEffect(() => {
     const getAllPosts = async () => {
       try {
-        debugger;
         const res = await axios.get(
           `/api/v1/board?page=${page}&perPage=${perPage}`,
         );
+        setTotal(res.data.total);
         setPosts(res.data.boards);
       } catch (e) {
         console.log(e);
@@ -71,6 +78,17 @@ const AdminUser = (props) => {
             </TableHead>
             {list}
           </UserTable>
+          <PaginationBox>
+            <Pagination
+              activePage={page}
+              itemsCountPerPage={perPage}
+              totalItemsCount={total}
+              pageRangeDisplayed={5}
+              nextPageText={'>'}
+              prevPageText={'<'}
+              onChange={handlePageChange}
+            />
+          </PaginationBox>
         </AdminBox>
       </BackGround>
     </div>
@@ -129,4 +147,51 @@ const TableRow = styled.div`
 const TableCell = styled.span`
   width: ${(props) => props.width};
 `;
+
+const PaginationBox = styled.div`
+  position: absolute;
+  bottom: 2rem;
+  left: calc(50% - 64px);
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+  ul.pagination li {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #e2e2e2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+  }
+  ul.pagination li:first-child {
+    border-radius: 5px 0 0 5px;
+  }
+  ul.pagination li:last-child {
+    border-radius: 0 5px 5px 0;
+  }
+  ul.pagination li a {
+    text-decoration: none;
+    color: #337ab7;
+    font-size: 1rem;
+  }
+  ul.pagination li.active a {
+    color: white;
+  }
+  ul.pagination li.active {
+    background-color: #337ab7;
+  }
+  ul.pagination li a:hover,
+  ul.pagination li a.active {
+    color: blue;
+  }
+`;
+
 export default AdminUser;

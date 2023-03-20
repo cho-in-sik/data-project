@@ -11,7 +11,7 @@ import { faUserGroup, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 const AdminUser = (props) => {
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
-  const perPage = 8;
+  const perPage = 10;
   const [total, setTotal] = useState(0);
   const [userType, setUserType] = useState('');
   const navigate = useNavigate();
@@ -24,11 +24,10 @@ const AdminUser = (props) => {
   useEffect(() => {
     const getAllUsers = async () => {
       try {
-        // debugger;
         const res = await axios.get(
           `/api/v1/admin/users?page=${page}&perPage=${perPage}`,
         );
-        setTotal(res.data.data.totalPage);
+        setTotal(res.data.data.userCount);
         setData(res.data.data.users);
       } catch (e) {
         console.log(e);
@@ -112,6 +111,8 @@ const AdminUser = (props) => {
               itemsCountPerPage={perPage}
               totalItemsCount={total}
               pageRangeDisplayed={5}
+              nextPageText={'>'}
+              prevPageText={'<'}
               onChange={handlePageChange}
             />
           </PaginationBox>

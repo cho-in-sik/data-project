@@ -21,6 +21,8 @@ function Login() {
     setPassword(e.target.value);
   };
 
+  let errorMessage = '';
+
   const handleClick = async () => {
     if (email === '' || password === '') {
       alert('이메일과 패스워드를 입력해주세요.');
@@ -41,8 +43,14 @@ function Login() {
       }
     } catch (e) {
       console.log(e);
+      errorMessage = e;
     }
   };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') handleClick();
+  };
+
   return (
     <BackGround>
       <Header />
@@ -65,6 +73,7 @@ function Login() {
               name="password"
               value={password}
               onChange={handlePwChange}
+              onKeyDown={handleKeyDown}
             />
           </LoginItem>
         </LoginWrapper>
