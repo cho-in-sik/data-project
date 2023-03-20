@@ -15,8 +15,9 @@ const AdminUser = (props) => {
   useEffect(() => {
     const getAllPosts = async () => {
       try {
+        debugger;
         const res = await axios.get(
-          `http://localhost:3000/api/v1/board?page=${page}&perPage=${perPage}`,
+          `/api/v1/board?page=${page}&perPage=${perPage}`,
         );
         setPosts(res.data.boards);
       } catch (e) {
@@ -35,7 +36,7 @@ const AdminUser = (props) => {
     */
   };
   const list = posts.map((item) => (
-    <TableRow key={item.id}>
+    <TableRow key={item._id}>
       <TableCell width="30%">{item.title}</TableCell>
       <TableCell width="15%">{item.createdAt}</TableCell>
       <TableCell width="15%">{item.author}</TableCell>

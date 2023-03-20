@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header/Header';
+import Pagination from 'react-js-pagination';
 import axios from 'axios';
 import styled from 'styled-components';
 import BackGround from '../../components/Background/Background';
@@ -10,17 +11,24 @@ import { faUserGroup, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 const AdminUser = (props) => {
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
-  const perPage = 10;
+  const perPage = 8;
+  const [total, setTotal] = useState(0);
   const [userType, setUserType] = useState('');
   const navigate = useNavigate();
+
+  const handlePageChange = (page) => {
+    setPage(page);
+  };
 
   // 전체 회원목록 조회
   useEffect(() => {
     const getAllUsers = async () => {
       try {
+        // debugger;
         const res = await axios.get(
           `/api/v1/admin/users?page=${page}&perPage=${perPage}`,
         );
+        setTotal(res.data.data.totalPage);
         setData(res.data.data.users);
       } catch (e) {
         console.log(e);
@@ -98,6 +106,15 @@ const AdminUser = (props) => {
             </TableHead>
             {list}
           </UserTable>
+          <PaginationBox>
+            <Pagination
+              activePage={page}
+              itemsCountPerPage={perPage}
+              totalItemsCount={total}
+              pageRangeDisplayed={5}
+              onChange={handlePageChange}
+            />
+          </PaginationBox>
         </AdminBox>
       </BackGround>
     </div>
@@ -108,6 +125,7 @@ const AdminBox = styled.div`
   position: relative;
   width: 90%;
   height: auto;
+  min-height: 70vh;
   background-color: white;
   border-radius: 20px;
   padding: 1rem;
@@ -156,4 +174,51 @@ const TableRow = styled.div`
 const TableCell = styled.span`
   width: ${(props) => props.width};
 `;
+
+const PaginationBox = styled.div`
+  position: absolute;
+  bottom: 2rem;
+  left: calc(50% - 64px);
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+  ul.pagination li {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #e2e2e2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+  }
+  ul.pagination li:first-child {
+    border-radius: 5px 0 0 5px;
+  }
+  ul.pagination li:last-child {
+    border-radius: 0 5px 5px 0;
+  }
+  ul.pagination li a {
+    text-decoration: none;
+    color: #337ab7;
+    font-size: 1rem;
+  }
+  ul.pagination li.active a {
+    color: white;
+  }
+  ul.pagination li.active {
+    background-color: #337ab7;
+  }
+  ul.pagination li a:hover,
+  ul.pagination li a.active {
+    color: blue;
+  }
+`;
+
 export default AdminUser;
