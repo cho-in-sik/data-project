@@ -27,7 +27,7 @@ function CommunityList() {
     async function fetchData() {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/v1/board?page=${page}&perPage=${perPage}`,
+          `/api/v1/board?page=${page}&perPage=${perPage}`,
         );
         // 응답 데이터에서 boards 배열만 추출하여 setBoards로 업데이트
         setBoards(response.data.boards);
@@ -38,11 +38,6 @@ function CommunityList() {
     }
     fetchData();
   }, [page, perPage]); //page, perPage가 변경될 때마다 useEffect가 실행
-
-  // 페이지 번호를 변경하는 함수
-  const handlePageChange = (pageNumber) => {
-    setPage(pageNumber);
-  };
 
   return (
     <BackGround>
@@ -80,9 +75,6 @@ function CommunityList() {
             )}
           </tbody>
         </Table>
-        <PaginationWrapper>
-          <Pagination page={page} handlePageChange={handlePageChange} />
-        </PaginationWrapper>
       </Container>
     </BackGround>
   );

@@ -46,15 +46,12 @@ const CommunityEditForm = () => {
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.put(
-        `http://localhost:3000/api/v1/board/${id}`,
-        {
-          title,
-          author,
-          content,
-          image,
-        },
-      );
+      const response = await axios.put(`/api/v1/board/${id}`, {
+        title,
+        author,
+        content,
+        image,
+      });
       console.log(response.data);
       navigate(`/board/${id}`); // 게시글 상세 페이지로 이동
     } catch (error) {

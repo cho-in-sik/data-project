@@ -24,9 +24,7 @@ function CommunityDetail() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axios.get(
-          `http://localhost:3000/api/v1/board/${id}`,
-        );
+        const response = await axios.get(`/api/v1/board/${id}`);
         setCommunity(response.data);
         // console.log(response.data);
       } catch (error) {
@@ -46,7 +44,7 @@ function CommunityDetail() {
   // 삭제하기 버튼을 눌렀을 때 실행되는 함수
   const handleDeleteClick = async () => {
     try {
-      await axios.delete(`http://localhost:3000/api/v1/board/${id}`);
+      await axios.delete(`/api/v1/board/${id}`);
       navigate('/board/all');
     } catch (error) {
       console.error('게시글 삭제에 실패했습니다:', error);
