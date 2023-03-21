@@ -38,13 +38,15 @@ const AdminUser = (props) => {
   // 아래 두 이벤트함수를 실행했을 때 각각의 target 회원에 해당하는 id를 가져와서 서버로 요청을 해야할텐데 어떤 방법으로 해야할까요?
 
   // 회원권한 onClick
-  const handleSelectChange = async (e) => {
+  const handleSelectChange = (index) => async (e) => {
     const id = e.target.parentElement.parentElement.firstChild.textContent;
     const res = await axios.put(`/api/v1/admin/users/${id}`, {
       userType: e.target.value,
     });
-
+    data[index].userType = e.target.value;
+    setData(data);
     console.log(res);
+    window.location.reload();
   };
 
   // 회원탈퇴 onClick
@@ -54,13 +56,14 @@ const AdminUser = (props) => {
     console.log(res);
     if (res.data !== '') {
       alert(res.data);
+      window.location.reload();
     } else {
       alert('오류가 발생했습니다.');
       return false;
     }
   };
 
-  const list = data.map((item) => {
+  const list = data.map((item, index) => {
     return (
       <TableRow key={item._id}>
         <TableCell width="5%" style={{ display: 'none' }}>
@@ -75,7 +78,7 @@ const AdminUser = (props) => {
         {item.volHistory[0].title} 등 {item.volHistory.length}건
       </TableCell> */}
         <TableCell width="5%">
-          <select onChange={handleSelectChange}>
+          <select onChange={handleSelectChange(index)} value={item.userType}>
             <option value="admin">admin</option>
             <option value="user">user</option>
           </select>

@@ -4,9 +4,11 @@ import styled from 'styled-components';
 import Header from '../../components/Header/Header';
 import BackGround from '../../components/Background/Background';
 import axios from 'axios';
-import MyVolunteer from './MyVolunteer';
+import MyVolunteer from '../MyVolunteer/MyVolunteer';
 import Paging from '../../components/Pagination/Pagination';
 import { useSelector } from 'react-redux';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 const list = [
   {
@@ -110,7 +112,7 @@ const list = [
   },
 ];
 
-const MyVolunteers = (props) => {
+const RecruitByGu = (props) => {
   const user = useSelector((state) => state.user);
   const [data, setData] = useState(list);
   const [page, setPage] = useState(1);
@@ -169,8 +171,27 @@ const MyVolunteers = (props) => {
       <Header />
       <VolunteerBox>
         <div style={{ paddingTop: '50px', paddingBottom: '30px' }}>
-          <Span onClick={handleParticipatedVolunteer}>참여한 봉사내역</Span>
-          <Span onClick={handleMadeVolunteer}>개설한 봉사내역</Span>
+          <Span>
+            <FontAwesomeIcon
+              icon={faArrowLeft}
+              style={{
+                color: '#aaa',
+                marginRight: '1rem',
+                cursor: 'pointer',
+              }}
+              onClick={() => {
+                navigate(-1);
+              }}
+            />
+            무슨구의 모집 게시글(총 0건)
+          </Span>
+          <span
+            onClick={() => {
+              navigate('/recruitment/form');
+            }}
+          >
+            | 작성하기
+          </span>
         </div>
         <VB>
           {volunteerState === ''
@@ -242,8 +263,10 @@ const MyVolunteers = (props) => {
 
 const VolunteerBox = styled.div`
   margin-top: 30px;
+  max-width: 1440px;
+  margin-top: 30px;
   width: 90%;
-  height: 650px;
+  height: 85%;
   border-radius: 20px;
   background-color: white;
   position: relative;
@@ -253,7 +276,6 @@ const Span = styled.span`
   font-size: 25px;
   font-weight: 400;
   padding-left: 50px;
-  cursor: pointer;
 `;
 
 const VB = styled.div`
@@ -262,4 +284,4 @@ const VB = styled.div`
   justify-content: center;
 `;
 
-export default MyVolunteers;
+export default RecruitByGu;

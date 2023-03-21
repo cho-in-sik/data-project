@@ -6,12 +6,13 @@ import axios from 'axios';
 import BackGround from '../../components/Background/Background';
 import { useSelector } from 'react-redux';
 
-const VolunteerDetail = () => {
+const RecruitByGuDetail = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
   const user = useSelector((state) => state.user);
   //useLocation 으로 navigate로 온 상태 받기
+  debugger;
   const title = location.state.title;
   const volunteerTime = location.state.volunteerTime;
   const address = location.state.address;
@@ -163,4 +164,4 @@ const DescriptionBox = styled.div`
   margin-left: 30px;
 `;
 
-export default VolunteerDetail;
+export default RecruitByGuDetail;

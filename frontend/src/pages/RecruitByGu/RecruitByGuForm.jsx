@@ -1,0 +1,99 @@
+import { useState } from 'react';
+import BackGround from '../../components/Background/Background';
+import Header from '../../components/Header/Header';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import {
+  FormWrapper,
+  FormTitle,
+  FormGroup,
+  FormLabel,
+  FormInput,
+  FormTextarea,
+  FormButton,
+} from '../../components/Community/styles/CommunityFormStyle';
+
+//게시글 작성 폼
+const CommunityPostForm = () => {
+  const [title, setTitle] = useState('');
+  const [author, setAuthor] = useState('');
+  const [content, setContent] = useState('');
+  const [image, setImage] = useState('');
+  // 페이지 이동을 위한 useNavigate 훅
+  const navigate = useNavigate();
+  // 게시글 작성을 위한 함수
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      // 게시글 작성 API 호출
+      const response = await axios.post('http://localhost:3000/api/v1/board', {
+        title,
+        author,
+        content,
+        image,
+      }); // 게시글 작성 후 게시글 목록 페이지로 이동
+      console.log(response.data);
+      navigate('/board/all');
+    } catch (error) {
+      console.error(error);
+      // 오류 메시지 표시
+      alert('게시글 작성에 실패했습니다.');
+    }
+  };
+
+  return (
+    <BackGround>
+      <Header />
+      <FormWrapper style={{ position: 'relative' }}>
+        <FormTitle>봉사 모집글 작성</FormTitle>
+        <form onSubmit={handleFormSubmit}>
+          <FormGroup>
+            <FormLabel htmlFor="title">제목</FormLabel>
+            <FormInput
+              type="text"
+              id="title"
+              value={title}
+              onChange={(event) => setTitle(event.target.value)}
+              required
+            />
+          </FormGroup>
+          <FormGroup>
+            <FormLabel htmlFor="author">작성자</FormLabel>
+            <FormInput
+              type="text"
+              id="author"
+              value={author}
+              onChange={(event) => setAuthor(event.target.value)}
+              required
+            />
+          </FormGroup>
+          <FormGroup>
+            <FormLabel htmlFor="content">내용</FormLabel>
+            <FormTextarea
+              id="content"
+              value={content}
+              onChange={(event) => setContent(event.target.value)}
+              required
+            />
+          </FormGroup>
+          <FormGroup>
+            <FormLabel htmlFor="image">이미지</FormLabel>
+            {/* 이미지 삽입 기능은 추후에 */}
+            <FormInput
+              type="text"
+              id="image"
+              value={image}
+              onChange={(event) => setImage(event.target.value)}
+            />
+          </FormGroup>
+          <FormButton type="submit">작성</FormButton>
+          <FormButton type="button" onClick={() => navigate(-1)}>
+            취소
+          </FormButton>
+        </form>
+      </FormWrapper>
+    </BackGround>
+  );
+};
+
+export default CommunityPostForm;

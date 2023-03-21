@@ -17,9 +17,16 @@ import CommunityEdit from './pages/Community/CommunityEdit';
 import MyVolunteers from './pages/MyVolunteer/MyVolunteers';
 import VolunteerDetail from './pages/MyVolunteer/VolunteerDetail';
 import RecruitmentMain from './components/Recruitment/RecruitmentMain';
+import RecruitByGu from './pages/RecruitByGu/RecruitByGu';
+import RecruitByGuDetail from './pages/RecruitByGu/RecruitByGuDetail';
+import RecruitByGuForm from './pages/RecruitByGu/RecruitByGuForm';
+
+// protected route
+import LoginRoute from './components/Route/LoginRoute/LoginRoute';
+import NonLoginRoute from './components/Route/NonLoginRoute/NonLoginRoute';
+import AdminRoute from './components/Route/AdminRoute/AdminRoute';
 
 // 관리자 페이지
-import AdminRoute from './components/AdminRoute/AdminRoute';
 import AdminMain from './pages/Admin/AdminMain';
 import AdminUser from './pages/Admin/AdminUser';
 import AdminVolunteer from './pages/Admin/AdminVolunteer';
@@ -37,24 +44,34 @@ export function Router() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Main />} />
-        <Route path="/join" element={<Join />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/mypage" element={<MyPage />} />
-        <Route path="/uservolunteer" element={<UserVolunteer />} />
-        <Route path="/userinfo" element={<UserInfo />} />
-        <Route path="/userdelete" element={<UserDelete />} />
-        <Route path="/myvolunteers" element={<MyVolunteers />} />
-        <Route path="/volunteerdetail" element={<VolunteerDetail />} />
-        <Route path="/board" element={<CommunityList />} />
-        <Route path="/board/:id" element={<CommunityDetail />} />
-        <Route path="/board/edit/:id" element={<CommunityEdit />} />
-        <Route path="/board/write" element={<CommunityForm />} />
-        <Route path="/recruitment/main" element={<RecruitmentMain />} />
-        <Route element={<AdminRoute user={user} />}>
-          <Route path="/admin" element={<AdminMain />} />
-          <Route path="/admin/user" element={<AdminUser />} />
-          <Route path="/admin/volunteer" element={<AdminVolunteer />} />
-          <Route path="/admin/community" element={<AdminCommunity />} />
+        <Route element={<NonLoginRoute />}>
+          <Route path="/join" element={<Join />} />
+          <Route path="/login" element={<Login />} />
+        </Route>
+        <Route element={<LoginRoute />}>
+          <Route path="/mypage" element={<MyPage />} />
+          <Route path="/uservolunteer" element={<UserVolunteer />} />
+          <Route path="/userinfo" element={<UserInfo />} />
+          <Route path="/userdelete" element={<UserDelete />} />
+          <Route path="/myvolunteers" element={<MyVolunteers />} />
+          <Route path="/volunteerdetail" element={<VolunteerDetail />} />
+          <Route path="/board" element={<CommunityList />} />
+          <Route path="/board/:id" element={<CommunityDetail />} />
+          <Route path="/board/edit/:id" element={<CommunityEdit />} />
+          <Route path="/board/write" element={<CommunityForm />} />
+          <Route path="/recruitment/main" element={<RecruitmentMain />} />
+          <Route path="/recruitment/:id" element={<RecruitByGu />} />
+          <Route
+            path="/recruitment/:id/:detail"
+            element={<RecruitByGuDetail />}
+          />
+          <Route path="/recruitment/form" element={<RecruitByGuForm />} />
+          <Route element={<AdminRoute />}>
+            <Route path="/admin" element={<AdminMain />} />
+            <Route path="/admin/user" element={<AdminUser />} />
+            <Route path="/admin/volunteer" element={<AdminVolunteer />} />
+            <Route path="/admin/community" element={<AdminCommunity />} />
+          </Route>
         </Route>
         {/* //지울것들 보기용도 */}
         <Route path="/1" element={<TimeOfAccident />} />
