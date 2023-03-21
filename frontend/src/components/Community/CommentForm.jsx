@@ -11,13 +11,10 @@ function CommentForm({ boardId, updateComments }) {
     e.preventDefault();
     try {
       //서버로 댓글 내용 전송
-      const response = await axios.post(
-        `http://localhost:3000/api/v1/board/${boardId}/comment`,
-        {
-          writer,
-          content,
-        },
-      );
+      const response = await axios.post(`/api/v1/board/${boardId}/comment`, {
+        writer,
+        content,
+      });
       // 댓글 작성에 성공한 경우, 작성자와 댓글 내용을 초기화
       setWriter('');
       setContent('');
