@@ -125,7 +125,7 @@ const MyVolunteers = (props) => {
   //참여한 모집글 조회
   const handleParticipated = async () => {
     try {
-      const res = await axios.get('/:id');
+      const res = await axios.get('/');
       setData(res.data);
     } catch (error) {
       console.error(error);
@@ -134,7 +134,7 @@ const MyVolunteers = (props) => {
   //개설한 모집글 조회
   const handleMade = async () => {
     try {
-      const res = await axios.get('/:id');
+      const res = await axios.get('/');
       setData(res.data);
     } catch (error) {
       console.error(error);

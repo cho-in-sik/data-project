@@ -41,7 +41,6 @@ const Header = () => {
           />
         </Logo>
         <Spacer />
-
         {user.id === '' ? null : user.userType === 'admin' ? (
           <>
             <img
@@ -52,21 +51,22 @@ const Header = () => {
             <Span onClick={() => navigate('/admin')}>관리자님</Span>
           </>
         ) : (
+          //유저면 이렇게 표시
           <>
             <img
               alt="backgroundimg"
-              src={baseimg}
+              src={user.profileImage ? user.profileImage : baseimg}
               style={{ width: '45px', height: '45px', borderRadius: '50%' }}
             />
             <Span onClick={() => navigate('/mypage')}>{user.nickname}님</Span>
           </>
         )}
+        {/* //로그인 되있으면 로그아웃표시 아니면 로그인표시 */}
         {user.id !== '' ? (
           <Span onClick={logoutHandler}>로그아웃</Span>
         ) : (
           <Span onClick={() => navigate('/login')}>로그인</Span>
         )}
-
         <Span onClick={() => navigate('/board')}>커뮤니티</Span>
         <Span onClick={() => navigate('/recruitment/main')}>봉사신청</Span>
       </ContentHeader>
