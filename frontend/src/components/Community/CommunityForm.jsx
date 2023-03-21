@@ -25,7 +25,7 @@ const CommunityPostForm = () => {
     event.preventDefault();
     try {
       // 게시글 작성 API 호출
-      const response = await axios.post('http://localhost:3000/api/v1/board', {
+      const response = await axios.post('/api/v1/board', {
         title,
         author,
         content,
@@ -81,7 +81,7 @@ const CommunityPostForm = () => {
           <FormLabel htmlFor="image">이미지</FormLabel>
           {/* 이미지 삽입 기능은 추후에 */}
           <FormInput
-            type="text"
+            type="file"
             id="image"
             value={image}
             onChange={(event) => setImage(event.target.value)}

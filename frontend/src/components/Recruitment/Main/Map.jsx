@@ -1,136 +1,154 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { select, geoPath, geoMercator } from 'd3';
-import { scaleSequential } from 'd3-scale'; // 스케일 함수를 생성하는 함수
-import {
-  // interpolateBlues,
-  interpolateGreens,
-  // interpolateRainbow,
-  // interpolateReds,
-} from 'd3-scale-chromatic'; // 색상을 생성하는 함수
-import { useDispatch, useSelector } from 'react-redux'; // 상태를 가져오기 위해 사용
-import { Casualties } from './data/casualties';
-// Casualties(사상자수) 데이터를 가져옴
-// import axios from 'axios';
-import styled from 'styled-components';
-
-// 지도를 그리는 컴포넌트
+import { scaleSequential } from 'd3-scale'; // 스케일 함수 생성
+import { interpolateGreens } from 'd3-scale-chromatic'; // 색상 스케일
+import { useDispatch, useSelector } from 'react-redux'; // 리덕스
+import { Casualties } from './data/casualties'; // 사상자 수 데이터
+import AboutMap from './AboutMap';
+import { Wrapper, MapSvg } from './styles/MapStyle';
+import Legend from './Legend';
+//지도를 그리는 컴포넌트
 function Map({ data }) {
   const dispatch = useDispatch();
-  const input = useSelector((state) => state.input); // input 상태를 가져옴
-  const [width, setWidth] = useState(0); // svg의 너비를 저장할 상태
-  const [height, setHeight] = useState(0); // svg의 높이를 저장할 상태
-  const svgRef = useRef(); // svg 요소를 참조할 ref
-  const wrapperRef = useRef(); // svg를 감싸는 div 요소를 참조할 ref
+  const input = useSelector((state) => state.input); // 리덕스에서 input 상태 가져오기
+  const [width, setWidth] = useState(0); // svg 너비
+  const [height, setHeight] = useState(0); // svg 높이
+  const svgRef = useRef(); // svg 참조
+  const wrapperRef = useRef(); // svg를 감싸는 div 참조
+  const [selectedGu, setSelectedGu] = useState(''); // 선택된 구 이름
 
-  //스케일 함수를 생성하여 구별 사상자수에 따라 색상을 지정
-  const colorScale = scaleSequential(interpolateGreens).domain([0, 300]);
+  const colorScale = scaleSequential(interpolateGreens).domain([0, 300]); // 색상 스케일
 
+  // svg를 감싸는 div의 너비와 높이를 가져와서 svg의 너비와 높이로 설정
+  const handleGuClick = useCallback((event, value) => {
+    setSelectedGu(value.properties.name); // 선택된 구 이름 설정
+
+    const svg = select(svgRef.current); // svg 참조
+    const labels = svg.selectAll('.labels'); // svg 안의 모든 text 참조
+    labels
+      // 선택된 구 이름은 흰색, 나머지는 회색으로 설정
+      // 선택된 구 이름은 30px, 나머지는 15px로 설정
+      .style('fill', (d) =>
+        d.properties.name === value.properties.name ? 'white' : 'black',
+      )
+      .style('font-size', (d) =>
+        d.properties.name === value.properties.name ? '30px' : '15px',
+      )
+      .transition() // 애니메이션
+      .duration(500) // 0.5초
+      .style(
+        'font-size',
+        (
+          d, // 폰트 크기
+        ) => (d.properties.name === value.properties.name ? '30px' : '15px'),
+      );
+  }, []);
+
+  // svg를 감싸는 div의 너비와 높이를 가져와서 svg의 너비와 높이로 설정
   useEffect(() => {
-    // svg 요소의 너비와 높이를 구함
     const svg = select(svgRef.current);
 
-    // 지도 데이터를 불러와서 경계선을 그리는 코드
-    const projection = geoMercator().fitSize([width, height], data); // 지도의 중심과 크기를 설정
-    const pathGenerator = geoPath().projection(projection); // 지도의 경계선을 그리는 함수
+    const projection = geoMercator().fitSize([width, height], data); // 지도의 중심과 크기 설정
+    const pathGenerator = geoPath().projection(projection); // 지도의 경로 설정
 
-    // svg 요소에 구별 경계선을 그림
-    svg
-      .selectAll('.gu')
-      .data(data.features)
-      .join('path')
-      .attr('class', 'gu')
-      .attr('d', (feature) => pathGenerator(feature)) // 경계선을 그림
-      .style('fill', (feature) => {
-        const target = Casualties.find(
-          (item) => item.borough === feature.properties.name, // 구별 이름을 찾음
-        );
-        if (target) {
-          const casualties = target.casualties;
-          return colorScale(casualties); // 구별 사상자수에 따라 색상을 지정
-        } else {
-          return 'gray'; // 데이터가 없는 구는 회색으로 표시
-        }
-      })
+    const guPaths = svg // svg 안의 모든 path 참조
+      .selectAll('.gu') // path 클래스 참조
+      .data(data.features) // 데이터 설정
+      .join('path') // path 추가
+      .attr('class', 'gu') // 클래스 설정
+      .attr('d', (feature) => pathGenerator(feature)) // 경로 설정
       .on('click', (event, value) => {
-        // 구를 클릭하면 GU-CLICK 액션을 디스패치
+        // 클릭 이벤트
         dispatch({
-          type: 'GU-CLICK', // 액션의 타입
-          input: value.properties.name, // 액션의 데이터
+          type: 'GU-CLICK',
+          input: value.properties.name, // 클릭한 구 이름을 input 상태에 저장
         });
-        console.log(value.properties.name);
+        handleGuClick(event, value); // 선택된 구 이름 설정
       });
 
-    // svg 요소에 구별 이름을 표시
-    svg
+    guPaths // path 색상 설정
+      .transition() // 애니메이션
+      .duration(500)
+      .style('fill', (feature) => {
+        const target = Casualties.find(
+          // 사상자 수 데이터에서 선택된 구 이름을 찾음
+          (item) => item.borough === feature.properties.name,
+        );
+        if (target) {
+          // 선택된 구 이름이 있으면
+          const casualties = target.casualties; // 사상자 수
+          return colorScale(casualties);
+        } else {
+          return 'gray';
+        }
+      });
+
+    const labels = svg // svg 안의 모든 text 참조
       .selectAll('.labels')
       .data(data.features)
       .join('text')
       .attr('class', 'labels')
       .attr('x', function (d) {
-        return pathGenerator.centroid(d)[0]; // 경계선의 중심 좌표를 반환
+        // 텍스트 위치 설정
+        return pathGenerator.centroid(d)[0];
       })
       .attr('y', function (d) {
-        return pathGenerator.centroid(d)[1]; // 경계선의 중심 좌표를 반환
+        // 텍스트 위치 설정
+        return pathGenerator.centroid(d)[1];
       })
       .text(function (d) {
-        return d.properties.name; // 구별 이름을 반환
+        // 텍스트 설정
+        return d.properties.name;
       })
-      .attr('text-anchor', 'middle') // 텍스트의 중심을 경계선의 중심으로 설정
-      .attr('alignment-baseline', 'central') // 텍스트의 중심을 경계선의 중심으로 설정
-      .style('fill', 'white'); // 텍스트의 색상을 흰색으로 설정
-    // 텍스트의 색상을 흰색으로 설정
-  }, [colorScale, data, dispatch, height, input, width]); // input 상태가 변경되면 useEffect 함수가 다시 실행됨
+      .attr('text-anchor', 'middle')
+      .attr('alignment-baseline', 'central')
+      .style('fill', (d) =>
+        // 선택된 구 이름은 흰색, 나머지는 회색으로 설정
+        d.properties.name === selectedGu ? 'white' : 'faintgray',
+      )
+      .style('font-size', (d) =>
+        d.properties.name === selectedGu ? '30px' : '15px',
+      );
 
-  // div 요소의 크기를 상태로 관리
+    labels
+      .filter((d) => d.properties.name === selectedGu)
+      .transition()
+      .duration(500)
+      .style('font-size', '30px');
+
+    labels
+      .filter((d) => d.properties.name !== selectedGu)
+      .transition()
+      .duration(500)
+      .style('font-size', '15px');
+  }, [data, selectedGu, colorScale, handleGuClick, height, width, dispatch]);
+
   useEffect(() => {
     const handleResize = () => {
-      setWidth(wrapperRef.current.clientWidth); // div 요소의 너비를 상태로 관리
-      setHeight(wrapperRef.current.clientHeight); // div 요소의 높이를 상태로 관리
+      setWidth(wrapperRef.current.clientWidth); // svg 너비 설정
+      setHeight(wrapperRef.current.clientHeight); // svg 높이 설정
     };
-    handleResize(); // 처음에 한 번 실행
-    window.addEventListener('resize', handleResize); // 리사이즈 이벤트가 발생하면 handleResize 함수를 실행
+    handleResize(); // 처음에 한번 실행
+    window.addEventListener('resize', handleResize); // 리사이즈 이벤트 리스너 등록
     return () => {
-      window.removeEventListener('resize', handleResize); // 컴포넌트가 언마운트되면 이벤트 리스너를 제거
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
   return (
-    <Wrapper ref={wrapperRef}>
-      <MapSvg
-        ref={svgRef}
-        width={width}
-        height={height}
-        className="seoul-map"
-      />
-    </Wrapper>
+    <>
+      <AboutMap />
+      <Legend colorScale={colorScale} />
+      <Wrapper ref={wrapperRef}>
+        <MapSvg
+          ref={svgRef}
+          width={width}
+          height={height}
+          className="seoul-map"
+        />
+      </Wrapper>
+    </>
   );
 }
 
 export default Map;
-
-const Wrapper = styled.div`
-  width: 50rem;
-  height: 40rem;
-`;
-
-const MapSvg = styled.svg`
-  display: block;
-  height: 100%;
-  width: 100%;
-  opacity: 0.8;
-  fill: #a59a9a;
-  stroke: #dad8d8;
-  stroke-width: 0.5px;
-
-  .gu:hover {
-    stroke: white;
-    stroke-width: 2px;
-    fill: #807a7a;
-    cursor: pointer;
-  }
-
-  .labels {
-    pointer-events: none;
-    font-size: 15px;
-  }
-`;

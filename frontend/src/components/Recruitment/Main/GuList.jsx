@@ -5,45 +5,67 @@ import styled from 'styled-components';
 
 const GuList = () => {
   const [sortOrder, setSortOrder] = useState('desc');
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const handleSortButtonClick = () => {
-    setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+  const handleSortButtonClick = (order) => () => {
+    setSortOrder(order);
   };
 
-  const sortedBoroughs = Casualties.sort((a, b) => {
+  const sortedBoroughs = Casualties.slice().sort((a, b) => {
     if (sortOrder === 'desc') {
-      return (
-        b.casualties - a.casualties ||
-        a.borough.localeCompare(b.borough, 'ko-KR', {
-          sensitivity: 'base',
-          caseFirst: 'upper',
-        })
-      );
+      return b.casualties - a.casualties;
+    } else if (sortOrder === 'asc') {
+      return a.casualties - b.casualties;
     } else {
-      return (
-        a.casualties - b.casualties ||
-        b.borough.localeCompare(a.borough, 'ko-KR', {
-          sensitivity: 'base',
-          caseFirst: 'upper',
-        })
-      );
+      return a.borough.localeCompare(b.borough, 'ko-KR', {
+        sensitivity: 'base',
+        caseFirst: 'upper',
+      });
     }
   });
 
+  const filteredBoroughs = sortedBoroughs.filter((casualty) =>
+    casualty.borough.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
+
   return (
     <GuListWrapper>
-      <GuListTitle>지역 선택</GuListTitle>
-      <div>
-        <GuListSortButton onClick={handleSortButtonClick}>
-          {sortOrder === 'desc' ? '사고 많은 순' : '사고 적은 순'}
+      <GuListTitle>봉사 지역 선택</GuListTitle>
+      <GuListSearchInput
+        type="text"
+        placeholder="봉사할 지역 검색하기 예)강남구"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+      <GuListSortButtonsWrapper>
+        <GuListSortButton
+          onClick={handleSortButtonClick('desc')}
+          className={sortOrder === 'desc' ? 'selected' : ''}
+        >
+          사고 많은 순
         </GuListSortButton>
-      </div>
+        <GuListSortButton
+          onClick={handleSortButtonClick('asc')}
+          className={sortOrder === 'asc' ? 'selected' : ''}
+        >
+          사고 적은 순
+        </GuListSortButton>
+        <GuListSortButton
+          onClick={handleSortButtonClick('name')}
+          className={sortOrder === 'name' ? 'selected' : ''}
+        >
+          이름순
+        </GuListSortButton>
+      </GuListSortButtonsWrapper>
       <GuListContent>
-        {sortedBoroughs.map((casualty) => (
+        {filteredBoroughs.map((casualty) => (
           <GuListItem key={casualty.borough}>
-            <Link to={`/recruitment/${casualty.borough}`}>
+            <GuLink
+              to={`/recruitment/${casualty.borough}`}
+              style={{ color: '#707070', textDecoration: 'none' }}
+            >
               {casualty.borough}
-            </Link>
+            </GuLink>
             <div>{casualty.casualties}명</div>
           </GuListItem>
         ))}
@@ -61,6 +83,7 @@ const GuListWrapper = styled.div`
 const GuListTitle = styled.h2`
   font-size: 24px;
   font-weight: bold;
+  margin-left: 10px;
 `;
 
 const GuListContent = styled.ul`
@@ -87,6 +110,11 @@ const GuListItem = styled.li`
   }
 `;
 
+const GuListSortButtonsWrapper = styled.div`
+  display: flex;
+  margin: 10px;
+`;
+
 const GuListSortButton = styled.button`
   margin-left: 10px;
   padding: 5px 10px;
@@ -95,8 +123,29 @@ const GuListSortButton = styled.button`
   color: #333;
   border: none;
   border-radius: 5px;
-  cursor: pointer;
-  &:hover {
-    background-color: #f1f1f1;
+
+  &.selected {
+    background-color: #47b781;
+    color: #fff;
   }
+
+  &:hover {
+    background-color: #47b781;
+  }
+`;
+
+const GuLink = styled(Link)`
+  color: black;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const GuListSearchInput = styled.input`
+  margin: 10px;
+  padding: 5px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 `;
