@@ -19,8 +19,6 @@ export const userSlice = createSlice({
       state.id = action.payload.id;
       state.nickname = action.payload.nickname;
       state.userType = action.payload.userType;
-      // state 변화를 알림
-      return state;
     },
     initUser: (state) => {
       state.email = initialState.email;

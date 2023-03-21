@@ -21,10 +21,9 @@ const labels = [
   '기타/불명',
   '가장자리통행중',
   '보도통행중',
-  '차도통행중',
-  '횡단중',
+  '차도통행중+횡단중',
 ];
-const mortality = [333, 33, 21, 146, 445];
+const mortality = [333, 33, 21, 591];
 const TypeOfAccident = () => {
   const options = {
     plugins: {
@@ -90,18 +89,12 @@ const TypeOfAccident = () => {
         label: '사망자 수',
 
         data: mortality,
-        backgroundColor: [
-          '#848a7e',
-          '#9dd573',
-          '#9dd573',
-          '#9dd573',
-          '#369431',
-        ],
+        backgroundColor: ['#848a7e', '#9dd573', '#9dd573', '#369431'],
         borderRadius: 5,
       },
     ],
   };
-  return <Bar options={options} data={data} width={400} height={400} />;
+  return <Bar options={options} data={data} width={600} height={450} />;
 };
 
 export default TypeOfAccident;

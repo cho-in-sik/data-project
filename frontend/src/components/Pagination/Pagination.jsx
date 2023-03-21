@@ -4,7 +4,13 @@ import { useState } from 'react';
 
 const Paging = ({ page, handlePageChange, total }) => {
   return (
-    <div>
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
       <PaginationBox>
         <Pagination
           activePage={page}
@@ -19,9 +25,6 @@ const Paging = ({ page, handlePageChange, total }) => {
 };
 
 const PaginationBox = styled.div`
-  position: absolute;
-  bottom: 20px;
-  left: 550px;
   .pagination {
     display: flex;
     justify-content: center;
@@ -49,14 +52,14 @@ const PaginationBox = styled.div`
   }
   ul.pagination li a {
     text-decoration: none;
-    color: #337ab7;
+    color: #5bb14e;
     font-size: 1rem;
   }
   ul.pagination li.active a {
     color: white;
   }
   ul.pagination li.active {
-    background-color: #337ab7;
+    background-color: #54a148;
   }
   ul.pagination li a:hover,
   ul.pagination li a.active {

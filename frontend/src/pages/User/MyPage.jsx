@@ -37,7 +37,7 @@ const MyPage = (props) => {
 const MypageBox = styled.div`
   margin-top: 80px;
   width: 80%;
-  height: 550px;
+  height: 70%;
   background-color: white;
   border-radius: 20px;
   display: flex;
@@ -49,8 +49,8 @@ const MypageBox = styled.div`
 
 const MyVolunteer = styled.div`
   color: #46b780;
-  width: 230px;
-  height: 230px;
+  width: 30%;
+  height: 40%;
   cursor: pointer;
   display: flex;
   flex-direction: column;

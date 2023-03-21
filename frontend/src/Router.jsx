@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import App from './App';
+import Main from './pages/Main/Main';
 import Join from './pages/Join/Join';
 import Login from './pages/Login/Login';
 import MyPage from './pages/User/MyPage';
@@ -35,7 +36,7 @@ export function Router() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<App />} />
+        <Route path="/" element={<Main />} />
         <Route path="/join" element={<Join />} />
         <Route path="/login" element={<Login />} />
         <Route path="/mypage" element={<MyPage />} />
@@ -59,7 +60,6 @@ export function Router() {
         <Route path="/1" element={<TimeOfAccident />} />
         <Route path="/2" element={<TypeOfAccident />} />
         <Route path="/3" element={<PieMortality />} />
-
       </Routes>
     </BrowserRouter>
   );
