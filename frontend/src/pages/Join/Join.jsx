@@ -118,9 +118,7 @@ const Join = () => {
       return false;
       // 모든 검사를 통과하면
     } else {
-      alert('회원가입되었습니다. 로그인 페이지로 이동합니다.');
       submitData();
-      navigate('/login');
     }
   };
 
@@ -137,10 +135,7 @@ const Join = () => {
       type: '',
     };
     try {
-      const res = await axios.post(
-        'http://localhost:3000/api/v1/users/join',
-        data,
-      );
+      const res = await axios.post('/api/v1/users/join', data);
       if (res.statusText === 'Created') {
         alert('회원가입이 완료되었습니다.');
         navigate('/login');

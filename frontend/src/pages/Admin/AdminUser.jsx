@@ -39,13 +39,11 @@ const AdminUser = (props) => {
 
   // 회원권한 onClick
   const handleSelectChange = async (e) => {
-    debugger;
-    setUserType(e.target.value);
     const id = e.target.parentElement.parentElement.firstChild.textContent;
-    console.log(UserType);
     const res = await axios.put(`/api/v1/admin/users/${id}`, {
-      userType: UserType,
+      userType: e.target.value,
     });
+
     console.log(res);
   };
 
@@ -77,7 +75,7 @@ const AdminUser = (props) => {
         {item.volHistory[0].title} 등 {item.volHistory.length}건
       </TableCell> */}
         <TableCell width="5%">
-          <select onChange={handleSelectChange} value={item.userType}>
+          <select onChange={handleSelectChange}>
             <option value="admin">admin</option>
             <option value="user">user</option>
           </select>
