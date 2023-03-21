@@ -67,8 +67,8 @@ const Header = () => {
           <Span onClick={() => navigate('/login')}>로그인</Span>
         )}
 
-        <Span onClick={() => navigate('/community/all')}>커뮤니티</Span>
-        <Span onClick={() => navigate('/')}>봉사신청</Span>
+        <Span onClick={() => navigate('/board')}>커뮤니티</Span>
+        <Span onClick={() => navigate('/recruitment/main')}>봉사신청</Span>
       </ContentHeader>
     </PositionHeader>
   );
@@ -77,6 +77,7 @@ const Header = () => {
 const PositionHeader = styled.header`
   background-color: white;
   margin-top: -10px;
+  z-index: 1;
 
   position: relative;
 

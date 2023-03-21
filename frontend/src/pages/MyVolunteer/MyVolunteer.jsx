@@ -23,7 +23,7 @@ const MyVolunteer = ({
     userId,
   };
   //모집상태가 "모집완료" 이면 모집상태 색변경
-  const meetingStatusFinish = meetingStatus === '모집완료' && '#ff5065';
+  const meetingStatusFinishedColor = meetingStatus === '모집완료' && '#ff5065';
 
   return (
     <VolunteerDetail
@@ -31,8 +31,8 @@ const MyVolunteer = ({
     >
       <MeetingStatus
         style={{
-          color: meetingStatusFinish,
-          borderColor: meetingStatusFinish,
+          color: meetingStatusFinishedColor,
+          borderColor: meetingStatusFinishedColor,
         }}
       >
         {meetingStatus}
@@ -58,8 +58,8 @@ const VolunteerDetail = styled.div`
   position: relative;
   background-color: whitesmoke;
 
-  width: 300px;
-  height: 220px;
+  width: 25%;
+  height: 28vh;
   border-radius: 20px;
   margin-top: 5px;
   margin-bottom: 20px;

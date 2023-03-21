@@ -34,18 +34,18 @@ const passwordValidate = (pw) => {
 const UserInfo = (props) => {
   const user = useSelector((state) => state.user);
   const [userInfo, setUserInfo] = useState();
-  useEffect(() => {
-    async function userData() {
-      try {
-        const res = await axios.get(`/api/v1/users/${user.id}`);
-        console.log(res.data.data);
-        setUserInfo(res.data.data);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    userData();
-  }, [user.id]);
+  // useEffect(() => {
+  //   async function userData() {
+  //     try {
+  //       const res = await axios.get(`/api/v1/users/${user.id}`);
+  //       console.log(res.data.data);
+  //       setUserInfo(res.data.data);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   }
+  //   userData();
+  // }, [user.id]);
 
   const [formValid, setFormValid] = useState([]);
   //상태관리
@@ -56,6 +56,7 @@ const UserInfo = (props) => {
   const pwRef = useRef();
   const pw1Ref = useRef();
   const addressRef = useRef();
+  const imgRef = useRef();
 
   const navigate = useNavigate();
 
@@ -67,8 +68,9 @@ const UserInfo = (props) => {
     const nickname = nicknameRef.current.value;
     const pw = pwRef.current.value;
     const pw1 = pw1Ref.current.value;
+    const image = imgRef.current.value;
 
-    //요처어 데이터 formdata에 모으기
+    //요청 데이터 formdata에 모으기
     const formData = {
       name,
       nickname,
@@ -114,10 +116,6 @@ const UserInfo = (props) => {
     <BackGround>
       <Header />
       <UserInfoBox>
-        {/* <UserImg
-          src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMjEyMjBfMTQw%2FMDAxNjcxNDY4MTY4Njgw._6Iq_FzSz5PQMdBty_qIUevQTeUrZidr8ghFutUlxs0g.cerzr-evHCcr1pkNlF2Ug9o2iAv-D86LpkyIDRssZkgg.JPEG.ovrcomnow%2F6.jpg&type=a340"
-          style={{ width: '100px' }}
-        /> */}
         <UserForm>
           <InfoItem style={{ marginTop: '50px' }}>
             <p>이름</p>
@@ -125,7 +123,7 @@ const UserInfo = (props) => {
               name="name"
               type="text"
               ref={nameRef}
-              value={userInfo.name}
+              // value={userInfo.name}
             />
           </InfoItem>
           <InfoItem>
@@ -134,7 +132,7 @@ const UserInfo = (props) => {
               name="nickname"
               type="text"
               ref={nicknameRef}
-              value={userInfo.nickname}
+              // value={userInfo.nickname}
             />
           </InfoItem>
           <InfoItem>
@@ -143,7 +141,7 @@ const UserInfo = (props) => {
               name="phonenumber"
               type="text"
               ref={phoneNumRef}
-              value={userInfo.phoneNumber}
+              // value={userInfo.phoneNumber}
             />
           </InfoItem>
           <InfoItem>
@@ -152,7 +150,7 @@ const UserInfo = (props) => {
               name="email"
               type="email"
               ref={emailRef}
-              value={userInfo.email}
+              // value={userInfo.email}
             />
           </InfoItem>
           <InfoItem>
@@ -169,7 +167,15 @@ const UserInfo = (props) => {
               name="address"
               type="text"
               ref={addressRef}
-              value={userInfo.address}
+              // value={userInfo.address}
+            />
+          </InfoItem>
+          <InfoItem>
+            <p>이미지</p>
+            <input
+              type="file"
+              accept=".png, .jpeg, .jpg"
+              style={{ border: 'none' }}
             />
           </InfoItem>
 
@@ -182,10 +188,10 @@ const UserInfo = (props) => {
 };
 
 const UserInfoBox = styled.div`
-  margin-top: 50px;
+  margin: 50px 0;
   position: relative;
   width: 50%;
-  height: 80%;
+  height: 90%;
   background-color: white;
   border-radius: 20px;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);

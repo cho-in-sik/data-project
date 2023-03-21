@@ -117,31 +117,31 @@ const MyVolunteers = (props) => {
   const [total, setTotal] = useState(20);
   const navigate = useNavigate();
   const items = 6;
-  const [volunteerState, setVolunteerState] = useState('');
 
   const handlePageChange = (page) => {
     return setPage(page);
   };
 
-  //참여한 봉사내역
-  const handleParticipatedVolunteer = () => {
-    setVolunteerState('participate');
+  //참여한 모집글 조회
+  const handleParticipated = async () => {
+    try {
+      const res = await axios.get('/:id');
+      setData(res.data);
+    } catch (error) {
+      console.error(error);
+    }
   };
-  //참여한 봉사만 필터하는 함수
-  const participateVolunteer = data
-    .slice(items * (page - 1), items * (page - 1) + items)
-    .filter((item) => item.userId !== user.id);
-
-  //개설한 봉사내역
-  const handleMadeVolunteer = () => {
-    setVolunteerState('made');
+  //개설한 모집글 조회
+  const handleMade = async () => {
+    try {
+      const res = await axios.get('/:id');
+      setData(res.data);
+    } catch (error) {
+      console.error(error);
+    }
   };
-  //개설한 봉사만 필터하는 함수
-  const joinVolunteer = data
-    .slice(items * (page - 1), items * (page - 1) + items)
-    .filter((item) => item.userId === user.id);
 
-  // 게시글 목록을 가져오는 함수
+  // // 게시글 목록을 가져오는 함수
   // useEffect(() => {
   //   async function fetchData() {
   //     try {
@@ -169,48 +169,11 @@ const MyVolunteers = (props) => {
       <Header />
       <VolunteerBox>
         <div style={{ paddingTop: '50px', paddingBottom: '30px' }}>
-          <Span onClick={handleParticipatedVolunteer}>참여한 봉사내역</Span>
-          <Span onClick={handleMadeVolunteer}>개설한 봉사내역</Span>
+          <Span onClick={handleParticipated}>참여한 봉사내역</Span>
+          <Span onClick={handleMade}>개설한 봉사내역</Span>
         </div>
         <VB>
-          {volunteerState === ''
-            ? data
-                .slice(items * (page - 1), items * (page - 1) + items)
-                .map((value, i) => {
-                  return (
-                    <MyVolunteer
-                      key={i}
-                      title={value.title}
-                      volunteerTime={value.volunteerTime}
-                      address={value.address}
-                      author={value.author}
-                      content={value.content}
-                      participation={value.participation}
-                      meetingStatus={value.meetingStatus}
-                      userId={value.userId}
-                    />
-                  );
-                })
-            : (volunteerState === 'participate'
-                ? participateVolunteer
-                : joinVolunteer
-              ).map((value, i) => {
-                return (
-                  <MyVolunteer
-                    key={i}
-                    title={value.title}
-                    volunteerTime={value.volunteerTime}
-                    address={value.address}
-                    author={value.author}
-                    content={value.content}
-                    participation={value.participation}
-                    meetingStatus={value.meetingStatus}
-                    userId={value.userId}
-                  />
-                );
-              })}
-
-          {/* {data
+          {data
             .slice(items * (page - 1), items * (page - 1) + items)
             .map((value, i) => {
               return (
@@ -226,7 +189,7 @@ const MyVolunteers = (props) => {
                   userId={value.userId}
                 />
               );
-            })} */}
+            })}
         </VB>
         <div>
           <Paging
@@ -241,9 +204,10 @@ const MyVolunteers = (props) => {
 };
 
 const VolunteerBox = styled.div`
+  max-width: 1440px;
   margin-top: 30px;
   width: 90%;
-  height: 650px;
+  height: 85%;
   border-radius: 20px;
   background-color: white;
   position: relative;

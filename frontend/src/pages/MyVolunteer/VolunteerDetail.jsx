@@ -5,6 +5,10 @@ import img from '../../assets/images/66112.jpg';
 import axios from 'axios';
 import BackGround from '../../components/Background/Background';
 import { useSelector } from 'react-redux';
+import CommentForm from '../../components/Community/CommentForm';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import Header from '../../components/Header/Header';
 
 const VolunteerDetail = () => {
   const location = useLocation();
@@ -22,7 +26,9 @@ const VolunteerDetail = () => {
 
   const handleClick = async () => {
     try {
-      await axios.delete('');
+      await axios.delete(
+        `http://localhost:3000/recruitment/${user.id}/participaints`,
+      );
     } catch (error) {
       console.error(error);
     }
@@ -30,9 +36,16 @@ const VolunteerDetail = () => {
 
   return (
     <BackGround>
+      <Header />
       <VolunteerDetailBox>
         <ContentDiv>
           <HeadDiv>
+            <FontAwesomeIcon
+              onClick={() => navigate('/myvolunteers')}
+              icon={faArrowLeft}
+              size="2x"
+              style={{ marginRight: '5%', cursor: 'pointer' }}
+            />
             <span>{title}</span>
             <button onClick={handleClick}>참가취소</button>
           </HeadDiv>
@@ -89,17 +102,19 @@ const VolunteerDetail = () => {
           </BodyBox>
         </ContentDiv>
         <DescriptionBox>봉사소개: {content}</DescriptionBox>
-        <ChatDiv>댓글 div</ChatDiv>
+        <ChatDiv>
+          <CommentForm />
+        </ChatDiv>
       </VolunteerDetailBox>
     </BackGround>
   );
 };
 
 const VolunteerDetailBox = styled.div`
-  margin-top: 50px;
+  margin-top: 20px;
   position: relative;
-  width: 1000px;
-  height: 700px;
+  width: 75%;
+  height: 85%;
   background-color: whitesmoke;
   border-radius: 20px;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
@@ -110,7 +125,7 @@ const ContentDiv = styled.div`
 const HeadDiv = styled.div`
   display: flex;
   justify-content: space-between;
-  margin: 30px 30px;
+  margin: 35px 30px;
   & span {
     font-size: 30px;
     font-weight: 400;
@@ -132,6 +147,7 @@ const BodyBox = styled.div`
 `;
 const ChatDiv = styled.div`
   height: 30%;
+  margin-left: 30px;
 `;
 
 const ImgBox = styled.div`
@@ -142,7 +158,7 @@ const ImgBox = styled.div`
   }
 `;
 const SpanDiv = styled.div`
-  margin-left: 100px;
+  margin-left: 18%;
   display: flex;
   flex-direction: column;
 
