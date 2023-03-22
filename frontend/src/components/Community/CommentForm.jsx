@@ -1,79 +1,58 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import axios from 'axios';
 
-const CommentFormWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-
-  label {
-    font-size: 16px;
-    margin-right: 10px;
-  }
-
-  input[type='text'],
-  textarea {
-    flex: 1;
-    padding: 5px;
-    margin-right: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-
-  button[type='submit'] {
-    margin-top: 10px;
-    background-color: #fff;
-    color: #333;
-    border: 1px solid #333;
-    border-radius: 5px;
-    padding: 5px 10px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: bold;
-
-    &:hover {
-      background-color: #333;
-      color: #fff;
-    }
-  }
-`;
-function CommentForm(props) {
-  // const [nickname, setNickname] = useState('');
+function CommentForm({ boardId, updateComments }) {
+  // 작성자와 뎃글 내용을 관리하는 상태값
+  const [writer, setWriter] = useState('');
   const [content, setContent] = useState('');
 
-  // const handleNicknameChange = (e) => {
-  //   setNickname(e.target.value);
-  // };
-
-  const handleContentChange = (e) => {
-    setContent(e.target.value);
-  };
-
-  const handleSubmit = (e) => {
+  // 댓글 작성 폼을 제출했을 때 실행되는 함수
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // 댓글 작성 로직 구현
+    try {
+      //서버로 댓글 내용 전송
+      const response = await axios.post(
+        `http://localhost:3000/api/v1/board/${boardId}/comment`,
+        {
+          writer,
+          content,
+        },
+      );
+      // 댓글 작성에 성공한 경우, 작성자와 댓글 내용을 초기화
+      setWriter('');
+      setContent('');
+      // 댓글 목록을 업데이트
+      updateComments(response.data.comments);
+    } catch (error) {
+      // 댓글 작성에 실패한 경우, 오류 메시지를 출력하고 사용자에게 알립니다.
+      console.error('댓글 작성에 실패했습니다:', error);
+      alert('댓글 작성에 실패했습니다.');
+    }
   };
 
   return (
-    <CommentFormWrapper>
-      <form onSubmit={handleSubmit}>
-        {/* <div>
-          <label>닉네임:</label>
-          <input
-            type="text"
-            value={nickname}
-            onChange={handleNicknameChange}
-            required
-          />
-        </div> */}
-        <div>
-          <label>댓글:</label>
-          <textarea value={content} onChange={handleContentChange} required />
-        </div>
-        <button type="submit">작성</button>
-      </form>
-    </CommentFormWrapper>
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label htmlFor="writer">작성자</label>
+        <input
+          type="text"
+          id="writer"
+          value={writer}
+          onChange={(e) => setWriter(e.target.value)}
+          required
+        />
+      </div>
+      <div>
+        <label htmlFor="content">내용</label>
+        <textarea
+          id="content"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          required
+        />
+      </div>
+      <button type="submit">댓글 작성</button>
+    </form>
   );
 }
 

@@ -3,35 +3,71 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import logo from '../../assets/images/logo.png';
 import baseimg from '../../assets/images/baseimg.png';
+import { useSelector, useDispatch } from 'react-redux';
+import { initUser } from '../../redux/userSlice';
+import { persistor } from '../../redux/store';
+import axios from 'axios';
 
 const Header = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const user = useSelector((state) => state.user);
+
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  // 로그아웃에 사용
+  const purge = async () => {
+    await persistor.purge(); // persistStore의 데이터 전부 날림
+  };
+
+  const logoutHandler = async (e) => {
+    try {
+      await axios.post('/api/v1/auth/logout');
+    } catch (error) {
+      console.error(error);
+    }
+    dispatch(initUser());
+    purge();
+    navigate('/');
+  };
 
   return (
     <PositionHeader>
       <ContentHeader>
         <Logo onClick={() => navigate('/')}>
-          <img src={logo} style={{ width: '110px', height: '90px' }} />
+          <img
+            src={logo}
+            style={{ width: '110px', height: '90px' }}
+            alt="logo"
+          />
         </Logo>
         <Spacer />
-        {!isLoggedIn && (
+
+        {user.id === '' ? null : user.userType === 'admin' ? (
           <>
             <img
+              alt="backgroundimg"
               src={baseimg}
               style={{ width: '45px', height: '45px', borderRadius: '50%' }}
             />
-            <Span>조인식님</Span>
+            <Span onClick={() => navigate('/admin')}>관리자님</Span>
+          </>
+        ) : (
+          <>
+            <img
+              alt="backgroundimg"
+              src={baseimg}
+              style={{ width: '45px', height: '45px', borderRadius: '50%' }}
+            />
+            <Span onClick={() => navigate('/mypage')}>{user.nickname}님</Span>
           </>
         )}
-
-        {!isLoggedIn ? (
-          <Span onClick={() => navigate('/')}>로그인</Span>
+        {user.id !== '' ? (
+          <Span onClick={logoutHandler}>로그아웃</Span>
         ) : (
-          <Span onClick={() => navigate('/')}>로그아웃</Span>
+          <Span onClick={() => navigate('/login')}>로그인</Span>
         )}
 
-        <Span onClick={() => navigate('/')}>커뮤니티</Span>
+        <Span onClick={() => navigate('/community/all')}>커뮤니티</Span>
         <Span onClick={() => navigate('/')}>봉사신청</Span>
       </ContentHeader>
     </PositionHeader>
@@ -41,6 +77,7 @@ const Header = () => {
 const PositionHeader = styled.header`
   background-color: white;
   margin-top: -10px;
+
   position: relative;
 
   top: 0px;

@@ -1,10 +1,14 @@
 import React, { useState, useRef } from 'react';
-// import axios from 'axios';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import Header from '../../components/Header/Header';
+import BackGround from '../../components/Background/Background';
 
 const Join = () => {
+  // useRef 설정
   const inputRef = useRef([]);
+
   const [inputs, setInputs] = useState({
     email: '',
     name: '',
@@ -31,6 +35,10 @@ const Join = () => {
   // 닉네임 : 2자 이상 10자 이하
   const nicknamePattern = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9]{2,10}$/i;
   const validNickname = nickname === '' || nicknamePattern.test(nickname);
+
+  // 휴대폰 번호는 2 or 3자리 숫자 - 3 or 4자리 숫자 - 4자리 숫자로 구성
+  const phoneNumberPattern = /^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}$/i;
+  const validPhoneNumber = phone === '' || phoneNumberPattern.test(phone);
 
   // 비밀번호 : 영문숫자특수문자혼합 8자리 이상
   const passwordPattern =
@@ -84,33 +92,40 @@ const Join = () => {
         nickname: '',
       });
       inputRef.current[2].focus();
+    } else if (!validPhoneNumber) {
+      alert('올바른 전화번호가 아닙니다.');
+      setInputs({
+        ...inputs,
+        phone: '',
+      });
+      inputRef.current[3].focus();
     } else if (!validPw) {
       alert('비밀번호는 4자 이상, 20자 미만입니다.');
       setInputs({
         ...inputs,
         pw: '',
       });
-      inputRef.current[3].focus();
+      inputRef.current[4].focus();
     } else if (!validPwConfirm) {
       alert('비밀번호 확인이 일치하지 않습니다.');
       setInputs({
         ...inputs,
         pwConfirm: '',
       });
-      inputRef.current[4].focus();
+      inputRef.current[5].focus();
     } else if (validBlank) {
       alert('모든 항목을 입력해주세요.');
       return false;
       // 모든 검사를 통과하면
     } else {
       alert('회원가입되었습니다. 로그인 페이지로 이동합니다.');
-      // submitData();
+      submitData();
       navigate('/login');
     }
   };
 
   // api에 전달
-  /* const submitData = async () => {
+  const submitData = async () => {
     const data = {
       name: name,
       email: email,
@@ -122,116 +137,134 @@ const Join = () => {
       type: '',
     };
     try {
-      const res = await axios.post('/public/data/userlist.json', data);
-      console.log(res);
+      const res = await axios.post(
+        'http://localhost:3000/api/v1/users/join',
+        data,
+      );
+      if (res.statusText === 'Created') {
+        alert('회원가입이 완료되었습니다.');
+        navigate('/login');
+      } else {
+        alert('잘못된 값이 입력되어 요청에 실패했습니다.');
+        return false;
+      }
     } catch (e) {
       console.log(e);
     }
-  }; */
+  };
 
   return (
-    <JoinBox>
-      <JoinTitle>회원가입</JoinTitle>
-      <JoinWrapper>
-        <JoinItem>
-          <p>이메일</p>
-          <input
-            type="email"
-            name="email"
-            value={email}
-            onChange={handleChange}
-            ref={(i) => (inputRef.current[0] = i)}
-          />
-          {validEmail ? null : <span> * 올바른 이메일을 입력하세요.</span>}
-        </JoinItem>
-        <JoinItem>
-          <p>이름</p>
-          <input
-            type="text"
-            name="name"
-            placeholder="이름은 2자 이상 10자 이하로 입력해주세요."
-            value={name}
-            onChange={handleChange}
-            ref={(i) => (inputRef.current[1] = i)}
-          />
-          {validName ? null : <span> * 올바른 이름을 입력하세요.</span>}
-        </JoinItem>
-        <JoinItem>
-          <p>닉네임</p>
-          <input
-            type="text"
-            name="nickname"
-            placeholder="한/영/숫자로 2자 이상 10자 이하로 입력해주세요."
-            value={nickname}
-            onChange={handleChange}
-            ref={(i) => (inputRef.current[2] = i)}
-          />
-          {validNickname ? null : <span> * 올바른 닉네임을 입력하세요.</span>}
-        </JoinItem>
-        <JoinItem>
-          <p>전화번호</p>
-          <input
-            type="text"
-            name="phone"
-            value={phone}
-            onChange={handleChange}
-            ref={(i) => (inputRef.current[3] = i)}
-          />
-        </JoinItem>
-        <JoinItem>
-          <p>비밀번호</p>
-          <input
-            type="password"
-            name="pw"
-            placeholder="영문, 숫자, 특수기호를 포함하여 작성해주세요."
-            value={pw}
-            onChange={handleChange}
-            ref={(i) => (inputRef.current[4] = i)}
-          />
-          {validPw ? null : <span> * 올바른 비밀번호를 입력하세요.</span>}
-        </JoinItem>
-        <JoinItem>
-          <p>비밀번호 확인</p>
-          <input
-            type="password"
-            name="pwConfirm"
-            value={pwConfirm}
-            onChange={handleChange}
-            ref={(i) => (inputRef.current[5] = i)}
-          />
-          {validPwConfirm ? null : (
-            <span> * 비밀번호 확인이 일치하지 않습니다.</span>
-          )}
-        </JoinItem>
-        <JoinItem>
-          <p>주소</p>
-          <input
-            type="text"
-            name="address"
-            placeholder="주소를 입력해주세요."
-            value={address}
-            onChange={handleChange}
-            ref={(i) => (inputRef.current[6] = i)}
-          />
-        </JoinItem>
-        {!validBlank ? null : <span> * 모든 항목을 입력해주세요.</span>}
-      </JoinWrapper>
-      <button type="button" onClick={handleClick}>
-        회원가입
-      </button>
-    </JoinBox>
+    <BackGround>
+      <Header />
+      <JoinBox>
+        <JoinTitle>회원가입</JoinTitle>
+        <JoinWrapper>
+          <JoinItem>
+            <p>이메일</p>
+            <input
+              type="email"
+              name="email"
+              value={email}
+              onChange={handleChange}
+              ref={(i) => (inputRef.current[0] = i)}
+            />
+            {validEmail ? null : <span> * 올바른 이메일을 입력하세요.</span>}
+          </JoinItem>
+          <JoinItem>
+            <p>이름</p>
+            <input
+              type="text"
+              name="name"
+              placeholder="이름은 2자 이상 10자 이하로 입력해주세요."
+              value={name}
+              onChange={handleChange}
+              ref={(i) => (inputRef.current[1] = i)}
+            />
+            {validName ? null : <span> * 올바른 이름을 입력하세요.</span>}
+          </JoinItem>
+          <JoinItem>
+            <p>닉네임</p>
+            <input
+              type="text"
+              name="nickname"
+              placeholder="한/영/숫자로 2자 이상 10자 이하로 입력해주세요."
+              value={nickname}
+              onChange={handleChange}
+              ref={(i) => (inputRef.current[2] = i)}
+            />
+            {validNickname ? null : <span> * 올바른 닉네임을 입력하세요.</span>}
+          </JoinItem>
+          <JoinItem>
+            <p>전화번호</p>
+            <input
+              type="text"
+              name="phone"
+              value={phone}
+              onChange={handleChange}
+              ref={(i) => (inputRef.current[3] = i)}
+            />
+            {validPhoneNumber ? null : (
+              <span> * 하이픈(-)을 포함한 전화번호를 입력하세요.</span>
+            )}
+          </JoinItem>
+          <JoinItem>
+            <p>비밀번호</p>
+            <input
+              type="password"
+              name="pw"
+              placeholder="영문, 숫자, 특수기호를 포함하여 작성해주세요."
+              value={pw}
+              onChange={handleChange}
+              ref={(i) => (inputRef.current[4] = i)}
+            />
+            {validPw ? null : <span> * 올바른 비밀번호를 입력하세요.</span>}
+          </JoinItem>
+          <JoinItem>
+            <p>비밀번호 확인</p>
+            <input
+              type="password"
+              name="pwConfirm"
+              value={pwConfirm}
+              onChange={handleChange}
+              ref={(i) => (inputRef.current[5] = i)}
+            />
+            {validPwConfirm ? null : (
+              <span> * 비밀번호 확인이 일치하지 않습니다.</span>
+            )}
+          </JoinItem>
+          <JoinItem>
+            <p>주소</p>
+            <input
+              type="text"
+              name="address"
+              placeholder="주소를 입력해주세요."
+              value={address}
+              onChange={handleChange}
+              ref={(i) => (inputRef.current[6] = i)}
+            />
+          </JoinItem>
+          {!validBlank ? null : <span> * 모든 항목을 입력해주세요.</span>}
+        </JoinWrapper>
+        <button type="button" onClick={handleClick}>
+          회원가입
+        </button>
+      </JoinBox>
+    </BackGround>
   );
 };
 
 export default Join;
 
 const JoinBox = styled.div`
-  width: 60%;
+  position: relative;
+  width: 30%;
+  min-width: 520px;
   background: #eee;
-  border: 1px solid;
   border-radius: 20px;
   text-align: center;
-  padding: 2rem;
+  padding: 2rem 0rem;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  margin-top: 1rem;
 
   button {
     border: none;
@@ -243,23 +276,24 @@ const JoinBox = styled.div`
     height: 2.5rem;
     border-radius: 20px;
     margin-top: 0.5rem;
+    cursor: pointer;
   }
 `;
 
 const JoinTitle = styled.div`
   width: 50%;
   font-size: 2rem;
-  margin: 0 auto;
+  margin: 1rem auto;
 `;
 
 const JoinWrapper = styled.div`
-  width: 80%;
+  width: 70%;
   margin: 0 auto;
 
   span {
     display: block;
     color: #ff0000;
-    font-size: 1rem;
+    font-size: 0.8rem;
   }
 `;
 

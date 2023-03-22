@@ -1,20 +1,31 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import BackGround from '../../components/Background/Background';
 import Header from '../../components/Header/Header';
+import { useSelector, useDispatch } from 'react-redux';
+import { persistor } from '../../redux/store';
+import { initUser } from '../../redux/userSlice';
 
 const UserDelete = (props) => {
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   const handleClick = async (e) => {
     e.preventDefault();
 
     const formData = { password };
 
+    const purge = async () => {
+      await persistor.purge(); // persistStore의 데이터 전부 날림
+    };
+
     try {
-      const res = await axios.delete(
-        `https://ee01f75c-7547-42d4-b77b-5fc613f782d7.mock.pstmn.io/userdelete`,
+      await axios.delete(
+        `/api/v1/users/${user.id}`,
         {
           data: { ...formData },
         },
@@ -26,38 +37,38 @@ const UserDelete = (props) => {
         //   },
         // },
       );
-      alert(res);
-      //회원 탈퇴시 토큰 제거
-      // localStorage.removeItem('ACCESS_TOKEN');
+
       alert('회원 탈퇴 되었습니다.');
-      window.location.href = '/';
+      navigate('/');
     } catch (error) {
-      console.log(error);
+      console.error(error);
       alert('비밀번호를 확인해주세요.');
     }
+    dispatch(initUser());
+    purge();
+    navigate('/');
   };
 
   return (
-    <>
+    <BackGround>
       <Header />
-      <BackGround>
-        <WithdrawBox>
-          <PasswordSpan>
-            서비스 탈퇴를 위해 비밀번호를 입력해 주세요.
-          </PasswordSpan>
-          <PasswordInput
-            onChange={(e) => setPassword(e.target.value)}
-            value={password}
-            type={'password'}
-          />
-          <WithdrawButton onClick={handleClick}>회원 탈퇴</WithdrawButton>
-        </WithdrawBox>
-      </BackGround>
-    </>
+      <WithdrawBox>
+        <PasswordSpan>
+          서비스 탈퇴를 위해 비밀번호를 입력해 주세요.
+        </PasswordSpan>
+        <PasswordInput
+          onChange={(e) => setPassword(e.target.value)}
+          value={password}
+          type="password"
+        />
+        <WithdrawButton onClick={handleClick}>회원 탈퇴</WithdrawButton>
+      </WithdrawBox>
+    </BackGround>
   );
 };
 
 const WithdrawBox = styled.div`
+  margin-top: 200px;
   width: 40%;
   height: 250px;
   background-color: white;

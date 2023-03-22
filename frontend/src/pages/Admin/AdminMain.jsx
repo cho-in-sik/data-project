@@ -4,38 +4,37 @@ import styled from 'styled-components';
 import BackGround from '../../components/Background/Background';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faHandshakeAngle,
-  faUser,
-  faTrashCan,
+  faUserGroup,
+  faNoteSticky,
+  faUsers,
 } from '@fortawesome/free-solid-svg-icons';
 
-const MyPage = (props) => {
+const AdminMain = (props) => {
   const navigate = useNavigate();
   return (
     <div>
       <BackGround>
         <Header />
-        <MypageBox>
-          <MyVolunteer onClick={() => navigate('/myvolunteers')}>
-            <FontAwesomeIcon icon={faHandshakeAngle} size="10x" />
-            <Span>봉사 관리</Span>
-          </MyVolunteer>
-          <MyInfo onClick={() => navigate('/userinfo')}>
-            <FontAwesomeIcon icon={faUser} size="10x" />
-            <Span>개인정보관리</Span>
-          </MyInfo>
-          <Withdraw onClick={() => navigate('/userdelete')}>
-            <FontAwesomeIcon icon={faTrashCan} size="10x" />
-            <Span>회원 탈퇴</Span>
-          </Withdraw>
-        </MypageBox>
+        <AdminBox>
+          <AdminUser onClick={() => navigate('/admin/user')}>
+            <FontAwesomeIcon icon={faUserGroup} size="10x" />
+            <Span>회원 관리</Span>
+          </AdminUser>
+          <AdminVolunteer onClick={() => navigate('/admin/volunteer')}>
+            <FontAwesomeIcon icon={faNoteSticky} size="10x" />
+            <Span>모집글 관리</Span>
+          </AdminVolunteer>
+          <AdminCommunity onClick={() => navigate('/admin/community')}>
+            <FontAwesomeIcon icon={faUsers} size="10x" />
+            <Span>커뮤니티 관리</Span>
+          </AdminCommunity>
+        </AdminBox>
       </BackGround>
     </div>
   );
 };
 
-const MypageBox = styled.div`
-  margin-top: 80px;
+const AdminBox = styled.div`
   width: 80%;
   height: 550px;
   background-color: white;
@@ -45,9 +44,10 @@ const MypageBox = styled.div`
   align-items: center;
   position: relative;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  margin-top: 4rem;
 `;
 
-const MyVolunteer = styled.div`
+const AdminUser = styled.div`
   color: #46b780;
   width: 230px;
   height: 230px;
@@ -56,8 +56,8 @@ const MyVolunteer = styled.div`
   flex-direction: column;
   align-items: center;
 `;
-const MyInfo = styled(MyVolunteer)``;
-const Withdraw = styled(MyVolunteer)``;
+const AdminVolunteer = styled(AdminUser)``;
+const AdminCommunity = styled(AdminUser)``;
 
 const Span = styled.span`
   margin-top: 50px;
@@ -66,4 +66,4 @@ const Span = styled.span`
   color: black;
 `;
 
-export default MyPage;
+export default AdminMain;
