@@ -18,7 +18,6 @@ export const userSlice = createSlice({
       // name, id에 API 값 받아오기
       state.email = action.payload.email;
       state.id = action.payload.id;
-
       state.nickname = action.payload.nickname;
       state.userType = action.payload.userType;
       state.profileImage = action.payload.profileImage;

@@ -158,6 +158,7 @@ const ImgBox = styled.div`
   }
 `;
 const SpanDiv = styled.div`
+  margin-top: 5%;
   margin-left: 18%;
   display: flex;
   flex-direction: column;
@@ -177,6 +178,7 @@ const DescriptionBox = styled.div`
   font-size: 18px;
   margin-top: 30px;
   margin-left: 30px;
+  font-size: 20px;
 `;
 
 export default VolunteerDetail;

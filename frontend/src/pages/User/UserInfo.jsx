@@ -5,7 +5,7 @@ import Header from '../../components/Header/Header.jsx';
 import styled from 'styled-components';
 import BackGround from '../../components/Background/Background';
 import { useSelector, useDispatch } from 'react-redux';
-// import { loginUser } from '../../redux/userSlice';
+import { loginUser } from '../../redux/userSlice';
 
 //유효성 검사
 //오류메시지를 상태로 관리하기?
@@ -34,26 +34,28 @@ const UserInfo = (props) => {
 
   const [img1, setImg1] = useState('');
 
+  //이미지 통신 함수
   const profileImgHandler = async (e) => {
     const img = e.target.files[0];
-    const formData = new FormData();
-    formData.append('image', img);
+    const formData1 = new FormData();
+    formData1.append('image', img);
 
     axios
-      .post('api/v1/image/upload', formData)
+      .post('api/v1/image/upload', formData1)
       .then((res) => {
-        setImg1(res.image);
+        setImg1(res.data.image);
         alert('성공');
       })
       .catch((err) => {
         alert('실패');
       });
+    return formData1;
   };
 
   useEffect(() => {
     async function userData() {
       try {
-        const res = await axios.get(`/api/v1/users/${user.id}`);
+        const res = await axios.get(`/api/v1/my/${user.id}`);
         console.log(res.data.data);
         setUserInfo(res.data.data);
       } catch (error) {
@@ -72,7 +74,6 @@ const UserInfo = (props) => {
   const pwRef = useRef();
   const pw1Ref = useRef();
   const addressRef = useRef();
-  const imgRef = useRef();
 
   const navigate = useNavigate();
 
@@ -83,7 +84,8 @@ const UserInfo = (props) => {
     const nickname = nicknameRef.current.value;
     const pw = pwRef.current.value;
     const pw1 = pw1Ref.current.value;
-    const image = imgRef.current.value;
+    const address = addressRef.current.value;
+    // const image = imgRef.current.value;
 
     //요청 데이터 formdata에 모으기
     const formData = {
@@ -91,7 +93,8 @@ const UserInfo = (props) => {
       nickname,
       pw,
       pw1,
-      image,
+      address,
+      profileImage: img1,
     };
 
     const isNameValid = nameValidate(name);
@@ -110,11 +113,20 @@ const UserInfo = (props) => {
 
     const submitHandler = async () => {
       try {
-        await axios.put(`/api/v1/users/${user.id}`, {
+        const res = await axios.put(`/api/v1/my/${user.id}`, {
           ...formData,
         });
+        console.log(res.data.data);
 
-        // dispatch(loginUser(formData));
+        dispatch(
+          loginUser({
+            email: res.data.data.email,
+            id: res.data.data._id,
+            nickname: res.data.data.nickname,
+            userType: res.data.data.userType,
+            profileImage: res.data.data.profileImage,
+          }),
+        );
         alert('정보수정에 성공했습니다.');
         navigate('/');
       } catch (error) {
@@ -175,7 +187,6 @@ const UserInfo = (props) => {
               style={{ border: 'none' }}
               onChange={profileImgHandler}
             />
-            <img src={img1} ref={imgRef} />
           </InfoItem>
 
           <span style={{ marginLeft: '30px' }}>{formValid}</span>
