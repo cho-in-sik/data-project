@@ -51,12 +51,13 @@ export const Table = styled.table`
   width: 95%;
   border-collapse: separate;
   background-color: #f9f9f9;
+  border-spacing: 0;
 
   th,
   td {
     border: 1px solid #ddd;
     padding: 15px;
-    font-weight: 600;
+    font-weight: bold;
     font-size: 1.1rem;
     color: #333;
     width: 50%;
@@ -64,11 +65,13 @@ export const Table = styled.table`
 
   th:first-child,
   td:first-child {
+    border-left: none;
     width: 60%;
   }
 
   th {
-    background-color: #f2f2f2;
+    background-color: #47b781;
+    color: white;
     text-align: center;
   }
 
@@ -83,6 +86,12 @@ export const Table = styled.table`
 
   tr:first-child td {
     border-top: none;
+  }
+
+  td:empty {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #999;
   }
 `;
 
@@ -107,5 +116,13 @@ export const PaginationWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
+  margin: 20px 0;
+
+  button {
+    margin: 0 5px;
+    font-weight: bold;
+    &:hover {
+      color: #47b781;
+    }
+  }
 `;
