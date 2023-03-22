@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import Header from '../../components/Header/Header';
 import BackGround from '../../components/Background/Background';
 import axios from 'axios';
-import MyVolunteer from '../MyVolunteer/MyVolunteer';
 import Paging from '../../components/Pagination/Pagination';
-import { useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
@@ -110,12 +108,41 @@ const data = [
 ];
 
 const RecruitByGu = (props) => {
-  // const user = useSelector((state) => state.user);
-  // const [data, setData] = useState([]);
+  const { id } = useParams();
+  const [data, setData] = useState([]);
+  const [gu, setGu] = useState('');
   const [page, setPage] = useState(1);
+  const perPage = 6;
   const [total, setTotal] = useState(data.length);
   const navigate = useNavigate();
+  const location = useLocation();
   // const items = 6;
+
+  const guName = location.state;
+  console.log(guName);
+  // 게시글 목록을 가져오는 함수
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const res = await axios.get(`/api/v1/recruitment/?boroughId=${id}`);
+        console.log(res);
+        setGu(res.data.data.recruitments[0].borough.borough);
+        setData(res.data.data.recruitments);
+        /* const pageData = {
+          page: response.data.page,
+          perPage: response.data.perPage,
+          total: response.data.total,
+          totalPage: Response.data.totalPage,
+        };
+        // 응답 데이터에서 boards 배열만 추출하여 setData로 업데이트
+        setData(response.data.boards);
+        setTotal(pageData.total); */
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    fetchData();
+  }, [page, perPage]);
 
   const handlePageChange = (page) => {
     return setPage(page);
@@ -123,41 +150,18 @@ const RecruitByGu = (props) => {
 
   const list = data.map((item) => {
     return (
-      <div key={item._id}>
-        <VolunteerDetail
-          onClick={() => navigate('/recruitmentdetail', { state: item })}
-        >
-          <MeetingStatus>{item.meetingStatus}</MeetingStatus>
-          <VolunteerMessage>{item.title}</VolunteerMessage>
-          <VolunteerMessage>{item.volunteerTime}</VolunteerMessage>
-          <VolunteerMessage>{item.address}</VolunteerMessage>
-          <VolunteerMessage>{item.author}</VolunteerMessage>
-        </VolunteerDetail>
-      </div>
+      <VolunteerDetail
+        key={item._id}
+        onClick={() => navigate(`/recruitment/${id}/${item._id}`)}
+      >
+        <MeetingStatus>{item.meetingStatus}</MeetingStatus>
+        <VolunteerMessage>{item.title}</VolunteerMessage>
+        <VolunteerMessage>{item.volunteerTime}</VolunteerMessage>
+        <VolunteerMessage>{item.address}</VolunteerMessage>
+        <VolunteerMessage>{item.author.nickname}</VolunteerMessage>
+      </VolunteerDetail>
     );
   });
-  // 게시글 목록을 가져오는 함수
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     try {
-  //       const response = await axios.get(
-  //         `http://localhost:3000/api/v1/board?page=${page}&perPage=${items}`,
-  //       );
-  //       const pageData = {
-  //         page: response.data.page,
-  //         perPage: response.data.perPage,
-  //         total: response.data.total,
-  //         totalPage: Response.data.totalPage,
-  //       };
-  //       // 응답 데이터에서 boards 배열만 추출하여 setData로 업데이트
-  //       setData(response.data.boards);
-  //       setTotal(pageData.total);
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   }
-  //   fetchData();
-  // }, [page, items]); //page, perPage가 변경될 때마다 useEffect가 실행
 
   return (
     <BackGround>
@@ -176,17 +180,17 @@ const RecruitByGu = (props) => {
                 navigate(-1);
               }}
             />
-            무슨구의 모집 게시글(총 {data.length}건)
+            {guName}의 모집 게시글(총 {data.length}건)
           </Span>
           <span
             onClick={() => {
-              navigate('/recruitment/form');
+              navigate(`/recruitment/${id}/form`, { state: guName });
             }}
           >
-            | 작성하기
+            | 새로운 게시글 작성하기
           </span>
         </div>
-        <VB>{list}</VB>
+        <VB>{data.length === 0 ? <p>'작성된 게시물이 없습니다.'</p> : list}</VB>
         <div>
           <Paging
             page={page}
@@ -202,7 +206,7 @@ const RecruitByGu = (props) => {
 const VolunteerBox = styled.div`
   margin-top: 30px;
   max-width: 1350px;
-  width: 80%;
+  width: 90%;
   height: 85%;
   border-radius: 20px;
   background-color: white;
@@ -210,26 +214,27 @@ const VolunteerBox = styled.div`
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 `;
 const Span = styled.span`
-  font-size: 25px;
+  font-size: 1.5rem;
   font-weight: 400;
-  padding-left: 50px;
+  padding-left: 3rem;
 `;
 
 const VB = styled.div`
+  width: 95%;
+  margin: 0 auto;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
 `;
 
 const VolunteerDetail = styled.div`
+  margin: 0.8rem;
   position: relative;
   background-color: whitesmoke;
-  height: 28vh;
+  width: 30%;
+  height: 25vh;
   border-radius: 20px;
-  margin-top: 5px;
-  margin-bottom: 20px;
-  margin-right: 20px;
-  margin-left: 20px;
+  margin: 0.8rem;
   display: flex;
   flex-direction: column;
   justify-content: space-around;

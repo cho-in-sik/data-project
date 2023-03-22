@@ -72,7 +72,11 @@ const GuList = ({ searchTerm, handleSearchTermChange }) => {
         {filteredBoroughs.map((casualty) => (
           <GuListItemButton
             key={casualty.borough} // key prop 추가
-            onClick={() => navigate(`/recruitment/${casualty.id}`)} // onClick 이벤트 함수 변경
+            onClick={() =>
+              navigate(`/recruitment/${casualty.id}`, {
+                state: casualty.borough,
+              })
+            } // onClick 이벤트 함수 변경
           >
             {casualty.borough}
             <div>{casualty.casualties}명</div>
