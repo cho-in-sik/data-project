@@ -3,7 +3,6 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUsers } from '@fortawesome/free-solid-svg-icons';
 import Header from '../../components/Header/Header';
-import Pagination from '../../components/Pagination/Pagination';
 import BackGround from '../../components/Background/Background';
 
 import {
@@ -12,32 +11,50 @@ import {
   Table,
   Empty,
   CreateButton,
-  PaginationWrapper,
   LinkStyled,
   ButtonWrapper,
+  PaginationWrapper,
 } from './styles/CommunityListStyle';
 
 function CommunityList() {
-  const [boards, setBoards] = useState([]); //게시판 목록
-  const [page, setPage] = useState(1); //현재 페이지
-  const perPage = 10; //한 페이지에 보여줄 게시글 수
+  const [boards, setBoards] = useState([]); // 게시글 목록
+  const [page, setPage] = useState(1); // 현재 페이지
+  const [perPage, setPerPage] = useState(10); // 한 페이지에 보여줄 게시글 수
+  const [total, setTotal] = useState(0); // 전체 게시글 수
+  const [totalPage, setTotalPage] = useState(0); // 전체 페이지 수
 
-  // 게시글 목록을 가져오는 함수
   useEffect(() => {
     async function fetchData() {
       try {
         const response = await axios.get(
           `/api/v1/board?page=${page}&perPage=${perPage}`,
-        );
-        // 응답 데이터에서 boards 배열만 추출하여 setBoards로 업데이트
-        setBoards(response.data.boards);
-        // console.log(response.data.boards);
+        ); // 게시글 목록 가져오기
+
+        setBoards(response.data.boards); // 게시글 목록
+        setTotal(response.data.total); // 전체 게시글 수
+        setTotalPage(response.data.totalPage); // 전체 페이지 수
       } catch (error) {
         console.log(error);
       }
     }
     fetchData();
-  }, [page, perPage]); //page, perPage가 변경될 때마다 useEffect가 실행
+  }, [page, perPage]); // page 혹은 perPage가 변경될 때마다 useEffect 함수 실행
+
+  const renderPageButtons = () => {
+    const buttons = []; // 페이지 버튼들을 담을 배열
+    for (let i = 1; i <= totalPage; i++) {
+      buttons.push(
+        <button
+          key={i}
+          onClick={() => setPage(i)}
+          style={{ fontWeight: i === page ? 'bold' : 'normal' }}
+        >
+          {i}
+        </button>, // 현재 페이지와 같은 페이지 번호의 버튼은 굵게 표시
+      );
+    }
+    return buttons;
+  };
 
   return (
     <BackGround>
@@ -47,7 +64,7 @@ function CommunityList() {
           <FontAwesomeIcon icon={faUsers} /> 봉사자 커뮤니티
         </Title>
         <ButtonWrapper>
-          <CreateButton to="/board">작성하기</CreateButton>
+          <CreateButton to="/board/write">게시글 작성</CreateButton>
         </ButtonWrapper>
         <Table>
           <thead>
@@ -65,16 +82,17 @@ function CommunityList() {
                       {board.title}
                     </LinkStyled>
                   </td>
-                  <td>{board.author}</td>
+                  <td>{board.author ? board.author.nickname : '익명'}</td>
                 </tr>
               ))
             ) : (
               <tr>
                 <Empty colSpan="2">게시글이 없습니다.</Empty>
-              </tr>
+              </tr> // 게시글이 없을 때
             )}
           </tbody>
         </Table>
+        <PaginationWrapper>{renderPageButtons()}</PaginationWrapper>
       </Container>
     </BackGround>
   );
