@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Pagination from 'react-js-pagination';
 import Header from '../../components/Header/Header';
 import styled from 'styled-components';
 import BackGround from '../../components/Background/Background';
@@ -11,61 +12,58 @@ import { faNoteSticky, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 const AdminUser = (props) => {
   const [posts, setPosts] = useState([]);
+  const [page, setPage] = useState(1);
+  const perPage = 8;
+  const [total, setTotal] = useState(0);
   const navigate = useNavigate();
-  /* const data = [
-    {
-      id: 1,
-      author: '홍길',
-      title: '000모임',
-      volunteerTime: '5시',
-      recruitment: '4',
-      address: '00고 사거리',
-      createdAt: '??',
-      participation: '3',
-      meetingStatus: '모집중',
-    },
-    {
-      id: 2,
-      author: '홍길',
-      title: '000모임',
-      volunteerTime: '5시',
-      recruitment: '4',
-      address: '00고 사거리',
-      createdAt: '??',
-      participation: '3',
-      meetingStatus: '모집중',
-    },
-  ]; */
   useEffect(() => {
     const getAllPosts = async () => {
-      debugger;
       try {
-        const res = await axios.get('/api/v1/recruitment/all');
+        const res = await axios.get(
+          `/api/v1/recruitment?page=${page}&perPage=${perPage}`,
+        );
+        setTotal(res.data.data.recruitmentCount);
         console.log(res);
-        // setPosts(res.data.boards);
+        setPosts(res.data.data.recruitments);
       } catch (e) {
         console.log(e);
       }
     };
     getAllPosts();
-  }, []);
-  const handleDelete = async () => {
-    return;
-    // const res = await axios.delete('http://localhost:3000/admin/', {
-    //   data: { token },
-    // });
-    // console.log(res);
+  }, [page, perPage]);
+
+  const handlePageChange = (page) => {
+    setPage(page);
+  };
+  const handleDelete = async (e) => {
+    const id = e.target.parentElement.parentElement.firstChild.textContent;
+    const res = await axios.delete(`/api/v1/admin/recruitment/${id}`);
+    if (res.data !== '') {
+      alert(res.data);
+      window.location.reload();
+    } else {
+      alert('오류가 발생했습니다.');
+      return false;
+    }
   };
   const list = posts.map((item) => (
-    <TableRow key={item.id}>
-      <TableCell width="15%">{item.address}</TableCell>
-      <TableCell width="15%">{item.volunteerTime}</TableCell>
-      <TableCell width="45%">
-        {item.participation}명 / {item.recruitment}명
+    <TableRow key={item._id}>
+      <TableCell width="5%" style={{ display: 'none' }}>
+        {item._id}
       </TableCell>
+      <TableCell width="15%">{item.author.nickname}</TableCell>
+      <TableCell width="15%">{item.borough.borough}</TableCell>
+      <TableCell width="15%">
+        {item.createdAt.slice(0, 10)} {item.createdAt.slice(11, 19)}
+      </TableCell>
+      <TableCell width="15%">{item.volunteerTime}</TableCell>
       <TableCell width="15%">{item.title}</TableCell>
       <TableCell width="10%">
-        <button onChange={handleDelete}>삭제</button>
+        {item.participants.length}명 / {item.recruitments}명
+      </TableCell>
+      <TableCell width="10%">{item.meetingStatus}</TableCell>
+      <TableCell width="10%">
+        <button onClick={handleDelete}>삭제</button>
       </TableCell>
     </TableRow>
   ));
@@ -88,14 +86,28 @@ const AdminUser = (props) => {
           </Title>
           <UserTable>
             <TableHead>
+              <TableCell width="15%">모집자 닉네임</TableCell>
               <TableCell width="15%">지역</TableCell>
-              <TableCell width="15%">시간</TableCell>
-              <TableCell width="45%">참여자</TableCell>
+              <TableCell width="15%">모집 생성 일시</TableCell>
+              <TableCell width="15%">봉사 일시</TableCell>
               <TableCell width="15%">모집글 제목</TableCell>
+              <TableCell width="10%">참여자</TableCell>
+              <TableCell width="10%">진행 여부</TableCell>
               <TableCell width="10%">삭제</TableCell>
             </TableHead>
             {list}
           </UserTable>
+          <PaginationBox>
+            <Pagination
+              activePage={page}
+              itemsCountPerPage={perPage}
+              totalItemsCount={total}
+              pageRangeDisplayed={5}
+              nextPageText=">"
+              prevPageText="<"
+              onChange={handlePageChange}
+            />
+          </PaginationBox>
         </AdminBox>
       </BackGround>
     </div>
@@ -153,4 +165,51 @@ const TableRow = styled.div`
 const TableCell = styled.span`
   width: ${(props) => props.width};
 `;
+
+const PaginationBox = styled.div`
+  position: absolute;
+  bottom: 2rem;
+  left: calc(50% - 64px);
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+  ul.pagination li {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #e2e2e2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+  }
+  ul.pagination li:first-child {
+    border-radius: 5px 0 0 5px;
+  }
+  ul.pagination li:last-child {
+    border-radius: 0 5px 5px 0;
+  }
+  ul.pagination li a {
+    text-decoration: none;
+    color: #337ab7;
+    font-size: 1rem;
+  }
+  ul.pagination li.active a {
+    color: white;
+  }
+  ul.pagination li.active {
+    background-color: #337ab7;
+  }
+  ul.pagination li a:hover,
+  ul.pagination li a.active {
+    color: blue;
+  }
+`;
+
 export default AdminUser;

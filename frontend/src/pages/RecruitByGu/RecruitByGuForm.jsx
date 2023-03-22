@@ -3,11 +3,11 @@ import BackGround from '../../components/Background/Background';
 import Header from '../../components/Header/Header';
 import axios from 'axios';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 
 //게시글 작성 폼
 const RecruitByGuForm = () => {
-  const [borough, setBorough] = useState('');
+  // const [borough, setBorough] = useState('');
   const [title, setTitle] = useState('');
   const [volunteerTime, setVolunteerTime] = useState('');
   const [recruitments, setRecruitments] = useState('');
@@ -18,22 +18,26 @@ const RecruitByGuForm = () => {
   const [category, setCategory] = useState('');
   // 페이지 이동을 위한 useNavigate 훅
   const navigate = useNavigate();
+  const { id } = useParams();
+  const location = useLocation();
+  const guName = location.state;
   // 게시글 작성을 위한 함수
   const handleFormSubmit = async (event) => {
     event.preventDefault();
+    debugger;
     const body = {
-      borough,
+      borough: id,
       title,
       volunteerTime,
       recruitments,
       content,
-      author,
-      image,
+      // author,
+      // image,
       address,
       category,
     };
     try {
-      const res = await axios.post('/api/v1/recruitment/', body);
+      const res = await axios.post('/api/v1/recruitment', body);
       console.log(res.data);
       navigate('/recruitment/main');
     } catch (error) {
@@ -41,7 +45,9 @@ const RecruitByGuForm = () => {
       alert('게시글 작성에 실패했습니다.');
     }
   };
-
+  const handleMouseOver = (e) => {
+    return;
+  };
   return (
     <BackGround>
       <Header />
@@ -50,12 +56,45 @@ const RecruitByGuForm = () => {
         <form onSubmit={handleFormSubmit}>
           <FormGroup>
             <FormLabel htmlFor="borough">지역</FormLabel>
-            <FormInput
+            {/* <FormInput
               type="text"
               value={borough}
               onChange={(event) => setBorough(event.target.value)}
               required
-            />
+            /> */}
+            <select
+              value={guName}
+              onChange={(event) => {
+                console.log(event.target.value);
+                // setBorough(event.target.value);
+              }}
+            >
+              <option value="강남구">강남구</option>
+              <option value="강동구">강동구</option>
+              <option value="강북구">강북구</option>
+              <option value="강서구">강서구</option>
+              <option value="관악구">관악구</option>
+              <option value="광진구">광진구</option>
+              <option value="구로구">구로구</option>
+              <option value="금천구">금천구</option>
+              <option value="노원구">노원구</option>
+              <option value="도봉구">도봉구</option>
+              <option value="동대문구">동대문구</option>
+              <option value="동작구">동작구</option>
+              <option value="마포구">마포구</option>
+              <option value="서대문구">서대문구</option>
+              <option value="서초구">서초구</option>
+              <option value="성동구">성동구</option>
+              <option value="성북구">성북구</option>
+              <option value="송파구">송파구</option>
+              <option value="양천구">양천구</option>
+              <option value="영등포구">영등포구</option>
+              <option value="용산구">용산구</option>
+              <option value="은평구">은평구</option>
+              <option value="종로구">종로구</option>
+              <option value="중구">중구</option>
+              <option value="중랑구">중랑구</option>
+            </select>
           </FormGroup>
           <FormGroup>
             <FormLabel htmlFor="title">제목</FormLabel>
@@ -74,6 +113,7 @@ const RecruitByGuForm = () => {
               onChange={(event) => setVolunteerTime(event.target.value)}
               required
             />
+            <span onMouseOver={handleMouseOver}>시간별 조회</span>
           </FormGroup>
           <FormGroup>
             <FormLabel htmlFor="recruitments">총 모집인원</FormLabel>
@@ -92,7 +132,7 @@ const RecruitByGuForm = () => {
               required
             />
           </FormGroup>
-          <FormGroup>
+          {/* <FormGroup>
             <FormLabel htmlFor="author">작성자</FormLabel>
             <FormInput
               type="text"
@@ -100,7 +140,7 @@ const RecruitByGuForm = () => {
               onChange={(event) => setAuthor(event.target.value)}
               required
             />
-          </FormGroup>
+          </FormGroup> */}
           <FormGroup>
             <FormLabel htmlFor="image">이미지</FormLabel>
             {/* 이미지 삽입 기능은 추후에 */}

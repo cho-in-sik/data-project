@@ -1,32 +1,48 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import img from '../../assets/images/66112.jpg';
 import axios from 'axios';
+import Header from '../../components/Header/Header';
 import BackGround from '../../components/Background/Background';
-import { useSelector } from 'react-redux';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+// import { useSelector } from 'react-redux';
 const RecruitByGuDetail = () => {
-  const data = [
-    {
-      _id: 1,
-      borough: '송파구',
-      title: '송파사거리 3인 모집합니다.',
-      comment: '',
-      volunteerTime: '23년3월24일 오후 4시-6시',
-      recruitments: 3,
-      content:
-        '요즘 송파사거리에서 신호위반하는 차량이 많은 것 같아서요. 시간 나시는 분들 같이 합시다.',
-      author: '송파맨',
-      image: '',
-      address: '송파사거리',
-      category: '단기',
-      participants: [],
-      meetingStatus: '모집중',
-    },
-  ];
+  const [data, setData] = useState({});
+  /*  const data = {
+    _id: 1,
+    borough: '송파구',
+    title: '송파사거리 3인 모집합니다.',
+    comment: '',
+    volunteerTime: '23년3월24일 오후 4시-6시',
+    recruitments: 3,
+    content:
+      '요즘 송파사거리에서 신호위반하는 차량이 많은 것 같아서요. 시간 나시는 분들 같이 합시다.',
+    author: '송파맨',
+    image: '',
+    address: '송파사거리',
+    category: '단기',
+    participants: [],
+    meetingStatus: '모집중',
+  }; */
   const navigate = useNavigate();
 
-  const user = useSelector((state) => state.user);
+  const { id } = useParams();
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        // debugger;
+        const res = await axios.get(`/api/v1/recruitment/${id}`);
+        console.log(res);
+        setData(res.data.data);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    fetchData();
+  }, []);
+  // const user = useSelector((state) => state.user);
 
   const handleClick = async () => {
     try {
@@ -38,11 +54,23 @@ const RecruitByGuDetail = () => {
 
   return (
     <BackGround>
+      <Header />
       <VolunteerDetailBox>
         <ContentDiv>
           <HeadDiv>
+            <FontAwesomeIcon
+              icon={faArrowLeft}
+              style={{
+                color: '#aaa',
+                marginRight: '1rem',
+                cursor: 'pointer',
+              }}
+              onClick={() => {
+                navigate(-1);
+              }}
+            />
             <span>{data.title}</span>
-            <button onClick={handlClickApply}>참가신청</button>
+            <button>참가신청</button>
             <button onClick={handleClick}>참가취소</button>
           </HeadDiv>
           <BodyBox>
@@ -51,23 +79,23 @@ const RecruitByGuDetail = () => {
             </ImgBox>
             <SpanDiv>
               <span>
-                주소: <span>{data.address}</span>
+                지역:
+                {/* <span>{data.borough.borough}</span> */}
+              </span>
+              <span>
+                위치: <span>{data.address}</span>
               </span>
               <span>
                 기간: <span>{data.volunteerTime}</span>
               </span>
-              <span
-                style={{
-                  display: 'flex',
-                }}
-              >
-                참여자:{' '}
-                <div
-                  style={{
-                    marginTop: '-8px',
-                    marginLeft: '10px',
-                  }}
-                />
+              <span>
+                모집 인원:{' '}
+                <span>
+                  {/* {data.participants.length}명 / {data.recruitments}명 */}
+                </span>
+              </span>
+              <span>
+                참여자: <span>{data.participants}</span>
               </span>
             </SpanDiv>
           </BodyBox>

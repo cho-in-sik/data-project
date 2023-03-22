@@ -6,7 +6,7 @@ const LoginRoute = () => {
   const user = useSelector((state) => state.user);
   if (user.id === '') {
     // alert('로그인 후 이용 가능한 서비스입니다.');
-    return <Navigate to="/" />;
+    return <Navigate to="/login" />;
   } else {
     return <Outlet />;
   }
