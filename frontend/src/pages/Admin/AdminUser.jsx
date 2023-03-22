@@ -43,10 +43,9 @@ const AdminUser = (props) => {
     const res = await axios.put(`/api/v1/admin/users/${id}`, {
       userType: e.target.value,
     });
+    debugger;
     data[index].userType = e.target.value;
     setData(data);
-    console.log(res);
-    window.location.reload();
   };
 
   // 회원탈퇴 onClick
@@ -78,7 +77,10 @@ const AdminUser = (props) => {
         {item.volHistory[0].title} 등 {item.volHistory.length}건
       </TableCell> */}
         <TableCell width="5%">
-          <select onChange={handleSelectChange(index)} value={item.userType}>
+          <select
+            onChange={handleSelectChange(index)}
+            defaultValue={item.userType}
+          >
             <option value="admin">admin</option>
             <option value="user">user</option>
           </select>

@@ -17,9 +17,11 @@ const Join = () => {
     pw: '',
     pwConfirm: '',
     address: '',
+    profileImage: '',
   });
 
-  const { email, name, nickname, phone, pw, pwConfirm, address } = inputs;
+  const { email, name, nickname, phone, pw, pwConfirm, address, profileImage } =
+    inputs;
   const navigate = useNavigate();
 
   // 유효성 검사
@@ -131,11 +133,10 @@ const Join = () => {
       address: address,
       phoneNumber: phone,
       nickname: nickname,
-      profileImage: '',
-      type: '',
+      profileImage: profileImage,
     };
     try {
-      const res = await axios.post('/api/v1/users/join', data);
+      const res = await axios.post('/api/v1/auth/join', data);
       if (res.statusText === 'Created') {
         alert('회원가입이 완료되었습니다.');
         navigate('/login');
@@ -238,6 +239,15 @@ const Join = () => {
               ref={(i) => (inputRef.current[6] = i)}
             />
           </JoinItem>
+          <JoinItem>
+            <p>프로필 이미지</p>
+            <input
+              type="file"
+              name="image"
+              ref={(i) => (inputRef.current[8] = i)}
+              style={{ border: 'none', fontSize: '0.5rem' }}
+            />
+          </JoinItem>
           {!validBlank ? null : <span> * 모든 항목을 입력해주세요.</span>}
         </JoinWrapper>
         <button type="button" onClick={handleClick}>
@@ -277,8 +287,8 @@ const JoinBox = styled.div`
 
 const JoinTitle = styled.div`
   width: 50%;
-  font-size: 2rem;
-  margin: 1rem auto;
+  font-size: 1.5rem;
+  margin: 0rem auto 1rem;
 `;
 
 const JoinWrapper = styled.div`
@@ -294,7 +304,7 @@ const JoinWrapper = styled.div`
 
 const JoinItem = styled.div`
   width: 90%;
-  margin: 1rem;
+  margin: 0.8rem;
   p {
     font-size: 0.8rem;
     text-align: left;
@@ -321,4 +331,7 @@ const JoinItem = styled.div`
     color: #ff0000;
     font-size: 0.7rem;
   }
+`;
+const ImgTag = styled.input`
+  border: none;
 `;
