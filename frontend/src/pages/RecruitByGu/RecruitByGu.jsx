@@ -10,139 +10,132 @@ import { useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
-const list = [
+const data = [
   {
-    title: '서울봉사',
-    volunteerTime: '2023-03-12',
-    address: '놀이터',
-    participation: ['조인식 '],
-    author: '조인식',
+    _id: 1,
+    borough: '송파구',
+    title: '송파사거리 3인 모집합니다.',
+    comment: '',
+    volunteerTime: '23년3월24일 오후 4시-6시',
+    recruitments: 3,
     content:
-      '안녕하세요 어디어디 봉사하는 모임입니다. 잘부탁드립니다 파이팅파이팅',
+      '요즘 송파사거리에서 신호위반하는 차량이 많은 것 같아서요. 시간 나시는 분들 같이 합시다.',
+    author: '송파맨',
+    image: '',
+    address: '송파사거리',
+    category: '단기',
+    participants: [],
     meetingStatus: '모집중',
-    userId: 1,
   },
   {
-    title: '광주봉사',
-    volunteerTime: '2024-08-12',
-    address: '초등학교',
-    participation: ['안정민 '],
-    author: '조인식',
+    _id: 2,
+    borough: '송파구',
+    title: '송파사거리 3인 모집합니다.',
+    comment: '',
+    volunteerTime: '23년3월24일 오후 4시-6시',
+    recruitments: 3,
     content:
-      '안녕하세요 어디어디 봉사하는 모임입니다. 잘부탁드립니다 파이팅파이팅',
-    meetingStatus: '모집완료',
-    userId: 2,
-  },
-  {
-    title: '부산봉사',
-    volunteerTime: '2021-03-12',
-    address: '중학교',
-    participation: ['최중현 '],
-    author: '조인식',
-    content:
-      '안녕하세요 어디어디 봉사하는 모임입니다. 잘부탁드립니다 파이팅파이팅',
+      '요즘 송파사거리에서 신호위반하는 차량이 많은 것 같아서요. 시간 나시는 분들 같이 합시다.',
+    author: '송파맨',
+    image: '',
+    address: '송파사거리',
+    category: '단기',
+    participants: [],
     meetingStatus: '모집중',
-    userId: 3,
   },
   {
-    title: '인천봉사',
-    volunteerTime: '2023-12-12',
-    address: '고등학교',
-    participation: ['조인식 ', '안정민', '최중현'],
-    author: '조인식',
+    _id: 3,
+    borough: '송파구',
+    title: '송파사거리 3인 모집합니다.',
+    comment: '',
+    volunteerTime: '23년3월24일 오후 4시-6시',
+    recruitments: 3,
     content:
-      '안녕하세요 어디어디 봉사하는 모임입니다. 잘부탁드립니다 파이팅파이팅',
-    meetingStatus: '모집완료',
-    userId: 4,
-  },
-  {
-    title: '대구봉사',
-    volunteerTime: '2023-03-12',
-    address: '횡단보도',
-    participation: ['조인식 ', '최중현'],
-    author: '조인식',
-    content:
-      '안녕하세요 어디어디 봉사하는 모임입니다. 잘부탁드립니다 파이팅파이팅',
+      '요즘 송파사거리에서 신호위반하는 차량이 많은 것 같아서요. 시간 나시는 분들 같이 합시다.',
+    author: '송파맨',
+    image: '',
+    address: '송파사거리',
+    category: '단기',
+    participants: [],
     meetingStatus: '모집중',
-    userId: 5,
   },
   {
-    title: '대전봉사',
-    volunteerTime: '2000-03-12',
-    address: '공원',
-    participation: ['조인식 '],
-    author: '조인식',
+    _id: 4,
+    borough: '송파구',
+    title: '송파사거리 3인 모집합니다.',
+    comment: '',
+    volunteerTime: '23년3월24일 오후 4시-6시',
+    recruitments: 3,
     content:
-      '안녕하세요 어디어디 봉사하는 모임입니다. 잘부탁드립니다 파이팅파이팅',
+      '요즘 송파사거리에서 신호위반하는 차량이 많은 것 같아서요. 시간 나시는 분들 같이 합시다.',
+    author: '송파맨',
+    image: '',
+    address: '송파사거리',
+    category: '단기',
+    participants: [],
     meetingStatus: '모집중',
-    userId: 6,
   },
   {
-    title: '제주도봉사',
-    volunteerTime: '2023-03-12',
-    address: '공원2',
-    participation: ['조인식 '],
-    author: '조인식',
+    _id: 5,
+    borough: '송파구',
+    title: '송파사거리 3인 모집합니다.',
+    comment: '',
+    volunteerTime: '23년3월24일 오후 4시-6시',
+    recruitments: 3,
     content:
-      '안녕하세요 어디어디 봉사하는 모임입니다. 잘부탁드립니다 파이팅파이팅',
-    meetingStatus: '모집완료',
-    userId: 6,
-  },
-  {
-    title: '서울봉사',
-    volunteerTime: '2023-03-12',
-    address: '놀이터',
-    participation: ['조인식 '],
-    author: '조인식',
-    content:
-      '안녕하세요 어디어디 봉사하는 모임입니다. 잘부탁드립니다 파이팅파이팅',
+      '요즘 송파사거리에서 신호위반하는 차량이 많은 것 같아서요. 시간 나시는 분들 같이 합시다.',
+    author: '송파맨',
+    image: '',
+    address: '송파사거리',
+    category: '단기',
+    participants: [],
     meetingStatus: '모집중',
-    userId: 7,
   },
   {
-    title: '울산봉사',
-    volunteerTime: '2023-03-12',
-    address: '공원3',
-    participation: ['조인 '],
-    author: '조인식',
+    _id: 6,
+    borough: '송파구',
+    title: '송파사거리 3인 모집합니다.',
+    comment: '',
+    volunteerTime: '23년3월24일 오후 4시-6시',
+    recruitments: 3,
     content:
-      '안녕하세요 어디어디 봉사하는 모임입니다. 잘부탁드립니다 파이팅파이팅',
-    meetingStatus: '모집완료',
-    userId: 8,
+      '요즘 송파사거리에서 신호위반하는 차량이 많은 것 같아서요. 시간 나시는 분들 같이 합시다.',
+    author: '송파맨',
+    image: '',
+    address: '송파사거리',
+    category: '단기',
+    participants: [],
+    meetingStatus: '모집중',
   },
 ];
 
 const RecruitByGu = (props) => {
-  const user = useSelector((state) => state.user);
-  const [data, setData] = useState(list);
+  // const user = useSelector((state) => state.user);
+  // const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
-  const [total, setTotal] = useState(20);
+  const [total, setTotal] = useState(data.length);
   const navigate = useNavigate();
-  const items = 6;
-  const [volunteerState, setVolunteerState] = useState('');
+  // const items = 6;
 
   const handlePageChange = (page) => {
     return setPage(page);
   };
 
-  //참여한 봉사내역
-  const handleParticipatedVolunteer = () => {
-    setVolunteerState('participate');
-  };
-  //참여한 봉사만 필터하는 함수
-  const participateVolunteer = data
-    .slice(items * (page - 1), items * (page - 1) + items)
-    .filter((item) => item.userId !== user.id);
-
-  //개설한 봉사내역
-  const handleMadeVolunteer = () => {
-    setVolunteerState('made');
-  };
-  //개설한 봉사만 필터하는 함수
-  const joinVolunteer = data
-    .slice(items * (page - 1), items * (page - 1) + items)
-    .filter((item) => item.userId === user.id);
-
+  const list = data.map((item) => {
+    return (
+      <div key={item._id}>
+        <VolunteerDetail
+          onClick={() => navigate('/recruitmentdetail', { state: item })}
+        >
+          <MeetingStatus>{item.meetingStatus}</MeetingStatus>
+          <VolunteerMessage>{item.title}</VolunteerMessage>
+          <VolunteerMessage>{item.volunteerTime}</VolunteerMessage>
+          <VolunteerMessage>{item.address}</VolunteerMessage>
+          <VolunteerMessage>{item.author}</VolunteerMessage>
+        </VolunteerDetail>
+      </div>
+    );
+  });
   // 게시글 목록을 가져오는 함수
   // useEffect(() => {
   //   async function fetchData() {
@@ -183,7 +176,7 @@ const RecruitByGu = (props) => {
                 navigate(-1);
               }}
             />
-            무슨구의 모집 게시글(총 0건)
+            무슨구의 모집 게시글(총 {data.length}건)
           </Span>
           <span
             onClick={() => {
@@ -193,62 +186,7 @@ const RecruitByGu = (props) => {
             | 작성하기
           </span>
         </div>
-        <VB>
-          {volunteerState === ''
-            ? data
-                .slice(items * (page - 1), items * (page - 1) + items)
-                .map((value, i) => {
-                  return (
-                    <MyVolunteer
-                      key={i}
-                      title={value.title}
-                      volunteerTime={value.volunteerTime}
-                      address={value.address}
-                      author={value.author}
-                      content={value.content}
-                      participation={value.participation}
-                      meetingStatus={value.meetingStatus}
-                      userId={value.userId}
-                    />
-                  );
-                })
-            : (volunteerState === 'participate'
-                ? participateVolunteer
-                : joinVolunteer
-              ).map((value, i) => {
-                return (
-                  <MyVolunteer
-                    key={i}
-                    title={value.title}
-                    volunteerTime={value.volunteerTime}
-                    address={value.address}
-                    author={value.author}
-                    content={value.content}
-                    participation={value.participation}
-                    meetingStatus={value.meetingStatus}
-                    userId={value.userId}
-                  />
-                );
-              })}
-
-          {/* {data
-            .slice(items * (page - 1), items * (page - 1) + items)
-            .map((value, i) => {
-              return (
-                <MyVolunteer
-                  key={i}
-                  title={value.title}
-                  volunteerTime={value.volunteerTime}
-                  address={value.address}
-                  author={value.author}
-                  content={value.content}
-                  participation={value.participation}
-                  meetingStatus={value.meetingStatus}
-                  userId={value.userId}
-                />
-              );
-            })} */}
-        </VB>
+        <VB>{list}</VB>
         <div>
           <Paging
             page={page}
@@ -263,9 +201,8 @@ const RecruitByGu = (props) => {
 
 const VolunteerBox = styled.div`
   margin-top: 30px;
-  max-width: 1440px;
-  margin-top: 30px;
-  width: 90%;
+  max-width: 1350px;
+  width: 80%;
   height: 85%;
   border-radius: 20px;
   background-color: white;
@@ -282,6 +219,41 @@ const VB = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+`;
+
+const VolunteerDetail = styled.div`
+  position: relative;
+  background-color: whitesmoke;
+  height: 28vh;
+  border-radius: 20px;
+  margin-top: 5px;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  margin-left: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+`;
+const MeetingStatus = styled.span`
+  width: 50px;
+  height: 15px;
+  background-color: white;
+  position: absolute;
+  top: 22px;
+  left: 20px;
+  font-size: 14px;
+  border-radius: 5px;
+  padding: 5px;
+  text-align: center;
+  color: #2ccc63;
+  border: solid 1px #2ccc63;
+`;
+
+const VolunteerMessage = styled.div`
+  font-size: 20px;
 `;
 
 export default RecruitByGu;

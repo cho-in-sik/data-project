@@ -1,25 +1,32 @@
 import React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import img from '../../assets/images/66112.jpg';
 import axios from 'axios';
 import BackGround from '../../components/Background/Background';
 import { useSelector } from 'react-redux';
-
 const RecruitByGuDetail = () => {
-  const location = useLocation();
+  const data = [
+    {
+      _id: 1,
+      borough: '송파구',
+      title: '송파사거리 3인 모집합니다.',
+      comment: '',
+      volunteerTime: '23년3월24일 오후 4시-6시',
+      recruitments: 3,
+      content:
+        '요즘 송파사거리에서 신호위반하는 차량이 많은 것 같아서요. 시간 나시는 분들 같이 합시다.',
+      author: '송파맨',
+      image: '',
+      address: '송파사거리',
+      category: '단기',
+      participants: [],
+      meetingStatus: '모집중',
+    },
+  ];
   const navigate = useNavigate();
 
   const user = useSelector((state) => state.user);
-  //useLocation 으로 navigate로 온 상태 받기
-  debugger;
-  const title = location.state.title;
-  const volunteerTime = location.state.volunteerTime;
-  const address = location.state.address;
-  const content = location.state.content;
-  const participation = location.state.participation;
-  const userId = location.state.userId;
-  console.log(userId);
 
   const handleClick = async () => {
     try {
@@ -34,7 +41,8 @@ const RecruitByGuDetail = () => {
       <VolunteerDetailBox>
         <ContentDiv>
           <HeadDiv>
-            <span>{title}</span>
+            <span>{data.title}</span>
+            <button onClick={handlClickApply}>참가신청</button>
             <button onClick={handleClick}>참가취소</button>
           </HeadDiv>
           <BodyBox>
@@ -43,10 +51,10 @@ const RecruitByGuDetail = () => {
             </ImgBox>
             <SpanDiv>
               <span>
-                주소: <span>{address}</span>
+                주소: <span>{data.address}</span>
               </span>
               <span>
-                기간: <span>{volunteerTime}</span>
+                기간: <span>{data.volunteerTime}</span>
               </span>
               <span
                 style={{
@@ -59,37 +67,12 @@ const RecruitByGuDetail = () => {
                     marginTop: '-8px',
                     marginLeft: '10px',
                   }}
-                >
-                  {participation.map((person, i) => (
-                    <div
-                      key={i}
-                      style={{
-                        display: 'flex',
-                        height: '60%',
-                      }}
-                    >
-                      <span>{person}</span>
-
-                      {user.id === userId && (
-                        <button
-                          onClick={() => console.log(1)}
-                          style={{
-                            height: '30px',
-                            width: '30px',
-                            marginTop: '5px',
-                          }}
-                        >
-                          X
-                        </button>
-                      )}
-                    </div>
-                  ))}
-                </div>
+                />
               </span>
             </SpanDiv>
           </BodyBox>
         </ContentDiv>
-        <DescriptionBox>봉사소개: {content}</DescriptionBox>
+        <DescriptionBox>봉사소개: {data.content}</DescriptionBox>
         <ChatDiv>댓글 div</ChatDiv>
       </VolunteerDetailBox>
     </BackGround>
