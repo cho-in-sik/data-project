@@ -25,7 +25,7 @@ const UserDelete = (props) => {
 
     try {
       await axios.delete(
-        `/api/v1/users/${user.id}`,
+        `/api/v1/users/${user._id}`,
         {
           data: { ...formData },
         },
