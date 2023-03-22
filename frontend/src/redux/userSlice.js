@@ -6,6 +6,7 @@ const initialState = {
   id: '',
   nickname: '',
   userType: '',
+  profileImage: '',
 };
 
 export const userSlice = createSlice({
@@ -19,12 +20,15 @@ export const userSlice = createSlice({
       state.id = action.payload.id;
       state.nickname = action.payload.nickname;
       state.userType = action.payload.userType;
+      state.profileImage = action.payload.profileImage;
     },
+
     initUser: (state) => {
       state.email = initialState.email;
       state.id = initialState.id;
       state.nickname = initialState.nickname;
       state.userType = initialState.userType;
+      state.profileImage = initialState.profileImage;
     },
   },
   extraReducers: (builder) => {

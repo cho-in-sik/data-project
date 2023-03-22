@@ -36,6 +36,7 @@ function Login() {
       });
       console.log(res);
       dispatch(loginUser(res.data));
+
       if (res.statusText === 'OK') {
         navigate('/mypage');
       } else {
