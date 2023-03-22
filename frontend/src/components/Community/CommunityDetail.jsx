@@ -15,60 +15,56 @@ import {
 } from './styles/CommunityDetailStyle';
 import { useNavigate, useParams } from 'react-router-dom';
 
+// 게시글 상세 페이지
 function CommunityDetail() {
-  // 게시글의 id를 가져옴
-  const { id } = useParams();
-  const [community, setCommunity] = useState(null);
+  const { id } = useParams(); // URL 파라미터 가져오기
+  const [community, setCommunity] = useState(null); // 게시글 정보
   const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchData() {
       try {
         const response = await axios.get(`/api/v1/board/${id}`);
-        setCommunity(response.data);
+        setCommunity(response.data.board); // 게시글 정보
         // console.log(response.data);
       } catch (error) {
-        console.error('데이터를 불러오는 중 오류가 발생했습니다:', error);
+        console.error('게시글을 불러오는데 실패하였습니다.', error);
         navigate('/board');
       }
     }
-    // fetchData 함수를 호출 및 실행
     fetchData();
-  }, [id, navigate]);
+  }, [id, navigate]); // id가 변경될 때마다 fetchData 함수 실행
 
-  // 수정하기 버튼을 눌렀을 때 실행되는 함수
   const handleEditClick = () => {
     navigate(`/board/edit/${community._id}`);
-  };
+  }; // 게시글 수정 페이지로 이동
 
-  // 삭제하기 버튼을 눌렀을 때 실행되는 함수
   const handleDeleteClick = async () => {
     try {
       await axios.delete(`/api/v1/board/${id}`);
-      navigate('/board/all');
+      navigate('/board');
     } catch (error) {
-      console.error('게시글 삭제에 실패했습니다:', error);
-      alert('게시글 삭제에 실패했습니다.');
+      console.error('게시글 삭제에 실패하였습니다.', error);
+      alert('본인의 게시글만 삭제할 수 있습니다.');
     }
-  };
+  }; // 게시글 삭제
 
-  // 댓글 작성 후 댓글 목록을 업데이트하는 함수
   const updateComments = (comments) => {
-    setCommunity({ ...community, comments });
+    setCommunity({ ...community, comments: comments }); // 댓글 정보 업데이트
   };
 
-  // 게시글이 로딩되지 않았을 때
   if (!community) {
-    return <div>게시글 불러오는 중</div>;
+    return <div>게시글 로딩중</div>;
   }
+
   return (
     <>
       <Header />
       <CommunityDetailWrapper>
         <CommunityDetailHeader>
-          <CommunityDetailTitle> {community.title}</CommunityDetailTitle>
+          <CommunityDetailTitle>{community.title}</CommunityDetailTitle>
           <CommunityDetailAuthor>
-            작성자: {community.author}
+            작성자: {community.author.nickname}
           </CommunityDetailAuthor>
         </CommunityDetailHeader>
 
@@ -76,33 +72,30 @@ function CommunityDetail() {
         {community.image && community.image.length > 0 && (
           <CommunityDetailImage
             src={community.image[0].imageUrl}
-            alt="게시글 이미지"
+            alt="Post Image"
           />
         )}
-        {/* 게시글 내용 */}
         <CommunityDetailContent>{community.content}</CommunityDetailContent>
         <div>
-          <button onClick={handleEditClick}>수정하기</button>
-          <button onClick={handleDeleteClick}>삭제하기</button>
+          <button onClick={handleEditClick}>수정</button>
+          <button onClick={handleDeleteClick}>삭제</button>
         </div>
         <CommunityDetailDivider />
         <CommunityDetailCommentTitle>댓글</CommunityDetailCommentTitle>
         <CommunityDetailComments>
-          {/* 댓글이 존재할 경우 */}
           {community.comments && community.comments.length > 0 ? (
             community.comments.map((comment) => (
               <div key={comment._id}>
-                <h4>{comment.writer}</h4>
+                <h4>{comment.writer.nickname}</h4>
                 <p>{comment.content}</p>
               </div>
             ))
           ) : (
-            <p>댓글이 없습니다.</p>
+            <p>댓글이 존재하지 않는 게시물입니다.</p>
           )}
-          {/* 댓글 작성 폼 */}
           <CommentForm boardId={id} updateComments={updateComments} />
         </CommunityDetailComments>
-        <button onClick={() => navigate('/board/all')}>목록으로</button>
+        <button onClick={() => navigate('/board')}>목록으로</button>
       </CommunityDetailWrapper>
     </>
   );
