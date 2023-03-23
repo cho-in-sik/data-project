@@ -8,12 +8,10 @@ import { useNavigate, useLocation, useParams } from 'react-router-dom';
 
 //게시글 작성 폼
 const RecruitByGuForm = () => {
-  // const [borough, setBorough] = useState('');
   const [title, setTitle] = useState('');
   const [volunteerTime, setVolunteerTime] = useState('');
   const [recruitments, setRecruitments] = useState('');
   const [content, setContent] = useState('');
-  // const [author, setAuthor] = useState('');
   const [image, setImage] = useState('');
   const [address, setAddress] = useState('');
   const [category, setCategory] = useState('');
@@ -34,8 +32,6 @@ const RecruitByGuForm = () => {
       volunteerTime,
       recruitments,
       content,
-      // author,
-      // image,
       address,
       category,
     };
@@ -54,6 +50,26 @@ const RecruitByGuForm = () => {
   const handleMouseLeave = () => {
     setModal(false);
   };
+
+  // 이미지 핸들러
+  const profileImgHandler = async (e) => {
+    debugger;
+    const img = e.target.files[0];
+    const formData = new FormData();
+    formData.append('image', img);
+
+    axios
+      .post('/api/v1/image/upload', formData)
+      .then((res) => {
+        setImage(res.data.image);
+        alert('성공');
+      })
+      .catch((err) => {
+        alert('실패');
+      });
+    return formData;
+  };
+
   return (
     <BackGround>
       <Header />
@@ -79,12 +95,9 @@ const RecruitByGuForm = () => {
                 placeholder="예) 23년 3월 22일 16시 - 18시"
                 required
               />
-              <span
-                onMouseOver={handleMouseOver}
-                onMouseLeave={handleMouseLeave}
-              >
-                시간별 조회
-              </span>
+              <p onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave}>
+                가이드
+              </p>
               {modal && <TimeOfAccident />}
             </FormGroup>
             <FormGroup>
@@ -110,8 +123,9 @@ const RecruitByGuForm = () => {
               <FormLabel htmlFor="image">이미지</FormLabel>
               <FormInput
                 type="file"
-                value={image}
-                onChange={(event) => setImage(event.target.value)}
+                accept=".png, .jpeg, .jpg"
+                style={{ border: 'none', fontSize: '0.8rem' }}
+                onChange={profileImgHandler}
               />
             </FormGroup>
             <FormGroup>
@@ -134,9 +148,9 @@ const RecruitByGuForm = () => {
               />
             </FormGroup>
           </FormGroupBox>
-          <FormButton type="submit">작성</FormButton>
+          <FormButton type="submit">작성하기</FormButton>
           <FormButton type="button" onClick={() => navigate(-1)}>
-            취소
+            작성 취소
           </FormButton>
         </form>
       </FormWrapper>
@@ -171,7 +185,15 @@ const FormGroupBox = styled.div`
 
 const FormGroup = styled.div`
   width: 75%;
-  margin: 2.5rem auto;
+  margin: 2rem auto;
+
+  p {
+    display: inline-block;
+    color: #fff;
+    background-color: #ff5065;
+    border-radius: 5px;
+    padding: 3px 6px;
+  }
 `;
 
 const FormLabel = styled.label`
@@ -182,11 +204,13 @@ const FormLabel = styled.label`
 `;
 
 const FormInput = styled.input`
-  width: 70%;
+  width: 65%;
   font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 5px;
-
+  margin-right: 1rem;
+  padding: 0 1rem;
+  line-height: 2.2rem;
   &::placeholder {
     font-size: 0.8rem;
     font-style: italic;
@@ -194,11 +218,14 @@ const FormInput = styled.input`
 `;
 
 const FormTextarea = styled.textarea`
-  width: 70%;
+  width: 65%;
   font-size: 1rem;
   border: 1px solid #ccc;
   resize: none;
   border-radius: 5px;
+  padding: 0 1rem;
+  line-height: 2.2rem;
+
   &::placeholder {
     font-size: 0.8rem;
     font-style: italic;
@@ -217,9 +244,8 @@ const FormButton = styled.button`
   border-radius: 5px;
   border: none;
   cursor: pointer;
-`;
 
-const FormError = styled.p`
-  color: red;
-  margin-top: 5px;
+  &:hover {
+    background-color: #2f9564;
+  }
 `;

@@ -143,8 +143,6 @@ const RecruitByGuDetail = () => {
     }
   };
 
-  // 모집완료일 경우 참가신청을 받지 않는다.
-
   return (
     <BackGround>
       <Header />
@@ -163,26 +161,29 @@ const RecruitByGuDetail = () => {
               }}
             />
             <span>{data.title}</span>
-            {/* 이 모임을 만든 사람인지 확인해서 */}
-            {user.id === data.author?._id ? (
-              // 이 모임을 만든 사람이면 보이는 버튼
-              <>
-                <button onClick={toggleRecruitComplete}>모집상태 변경</button>
-                <button onClick={handleDelete}>모집글 삭제</button>
-              </>
-            ) : // 이 모임을 만든 사람이 아니면 보이는 버튼
-            null}
 
-            {/* 이 모임에 참가한 사람인지 체크 */}
-            {checkApply(user.id) === true ? (
-              <button onClick={handleCancel}>참가취소</button>
-            ) : (
-              <button onClick={handleApply}>참가신청</button>
-            )}
+            <span style={{ width: '40%', float: 'right', textAlign: 'right' }}>
+              {/* 이 모임을 만든 사람인지 확인해서 */}
+              {user.id === data.author?._id ? (
+                // 이 모임을 만든 사람이면 보이는 버튼
+                <>
+                  <button onClick={toggleRecruitComplete}>모집상태 변경</button>
+                  <button onClick={handleDelete}>모집글 삭제</button>
+                </>
+              ) : // 이 모임을 만든 사람이 아니면 보이는 버튼
+              null}
+
+              {/* 이 모임에 참가한 사람인지 체크 */}
+              {checkApply(user.id) === true ? (
+                <button onClick={handleCancel}>참가취소</button>
+              ) : (
+                <button onClick={handleApply}>참가신청</button>
+              )}
+            </span>
           </HeadDiv>
           <BodyBox>
             <ImgBox>
-              <img src={img} alt="volunteer-IMG" />
+              <img src={data.image} alt="volunteer-IMG" />
             </ImgBox>
             <SpanDiv>
               <span style={{ display: 'none' }}>{data._id}</span>
@@ -238,25 +239,33 @@ const ContentDiv = styled.div`
   /* height: 60%; */
 `;
 const HeadDiv = styled.div`
-  display: flex;
-  justify-content: space-between;
+  /* display: flex; */
+  /* justify-content: space-between; */
   & span {
     width: 50%;
     font-size: 30px;
     font-weight: 400;
   }
   & button {
+    margin: 0 0.3rem;
     border: none;
+    border-radius: 20px;
     font-weight: 500;
-    padding: 5px 15px;
+    padding: 0.5rem 1rem;
     color: white;
-    font-size: 20px;
+    font-size: 1rem;
     background-color: #ff5065;
     cursor: pointer;
+
+    &:hover {
+      background-color: #fb324a;
+    }
   }
 `;
 const BodyBox = styled.div`
+  width: 90%;
   display: flex;
+  justify-content: space-around;
   height: auto;
   padding: 2rem;
 `;
@@ -265,13 +274,14 @@ const ChatDiv = styled.div`
 `;
 
 const ImgBox = styled.div`
+  width: 40%;
+  height: auto;
   & img {
     border-radius: 10px;
-    width: 400px;
-    height: 300px;
   }
 `;
 const SpanDiv = styled.div`
+  width: 50%;
   padding-left: 5%;
   & span {
     display: inline-block;

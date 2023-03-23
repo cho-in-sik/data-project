@@ -17,11 +17,10 @@ const Join = () => {
     pw: '',
     pwConfirm: '',
     address: '',
-    profileImage: '',
   });
+  const [profileImage, setProfileImage] = useState('');
 
-  const { email, name, nickname, phone, pw, pwConfirm, address, profileImage } =
-    inputs;
+  const { email, name, nickname, phone, pw, pwConfirm, address } = inputs;
   const navigate = useNavigate();
 
   // 유효성 검사
@@ -124,6 +123,25 @@ const Join = () => {
     }
   };
 
+  // 이미지 핸들러
+  const profileImgHandler = async (e) => {
+    debugger;
+    const img = e.target.files[0];
+    const formData = new FormData();
+    formData.append('image', img);
+
+    axios
+      .post('/api/v1/image/upload', formData)
+      .then((res) => {
+        setProfileImage(res.data.image);
+        alert('성공');
+      })
+      .catch((err) => {
+        alert('실패');
+      });
+    return formData;
+  };
+
   // api에 전달
   const submitData = async () => {
     const data = {
@@ -133,7 +151,6 @@ const Join = () => {
       address: address,
       phoneNumber: phone,
       nickname: nickname,
-      profileImage: profileImage,
     };
     try {
       const res = await axios.post('/api/v1/auth/join', data);
@@ -244,7 +261,9 @@ const Join = () => {
             <input
               type="file"
               name="image"
-              ref={(i) => (inputRef.current[8] = i)}
+              accept=".png, .jpeg, .jpg"
+              ref={(i) => (inputRef.current[7] = i)}
+              onChange={profileImgHandler}
               style={{ border: 'none', fontSize: '0.5rem' }}
             />
           </JoinItem>

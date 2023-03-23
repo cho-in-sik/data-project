@@ -27,8 +27,10 @@ const RecruitByGu = (props) => {
   useEffect(() => {
     async function fetchData() {
       try {
-        debugger;
-        const res = await axios.get(`/api/v1/recruitment/?boroughId=${id}`);
+        // debugger;
+        const res = await axios.get(
+          `/api/v1/recruitment?boroughId=${id}&page=${page}&perPage=${perPage}`,
+        );
         console.log(res);
         setGu(res.data.data.recruitments[0].borough.borough);
         setTotal(res.data.data.recruitmentCount);
@@ -76,7 +78,7 @@ const RecruitByGu = (props) => {
                 navigate(-1);
               }}
             />
-            {guName}의 모집 게시글(총 {data.length}건)
+            {guName}의 모집 게시글(총 {total}건)
           </Span>
           {!user.id ? null : (
             <button
@@ -90,17 +92,17 @@ const RecruitByGu = (props) => {
         </div>
         <VB>{data.length === 0 ? <p>'작성된 게시물이 없습니다.'</p> : list}</VB>
         <div>
-          {data.length < 7 ? null : (
-            <PaginationBox>
-              <Pagination
-                activePage={page}
-                itemsCountPerPage={perPage}
-                pageRangeDisplayed={5}
-                totalItemsCount={total}
-                onChange={handlePageChange}
-              />
-            </PaginationBox>
-          )}
+          {/* {data.length < 7 ? null : ( */}
+          <PaginationBox>
+            <Pagination
+              activePage={page}
+              itemsCountPerPage={perPage}
+              pageRangeDisplayed={5}
+              totalItemsCount={total}
+              onChange={handlePageChange}
+            />
+          </PaginationBox>
+          {/* )} */}
         </div>
       </VolunteerBox>
     </BackGround>
