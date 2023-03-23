@@ -16,9 +16,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUsers } from '@fortawesome/free-solid-svg-icons';
 
 const CommunityPostForm = () => {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+  const [title, setTitle] = useState(''); // 게시글 제목
+  const [content, setContent] = useState(''); // 게시글 내용
   const [image, setImage] = useState(null);
+  // 게시글 이미지 null값으로 해놓는 이유는 이미지를 업로드 하지 않아도 게시글을 작성할 수 있기 때문
   const navigate = useNavigate();
 
   const user = useSelector((state) => state.user);
@@ -31,8 +32,8 @@ const CommunityPostForm = () => {
     formData.append('image', file);
     try {
       const response = await axios.post('/api/v1/image/upload', formData);
-      console.log(response.data);
-      setImage(response.data.image);
+      // console.log(response.data);
+      setImage(response.data.image); // 이미지 업로드 성공 시 이미지 URL을 image 상태에 저장
       alert('이미지 업로드 성공!');
     } catch (error) {
       console.error(error);
@@ -76,12 +77,14 @@ const CommunityPostForm = () => {
         <FormGroup>
           <FormLabel htmlFor="author">작성자</FormLabel>
           <div>{user.nickname}</div>
+          {/* 현재 유저의 닉네임 표시 */}
         </FormGroup>
         <FormGroup>
           <FormLabel htmlFor="content">내용</FormLabel>
           <FormTextarea
             id="content"
             value={content}
+            // 댓글 내용
             onChange={(event) => setContent(event.target.value)}
             required
           />
@@ -92,7 +95,7 @@ const CommunityPostForm = () => {
             type="file"
             accept=".png, .jpeg, .jpg"
             style={{ border: 'none' }}
-            onChange={handleImageUpload} // add onChange event handler to handle image upload
+            onChange={handleImageUpload} // 이미지 업로드
           />
         </FormGroup>
         <FormButton type="submit">작성 완료</FormButton>

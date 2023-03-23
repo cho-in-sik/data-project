@@ -14,8 +14,7 @@ function CommentForm({ boardId, updateComments }) {
         content,
       }); // 댓글 작성 API 호출
 
-      setContent('');
-
+      setContent(''); // 댓글 내용 초기화
       updateComments(response.data.comments); // 댓글 목록 갱신
     } catch (error) {
       console.error('댓글 작성에 실패하였습니다.', error);

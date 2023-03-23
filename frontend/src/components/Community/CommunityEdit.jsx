@@ -15,21 +15,21 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUsers } from '@fortawesome/free-solid-svg-icons';
 
 const CommunityEditForm = () => {
-  const { id } = useParams();
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [image, setImage] = useState(null);
+  const { id } = useParams(); // URL 파라미터 가져오기
+  const [title, setTitle] = useState(''); // 게시글 제목
+  const [content, setContent] = useState(''); // 게시글 내용
+  const [image, setImage] = useState(null); // 게시글 이미지
 
   const navigate = useNavigate();
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user); // Redux의 useSelector hook을 이용해 현재 유저 정보 가져오기
 
   useEffect(() => {
     async function fetchData() {
       try {
         const response = await axios.get(`/api/v1/board/${id}`);
-        setTitle(response.data.board.title);
-        setContent(response.data.board.content);
-        setImage(response.data.board.image);
+        setTitle(response.data.board.title); // 게시글 제목
+        setContent(response.data.board.content); // 게시글 내용
+        setImage(response.data.board.image); // 게시글 이미지
       } catch (error) {
         console.error(error);
         alert('게시물을 읽어오는데 실패하였습니다.');
@@ -37,16 +37,17 @@ const CommunityEditForm = () => {
       }
     }
     fetchData();
-  }, [id, navigate]);
+  }, [id, navigate]); // id가 변경될 때마다 useEffect 함수가 실행되도록 함
 
+  //이미지 업로드
   const handleImageUpload = async (event) => {
-    const file = event.target.files[0];
-    const formData = new FormData();
+    const file = event.target.files[0]; // 업로드한 파일
+    const formData = new FormData(); // FormData 객체 생성
     formData.append('image', file);
     try {
       const response = await axios.post('/api/v1/image/upload', formData);
       console.log(response.data);
-      setImage(response.data.image);
+      setImage(response.data.image); // 이미지 업로드 성공 시 이미지 URL을 image 상태에 저장
       alert('이미지 업로드 성공!');
     } catch (error) {
       console.error(error);
@@ -54,6 +55,7 @@ const CommunityEditForm = () => {
     }
   };
 
+  // 게시글 수정
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     try {

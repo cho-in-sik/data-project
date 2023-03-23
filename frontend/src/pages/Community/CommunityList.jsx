@@ -20,7 +20,6 @@ function CommunityList() {
   const [boards, setBoards] = useState([]); // 게시글 목록
   const [page, setPage] = useState(1); // 현재 페이지
   const [perPage, setPerPage] = useState(10); // 한 페이지에 보여줄 게시글 수
-  const [total, setTotal] = useState(0); // 전체 게시글 수
   const [totalPage, setTotalPage] = useState(0); // 전체 페이지 수
 
   useEffect(() => {
@@ -31,7 +30,6 @@ function CommunityList() {
         ); // 게시글 목록 가져오기
 
         setBoards(response.data.boards); // 게시글 목록
-        setTotal(response.data.total); // 전체 게시글 수
         setTotalPage(response.data.totalPage); // 전체 페이지 수
       } catch (error) {
         console.log(error);
