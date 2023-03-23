@@ -18,6 +18,7 @@ import RecruitmentMain from './components/Recruitment/RecruitmentMain';
 import RecruitByGu from './pages/RecruitByGu/RecruitByGu';
 import RecruitByGuDetail from './pages/RecruitByGu/RecruitByGuDetail';
 import RecruitByGuForm from './pages/RecruitByGu/RecruitByGuForm';
+import NotFound from './pages/NotFound/NotFound';
 
 // protected route
 import LoginRoute from './components/Route/LoginRoute/LoginRoute';
@@ -40,6 +41,8 @@ export function Router() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Main />} />
+        <Route path="/recruitment/main" element={<RecruitmentMain />} />
+        <Route path="/recruitment/:id" element={<RecruitByGu />} />
         <Route element={<NonLoginRoute />}>
           <Route path="/join" element={<Join />} />
           <Route path="/login" element={<Login />} />
@@ -55,8 +58,6 @@ export function Router() {
           <Route path="/board/:id" element={<CommunityDetail />} />
           <Route path="/board/edit/:id" element={<CommunityEdit />} />
           <Route path="/board/write" element={<CommunityForm />} />
-          <Route path="/recruitment/main" element={<RecruitmentMain />} />
-          <Route path="/recruitment/:id" element={<RecruitByGu />} />
           <Route path="/recruitment/:id/:id" element={<RecruitByGuDetail />} />
           <Route path="/recruitment/:id/form" element={<RecruitByGuForm />} />
           <Route element={<AdminRoute />}>
@@ -70,6 +71,7 @@ export function Router() {
         <Route path="/1" element={<TimeOfAccident />} />
         <Route path="/2" element={<TypeOfAccident />} />
         <Route path="/3" element={<PieMortality />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );
