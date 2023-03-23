@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const MyVolunteer = ({
   title,
@@ -8,10 +9,12 @@ const MyVolunteer = ({
   address,
   author,
   content,
-  participation,
+  participants,
   meetingStatus,
   userId,
+  recruitmentId,
 }) => {
+  const user = useSelector((state) => state.user);
   const navigate = useNavigate();
   const data = {
     title,
@@ -19,8 +22,9 @@ const MyVolunteer = ({
     address,
     author,
     content,
-    participation,
+    participants,
     userId,
+    recruitmentId,
   };
   //모집상태가 "모집완료" 이면 모집상태 색변경
   const meetingStatusFinishedColor = meetingStatus === '모집완료' && '#ff5065';
@@ -49,7 +53,9 @@ const MyVolunteer = ({
       </VolunteerMessage>
       <VolunteerMessage>{volunteerTime}</VolunteerMessage>
       <VolunteerMessage>{address}</VolunteerMessage>
-      <VolunteerMessage>{author}</VolunteerMessage>
+      <VolunteerMessage>
+        {author === user.id ? user.nickname : author}
+      </VolunteerMessage>
     </VolunteerDetail>
   );
 };

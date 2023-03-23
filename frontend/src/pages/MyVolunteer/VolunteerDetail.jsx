@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import img from '../../assets/images/66112.jpg';
 import axios from 'axios';
 import BackGround from '../../components/Background/Background';
 import { useSelector } from 'react-redux';
-import CommentForm from '../../components/Community/CommentForm';
+import VolunteerComment from './VolunteerComment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import Header from '../../components/Header/Header';
@@ -20,10 +20,26 @@ const VolunteerDetail = () => {
   const volunteerTime = location.state.volunteerTime;
   const address = location.state.address;
   const content = location.state.content;
-  const participation = location.state.participation;
+  const participants = location.state.participants;
   const userId = location.state.userId;
-  console.log(userId);
+  const recruitmentId = location.state.recruitmentId;
 
+  const [comment, setComment] = useState([]);
+
+  //get으로 상세페이지 불러오기..
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const res = await axios.get(`/api/v1/recruitment/${recruitmentId}`);
+        setComment(res.data.data.comments);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    getData();
+  }, [recruitmentId]);
+
+  //참가자 탈퇴 핸들러
   const handleClick = async () => {
     try {
       await axios.delete(
@@ -32,6 +48,19 @@ const VolunteerDetail = () => {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  //props로 넘겨줄 함수 (댓글 delete하고 setComment바꾸기)
+  const deleteCommentHandler = (commentId) => {
+    const updatedComments = comment.filter((item) => item._id !== commentId);
+    setComment(updatedComments);
+  };
+
+  //props로 넘겨줄 함수 (댓글 post하고 setComment바꾸기)
+  const postCommentHandler = (data) => {
+    console.log(data);
+    const updatedComments = comment.push({ ...comment, data });
+    setComment(updatedComments);
   };
 
   return (
@@ -72,7 +101,8 @@ const VolunteerDetail = () => {
                     marginLeft: '10px',
                   }}
                 >
-                  {participation.map((person, i) => (
+                  {' '}
+                  {participants.map((person, i) => (
                     <div
                       key={i}
                       style={{
@@ -103,7 +133,12 @@ const VolunteerDetail = () => {
         </ContentDiv>
         <DescriptionBox>봉사소개: {content}</DescriptionBox>
         <ChatDiv>
-          <CommentForm />
+          <VolunteerComment
+            recruitmentId={recruitmentId}
+            comment={comment}
+            deleteCommentHandler={deleteCommentHandler}
+            postCommentHandler={postCommentHandler}
+          />
         </ChatDiv>
       </VolunteerDetailBox>
     </BackGround>
@@ -111,7 +146,7 @@ const VolunteerDetail = () => {
 };
 
 const VolunteerDetailBox = styled.div`
-  margin-top: 20px;
+  margin: 20px 0;
   position: relative;
   width: 75%;
   height: 85%;
@@ -120,12 +155,13 @@ const VolunteerDetailBox = styled.div`
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 `;
 const ContentDiv = styled.div`
-  height: 60%;
+  height: 50%;
 `;
 const HeadDiv = styled.div`
   display: flex;
   justify-content: space-between;
   margin: 35px 30px;
+
   & span {
     font-size: 30px;
     font-weight: 400;
@@ -146,7 +182,7 @@ const BodyBox = styled.div`
   align-items: center;
 `;
 const ChatDiv = styled.div`
-  height: 30%;
+  height: 40%;
   margin-left: 30px;
 `;
 
@@ -154,7 +190,7 @@ const ImgBox = styled.div`
   & img {
     border-radius: 10px;
     width: 400px;
-    height: 300px;
+    height: 10%;
   }
 `;
 const SpanDiv = styled.div`
@@ -176,8 +212,9 @@ const SpanDiv = styled.div`
 const DescriptionBox = styled.div`
   height: 10%;
   font-size: 18px;
-  margin-top: 30px;
+  margin-top: 3%;
   margin-left: 30px;
+  margin-bottom: 3%;
   font-size: 20px;
 `;
 
