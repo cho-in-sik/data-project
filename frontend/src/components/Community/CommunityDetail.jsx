@@ -19,6 +19,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 function CommunityDetail() {
   const { id } = useParams(); // URL 파라미터 가져오기
   const [community, setCommunity] = useState(null); // 게시글 정보
+  const [comments, setComments] = useState([]); // 댓글 정보
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,7 +27,8 @@ function CommunityDetail() {
       try {
         const response = await axios.get(`/api/v1/board/${id}`);
         setCommunity(response.data.board); // 게시글 정보
-        // console.log(response.data);
+        setComments(response.data.comments); // 댓글 정보
+        // console.log(response.data.comments);
       } catch (error) {
         console.error('게시글을 불러오는데 실패하였습니다.', error);
         navigate('/board');
@@ -49,6 +51,19 @@ function CommunityDetail() {
     }
   }; // 게시글 삭제
 
+  const handleDeleteComment = async (commentId) => {
+    try {
+      await axios.delete(`/api/v1/board/${id}/comment/${commentId}`);
+      const updatedComments = comments.filter(
+        (comment) => comment._id !== commentId,
+      );
+      setComments(updatedComments);
+    } catch (error) {
+      console.error('댓글 삭제에 실패하였습니다.', error);
+      alert('본인의 댓글만 삭제할 수 있습니다.');
+    }
+  }; // 댓글 삭제
+
   const updateComments = (comments) => {
     setCommunity({ ...community, comments: comments }); // 댓글 정보 업데이트
   };
@@ -70,10 +85,7 @@ function CommunityDetail() {
 
         <CommunityDetailDivider />
         {community.image && community.image.length > 0 && (
-          <CommunityDetailImage
-            src={community.image[0].imageUrl}
-            alt="Post Image"
-          />
+          <CommunityDetailImage src={community.image} alt="업로드 이미지" />
         )}
         <CommunityDetailContent>{community.content}</CommunityDetailContent>
         <div>
@@ -83,11 +95,14 @@ function CommunityDetail() {
         <CommunityDetailDivider />
         <CommunityDetailCommentTitle>댓글</CommunityDetailCommentTitle>
         <CommunityDetailComments>
-          {community.comments && community.comments.length > 0 ? (
-            community.comments.map((comment) => (
+          {comments && comments.length > 0 ? (
+            comments.map((comment) => (
               <div key={comment._id}>
                 <h4>{comment.writer.nickname}</h4>
                 <p>{comment.content}</p>
+                <button onClick={() => handleDeleteComment(comment._id)}>
+                  삭제
+                </button>
               </div>
             ))
           ) : (
