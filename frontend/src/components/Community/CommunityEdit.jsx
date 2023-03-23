@@ -18,19 +18,18 @@ const CommunityEditForm = () => {
   const { id } = useParams();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [image, setImage] = useState('');
+  const [image, setImage] = useState(null);
 
   const navigate = useNavigate();
-  const user = useSelector((state) => state.user); // Redux의 useSelector hook을 이용해 현재 유저 정보 가져오기
+  const user = useSelector((state) => state.user);
 
   useEffect(() => {
     async function fetchData() {
       try {
         const response = await axios.get(`/api/v1/board/${id}`);
-        setTitle(response.data.board.title); // 게시글 제목
-        setContent(response.data.board.content); // 게시글 내용
-        setImage(response.data.board.image); // 게시글 이미지
-        // console.log(response.data);
+        setTitle(response.data.board.title);
+        setContent(response.data.board.content);
+        setImage(response.data.board.image);
       } catch (error) {
         console.error(error);
         alert('게시물을 읽어오는데 실패하였습니다.');
@@ -40,6 +39,21 @@ const CommunityEditForm = () => {
     fetchData();
   }, [id, navigate]);
 
+  const handleImageUpload = async (event) => {
+    const file = event.target.files[0];
+    const formData = new FormData();
+    formData.append('image', file);
+    try {
+      const response = await axios.post('/api/v1/image/upload', formData);
+      console.log(response.data);
+      setImage(response.data.image);
+      alert('이미지 업로드 성공!');
+    } catch (error) {
+      console.error(error);
+      alert('이미지 업로드 실패!');
+    }
+  };
+
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -48,10 +62,12 @@ const CommunityEditForm = () => {
         content,
         image,
       });
-      navigate(`/board/${id}`); // 게시글 상세 페이지로 이동
+      // console.log(response.data);
+      navigate(`/board/${id}`);
     } catch (error) {
       console.error(error);
-      alert('게시글 수정이 실패하였습니다.');
+      alert('본인의 게시글만 수정할 수 있습니다.');
+      navigate(`/board/${id}`);
     }
   };
 
@@ -67,8 +83,8 @@ const CommunityEditForm = () => {
           <FormInput
             type="text"
             id="title"
-            value={title} // 제목
-            onChange={(event) => setTitle(event.target.value)} // 제목 입력
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
             required
           />
         </FormGroup>
@@ -91,7 +107,7 @@ const CommunityEditForm = () => {
             type="file"
             accept=".png, .jpeg, .jpg"
             style={{ border: 'none' }}
-            onChange={(event) => setImage(event.target.value)}
+            onChange={handleImageUpload}
           />
         </FormGroup>
         <FormButton type="submit">수정</FormButton>
