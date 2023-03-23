@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
+import styled from 'styled-components';
 
 function CommentForm({ boardId, updateComments }) {
   const [content, setContent] = useState(''); // 댓글 내용
@@ -23,15 +24,9 @@ function CommentForm({ boardId, updateComments }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <CommentFormWrapper onSubmit={handleSubmit}>
       <div>
-        <label htmlFor="author">작성자</label>
-        <div>{user.nickname}</div>
-        {/* // 현재 유저의 닉네임 표시 */}
-      </div>
-
-      <div>
-        <label htmlFor="content">내용</label>
+        <label htmlFor="content">댓글 작성하기</label>
         <textarea
           id="content"
           value={content} // 댓글 내용
@@ -40,9 +35,68 @@ function CommentForm({ boardId, updateComments }) {
         />
       </div>
 
-      <button type="submit">댓글 작성</button>
-    </form>
+      <button type="submit">등록</button>
+    </CommentFormWrapper>
   );
 }
 
 export default CommentForm;
+
+const CommentFormWrapper = styled.form`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  margin-top: 20px;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+
+    label {
+      font-size: 24px;
+      margin-bottom: 10px;
+      width: 15%;
+      text-align: center;
+      border-radius: 10px;
+      padding: 5px 10px;
+      border: none;
+      background-color: whitesmoke;
+    }
+
+    div {
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    textarea {
+      height: 100px;
+      font-size: 14px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      resize: none;
+    }
+  }
+
+  button {
+    align-self: flex-end;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 15px;
+    color: #333;
+    align-self: flex-end;
+
+    &:hover {
+      background-color: #47b781;
+    }
+
+    &:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+  }
+`;

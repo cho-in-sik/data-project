@@ -96,7 +96,7 @@ export const Table = styled.table`
 `;
 
 export const LinkStyled = styled(Link)`
-  color: inherit;
+  color: black;
   text-decoration: none;
 
   &:hover {
@@ -121,8 +121,20 @@ export const PaginationWrapper = styled.div`
   button {
     margin: 0 5px;
     font-weight: bold;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    color: #333;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+
     &:hover {
-      color: #47b781;
+      background-color: #ddd;
+    }
+
+    &:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
     }
   }
 `;

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import CommentForm from './CommentForm';
 import Header from '../Header/Header';
+import { useSelector } from 'react-redux';
 import {
   CommunityDetailWrapper,
   CommunityDetailHeader,
@@ -12,6 +13,7 @@ import {
   CommunityDetailCommentTitle,
   CommunityDetailDivider,
   CommunityDetailComments,
+  ButtonContainer,
 } from './styles/CommunityDetailStyle';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -20,8 +22,10 @@ function CommunityDetail() {
   const { id } = useParams(); // URL 파라미터 가져오기
   const [community, setCommunity] = useState(null); // 게시글 정보
   const [comments, setComments] = useState([]); // 댓글 정보
+  const user = useSelector((state) => state.user); // Redux의 useSelector hook을 이용해 현재 유저 정보 가져오기
   const navigate = useNavigate();
 
+  // 게시글 정보와 댓글 정보를 가져옴
   useEffect(() => {
     async function fetchData() {
       try {
@@ -35,17 +39,26 @@ function CommunityDetail() {
       }
     }
     fetchData(); // fetchData 함수 실행
-  }, [id, navigate, community]); // [] 변경될 때마다 useEffect 함수가 실행되도록 함
+  }, [id, navigate]); // [] 변경될 때마다 useEffect 함수가 실행되도록 함
 
   // 댓글 목록 갱신
-  const updateComments = (comments) => {
-    setCommunity({ ...community, comments: comments });
-    // 댓글 정보 업데이트, community가 바뀌면 useEffect 함수가 실행되어 게시글 정보를 다시 가져옴
+  const updateComments = async (comments) => {
+    try {
+      const response = await axios.get(`/api/v1/board/${id}`);
+      setComments(response.data.comments);
+    } catch (error) {
+      console.error('댓글 렌더링에 실패하였습니다.', error);
+      navigate(`/board/${id}`);
+    }
   };
 
   // 게시글 수정 페이지로 이동
   const handleEditClick = () => {
-    navigate(`/board/edit/${community._id}`);
+    if (user.id === community.author._id) {
+      navigate(`/board/edit/${community._id}`);
+    } else {
+      alert('본인의 게시글만 수정할 수 있습니다.');
+    }
   };
 
   // 게시글 삭제 페이지로 이동
@@ -84,7 +97,7 @@ function CommunityDetail() {
         <CommunityDetailHeader>
           <CommunityDetailTitle>{community.title}</CommunityDetailTitle>
           <CommunityDetailAuthor>
-            작성자: {community.author.nickname}
+            {community.author.nickname}
           </CommunityDetailAuthor>
         </CommunityDetailHeader>
         <CommunityDetailDivider />
@@ -93,12 +106,15 @@ function CommunityDetail() {
           <CommunityDetailImage src={community.image} alt="업로드 이미지" />
         )}
         <CommunityDetailContent>{community.content}</CommunityDetailContent>
-        <div>
+        <ButtonContainer>
           <button onClick={handleEditClick}>수정</button>
           <button onClick={handleDeleteClick}>삭제</button>
-        </div>
+          <button onClick={() => navigate('/board')}>목록으로</button>
+        </ButtonContainer>
         <CommunityDetailDivider />
-        <CommunityDetailCommentTitle>댓글</CommunityDetailCommentTitle>
+        <CommunityDetailCommentTitle>
+          댓글({comments.length})
+        </CommunityDetailCommentTitle>
         <CommunityDetailComments>
           {/* // map 함수를 사용하여 댓글 목록을 보여줌 */}
           {/* // 댓글이 존재하지 않을 경우에는 댓글이 존재하지 않는 게시물입니다.를 보여줌 */}
@@ -115,9 +131,8 @@ function CommunityDetail() {
           ) : (
             <p>댓글이 존재하지 않는 게시물입니다.</p>
           )}
-          <CommentForm boardId={id} updateComments={updateComments} />
         </CommunityDetailComments>
-        <button onClick={() => navigate('/board')}>목록으로</button>
+        <CommentForm boardId={id} updateComments={updateComments} />
       </CommunityDetailWrapper>
     </>
   );

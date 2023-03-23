@@ -41,6 +41,7 @@ const CommunityPostForm = () => {
     }
   };
 
+  // 게시글 작성
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -99,7 +100,6 @@ const CommunityPostForm = () => {
           />
         </FormGroup>
         <FormButton type="submit">작성 완료</FormButton>
-
         <FormButton type="button" onClick={() => navigate('/board')}>
           취소
         </FormButton>
