@@ -7,7 +7,7 @@ import Header from '../../components/Header/Header';
 import BackGround from '../../components/Background/Background';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-// import { useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 const RecruitByGuDetail = () => {
   const [data, setData] = useState({});
   /*  const data = {
@@ -27,7 +27,7 @@ const RecruitByGuDetail = () => {
     meetingStatus: '모집중',
   }; */
   const navigate = useNavigate();
-
+  const user = useSelector((state) => state.user);
   const { id } = useParams();
   useEffect(() => {
     async function fetchData() {
@@ -42,16 +42,38 @@ const RecruitByGuDetail = () => {
     }
     fetchData();
   }, []);
-  // const user = useSelector((state) => state.user);
-
-  const handleClick = async () => {
+  const handleApply = async () => {
     try {
-      await axios.delete('');
-    } catch (error) {
-      console.error(error);
+      const res = await axios.post(`/api/v1/recruitment/${id}/participants`, {
+        participantId: user.id,
+      });
+      console.log(res);
+      if (res.statusText === 'OK') {
+        alert('해당 봉사에 참여 신청이 완료 되었습니다.');
+      } else {
+        alert('오류가 발생하였습니다.');
+      }
+    } catch (e) {
+      console.log(e);
     }
   };
-
+  const handleCancel = () => {
+    return;
+  };
+  const handleDelete = async () => {
+    try {
+      const res = await axios.delete(`/api/v1/recruitment/${id}`);
+      console.log(res);
+      if (res.statusText === 'OK') {
+        alert('게시글이 삭제되었습니다.');
+        navigate(`/recruitment/${id}`);
+      } else {
+        alert('게시글 삭제에 실패하였습니다.)');
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
   return (
     <BackGround>
       <Header />
@@ -70,17 +92,24 @@ const RecruitByGuDetail = () => {
               }}
             />
             <span>{data.title}</span>
-            <button>참가신청</button>
-            <button onClick={handleClick}>참가취소</button>
+
+            <button onClick={handleCancel}>참여취소</button>
+
+            {user.id !== data._id ? (
+              <button onClick={handleDelete}>모집글 삭제</button>
+            ) : (
+              <button onClick={handleApply}>참가신청</button>
+            )}
           </HeadDiv>
           <BodyBox>
             <ImgBox>
               <img src={img} alt="volunteer-IMG" />
             </ImgBox>
             <SpanDiv>
+              <span style={{ display: 'none' }}>{data._id}</span>
               <span>
                 지역:
-                {/* <span>{data.borough.borough}</span> */}
+                <span>{data.borough?.borough}</span>
               </span>
               <span>
                 위치: <span>{data.address}</span>

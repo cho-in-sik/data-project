@@ -192,11 +192,13 @@ const RecruitByGu = (props) => {
         </div>
         <VB>{data.length === 0 ? <p>'작성된 게시물이 없습니다.'</p> : list}</VB>
         <div>
-          <Paging
-            page={page}
-            handlePageChange={handlePageChange}
-            total={total}
-          />
+          {data.length < 7 ? null : (
+            <Paging
+              page={page}
+              handlePageChange={handlePageChange}
+              total={total}
+            />
+          )}
         </div>
       </VolunteerBox>
     </BackGround>
