@@ -8,8 +8,7 @@ const MyVolunteer = ({
   volunteerTime,
   address,
   author,
-  content,
-  participants,
+
   meetingStatus,
   userId,
   recruitmentId,
@@ -17,12 +16,6 @@ const MyVolunteer = ({
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
   const data = {
-    title,
-    volunteerTime,
-    address,
-    author,
-    content,
-    participants,
     userId,
     recruitmentId,
   };

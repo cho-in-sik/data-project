@@ -15,29 +15,36 @@ const VolunteerDetail = () => {
   const navigate = useNavigate();
 
   const user = useSelector((state) => state.user);
-  //useLocation 으로 navigate로 온 상태 받기
-  const title = location.state.title;
-  const volunteerTime = location.state.volunteerTime;
-  const address = location.state.address;
-  const content = location.state.content;
-  const participants = location.state.participants;
-  const userId = location.state.userId;
+  // //useLocation 으로 navigate로 온 상태 받기
+
+  // const userId = location.state.userId;
+
   const recruitmentId = location.state.recruitmentId;
 
   const [comment, setComment] = useState([]);
+  const [title, setTitle] = useState('');
+  const [address, setAddress] = useState('');
+  const [volunteerTime, setVolunteerTime] = useState('');
+  const [participants, setParticipants] = useState([]);
+  const [content, setContent] = useState('');
 
-  //get으로 상세페이지 불러오기..
+  //get으로 상세페이지 데이터 불러오기..
   useEffect(() => {
     const getData = async () => {
       try {
         const res = await axios.get(`/api/v1/recruitment/${recruitmentId}`);
         setComment(res.data.data.comments);
+        setTitle(res.data.data.plainRecruitment.title);
+        setAddress(res.data.data.plainRecruitment.address);
+        setVolunteerTime(res.data.data.plainRecruitment.volunteerTime);
+        setParticipants(res.data.data.plainRecruitment.participants);
+        setContent(res.data.data.plainRecruitment.content);
       } catch (error) {
         console.error(error);
       }
     };
     getData();
-  }, [recruitmentId]);
+  }, [recruitmentId, comment]);
 
   //참가자 탈퇴 핸들러
   const handleClick = async () => {
@@ -58,9 +65,7 @@ const VolunteerDetail = () => {
 
   //props로 넘겨줄 함수 (댓글 post하고 setComment바꾸기)
   const postCommentHandler = (data) => {
-    console.log(data);
-    const updatedComments = comment.push({ ...comment, data });
-    setComment(updatedComments);
+    setComment({ ...comment, comments: data });
   };
 
   return (
@@ -112,7 +117,7 @@ const VolunteerDetail = () => {
                     >
                       <span>{person}</span>
 
-                      {user.id === userId && (
+                      {/* {user.id === userId && (
                         <button
                           onClick={() => console.log(1)}
                           style={{
@@ -123,7 +128,7 @@ const VolunteerDetail = () => {
                         >
                           X
                         </button>
-                      )}
+                      )} */}
                     </div>
                   ))}
                 </div>
@@ -212,7 +217,7 @@ const SpanDiv = styled.div`
 const DescriptionBox = styled.div`
   height: 10%;
   font-size: 18px;
-  margin-top: 3%;
+  margin-top: 5%;
   margin-left: 30px;
   margin-bottom: 3%;
   font-size: 20px;

@@ -112,7 +112,7 @@ const list = [
 
 const MyVolunteers = (props) => {
   const user = useSelector((state) => state.user);
-  const [data, setData] = useState(list);
+  const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(20);
   const navigate = useNavigate();
@@ -134,9 +134,9 @@ const MyVolunteers = (props) => {
   //개설한 모집글 조회
   const handleMade = async () => {
     try {
-      const res = await axios.get('/api/v1/my/all/recruitments');
-      console.log(res);
-      setData(res.data);
+      const res = await axios.get('/api/v1/my/authorRecruitments');
+      console.log(res.data.data);
+      setData(res.data.data);
     } catch (error) {
       console.error(error);
     }

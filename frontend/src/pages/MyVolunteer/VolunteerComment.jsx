@@ -3,12 +3,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 
-function VolunteerComment({
-  recruitmentId,
-  comment,
-  deleteCommentHandler,
-  postCommentHandler,
-}) {
+function VolunteerComment({ recruitmentId, comment, deleteCommentHandler }) {
   const [content, setContent] = useState(''); // 댓글 내용
   const user = useSelector((state) => state.user); // Redux의 useSelector hook을 이용해 현재 유저 정보 가져오기
 
@@ -23,7 +18,7 @@ function VolunteerComment({
         },
       );
       // postCommentHandler(res.data);
-      console.log(res.data);
+
       setContent('');
     } catch (error) {
       console.error('댓글 작성에 실패하였습니다.', error);
@@ -68,7 +63,7 @@ function VolunteerComment({
               key={item._id}
               style={{ display: 'flex', alignItems: 'center' }}
             >
-              <div>닉네임</div>
+              <div>{item.writer.nickname}</div>
               <CommentLi>{item.content}</CommentLi>
               <CommentDeleteButton onClick={() => handleDelete(item._id)}>
                 삭제
