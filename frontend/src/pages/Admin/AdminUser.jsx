@@ -43,7 +43,6 @@ const AdminUser = (props) => {
     const res = await axios.put(`/api/v1/admin/users/${id}`, {
       userType: e.target.value,
     });
-    debugger;
     data[index].userType = e.target.value;
     setData(data);
   };

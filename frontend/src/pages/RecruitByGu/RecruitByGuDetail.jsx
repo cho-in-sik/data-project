@@ -9,46 +9,48 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { useSelector } from 'react-redux';
 const RecruitByGuDetail = () => {
-  const [data, setData] = useState({});
-  /*  const data = {
-    _id: 1,
-    borough: '송파구',
-    title: '송파사거리 3인 모집합니다.',
-    comment: '',
-    volunteerTime: '23년3월24일 오후 4시-6시',
-    recruitments: 3,
-    content:
-      '요즘 송파사거리에서 신호위반하는 차량이 많은 것 같아서요. 시간 나시는 분들 같이 합시다.',
-    author: '송파맨',
-    image: '',
-    address: '송파사거리',
-    category: '단기',
-    participants: [],
-    meetingStatus: '모집중',
-  }; */
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
   const { id } = useParams();
+  const [data, setData] = useState({});
+  const [recruit, setRecruit] = useState(0);
+  const [meetingStatus, setMeetingStatus] = useState('');
+  const [isUserApplied, setIsUserApplied] = useState('참가신청');
   useEffect(() => {
     async function fetchData() {
       try {
-        // debugger;
         const res = await axios.get(`/api/v1/recruitment/${id}`);
         console.log(res);
         setData(res.data.data);
+        setRecruit(res.data.data.participants.length);
+        setMeetingStatus(res.data.data.meetingStatus);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    async function getParticipants() {
+      try {
+        debugger;
+        const res = await axios.get(`api/v1/recruitment/${id}/participants`);
+        console.log(res);
       } catch (e) {
         console.log(e);
       }
     }
     fetchData();
-  }, []);
+    // getParticipants();
+  }, [meetingStatus, isUserApplied]);
+
+  // 참가신청 버튼 클릭 이벤트
   const handleApply = async () => {
     try {
       const res = await axios.post(`/api/v1/recruitment/${id}/participants`, {
         participantId: user.id,
       });
       console.log(res);
-      if (res.statusText === 'OK') {
+      if (res.statusText === 'Created') {
+        setRecruit((prev) => prev + 1);
+        setIsUserApplied(true);
         alert('해당 봉사에 참여 신청이 완료 되었습니다.');
       } else {
         alert('오류가 발생하였습니다.');
@@ -57,16 +59,71 @@ const RecruitByGuDetail = () => {
       console.log(e);
     }
   };
-  const handleCancel = () => {
-    return;
+
+  // 참가 신청 취소 버튼 클릭 이벤트
+  const handleCancel = async () => {
+    try {
+      const res = await axios.delete(
+        `/api/v1/recruitment/${id}/participants/${user.id}`,
+        {
+          participantId: user.id,
+        },
+      );
+      if (res.statusText === 'OK') {
+        setRecruit((prev) => prev - 1);
+        setIsUserApplied(false);
+        alert('참가 신청이 취소되었습니다.');
+        // navigate(-1);
+      } else {
+        alert('참가 신청에 실패하였습니다.)');
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
+
+  // 모집완료 버튼 클릭 이벤트
+  const toggleRecruitComplete = async () => {
+    try {
+      let soonMeetingStatus = '';
+      // 현재 모집 상황이 '모집중'이면 곧 바뀔 모집 상태는 '모집완료', 아니면 '모집중'
+      data.meetingStatus === '모집중'
+        ? (soonMeetingStatus = '모집완료')
+        : (soonMeetingStatus = '모집중');
+
+      // 곧 바뀔 상태로 수정하는 요청 보내기
+      const res = await axios.put(`/api/v1/recruitment/${id}`, {
+        ...data,
+        meetingStatus: soonMeetingStatus,
+      });
+
+      // 그래서
+      console.log(
+        '모집 상태는 ',
+        res.data.data.meetingStatus,
+        '(으)로 바뀝니다.',
+      );
+
+      // 통신에 성공하면
+      if (res.statusText === 'OK') {
+        alert(`상태를 ${soonMeetingStatus}(으)로 변경하였습니다.`);
+        // 바뀐 상태로 렌더링하기.
+        setMeetingStatus(soonMeetingStatus);
+        console.log(res);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  // 모집글 삭제 클릭 이벤트
   const handleDelete = async () => {
     try {
       const res = await axios.delete(`/api/v1/recruitment/${id}`);
       console.log(res);
       if (res.statusText === 'OK') {
         alert('게시글이 삭제되었습니다.');
-        navigate(`/recruitment/${id}`);
+        navigate(-1);
       } else {
         alert('게시글 삭제에 실패하였습니다.)');
       }
@@ -74,6 +131,20 @@ const RecruitByGuDetail = () => {
       console.log(e);
     }
   };
+
+  // 로그인한 유저가 현재 페이지 모집글에 참가 신청했는지 여부 체크.
+  const checkApply = (id) => {
+    const checkApplied = data.participants?.filter(
+      (elem) => elem.participantId === id,
+    );
+    if (checkApplied?.length !== 0) {
+      console.log('현재 참가한 상태입니다.');
+      return true; // true = 참가한 상태입니다.
+    }
+  };
+
+  // 모집완료일 경우 참가신청을 받지 않는다.
+
   return (
     <BackGround>
       <Header />
@@ -92,11 +163,19 @@ const RecruitByGuDetail = () => {
               }}
             />
             <span>{data.title}</span>
+            {/* 이 모임을 만든 사람인지 확인해서 */}
+            {user.id === data.author?._id ? (
+              // 이 모임을 만든 사람이면 보이는 버튼
+              <>
+                <button onClick={toggleRecruitComplete}>모집상태 변경</button>
+                <button onClick={handleDelete}>모집글 삭제</button>
+              </>
+            ) : // 이 모임을 만든 사람이 아니면 보이는 버튼
+            null}
 
-            <button onClick={handleCancel}>참여취소</button>
-
-            {user.id !== data._id ? (
-              <button onClick={handleDelete}>모집글 삭제</button>
+            {/* 이 모임에 참가한 사람인지 체크 */}
+            {checkApply(user.id) === true ? (
+              <button onClick={handleCancel}>참가취소</button>
             ) : (
               <button onClick={handleApply}>참가신청</button>
             )}
@@ -107,29 +186,37 @@ const RecruitByGuDetail = () => {
             </ImgBox>
             <SpanDiv>
               <span style={{ display: 'none' }}>{data._id}</span>
-              <span>
-                지역:
-                <span>{data.borough?.borough}</span>
-              </span>
-              <span>
-                위치: <span>{data.address}</span>
-              </span>
-              <span>
-                기간: <span>{data.volunteerTime}</span>
-              </span>
-              <span>
-                모집 인원:{' '}
-                <span>
-                  {/* {data.participants.length}명 / {data.recruitments}명 */}
-                </span>
-              </span>
-              <span>
-                참여자: <span>{data.participants}</span>
-              </span>
+              <p>
+                <span>지역</span>
+                {data.borough?.borough}
+              </p>
+              <p>
+                <span>위치</span>
+                {data.address}
+              </p>
+              <p>
+                <span>기간</span>
+                {data.volunteerTime}
+              </p>
+              <p>
+                <span>모집 인원</span>
+                {recruit}명 / {data.recruitments}명
+              </p>
+              <p>
+                <span>참여자</span>
+                {/* {data.participants} */}
+              </p>
+              <p>
+                <span>모집 상태</span>
+                {meetingStatus}
+              </p>
+              <p>
+                <span>간단한 소개</span>
+                {data.content}
+              </p>
             </SpanDiv>
           </BodyBox>
         </ContentDiv>
-        <DescriptionBox>봉사소개: {data.content}</DescriptionBox>
         <ChatDiv>댓글 div</ChatDiv>
       </VolunteerDetailBox>
     </BackGround>
@@ -137,22 +224,24 @@ const RecruitByGuDetail = () => {
 };
 
 const VolunteerDetailBox = styled.div`
-  margin-top: 50px;
+  margin-top: 4rem;
   position: relative;
-  width: 1000px;
-  height: 700px;
+  width: 60%;
+  height: auto;
+  max-height: 70%;
+  padding: 2rem;
   background-color: whitesmoke;
   border-radius: 20px;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 `;
 const ContentDiv = styled.div`
-  height: 60%;
+  /* height: 60%; */
 `;
 const HeadDiv = styled.div`
   display: flex;
   justify-content: space-between;
-  margin: 30px 30px;
   & span {
+    width: 50%;
     font-size: 30px;
     font-weight: 400;
   }
@@ -167,12 +256,12 @@ const HeadDiv = styled.div`
   }
 `;
 const BodyBox = styled.div`
-  margin: 0px 30px;
   display: flex;
-  align-items: center;
+  height: auto;
+  padding: 2rem;
 `;
 const ChatDiv = styled.div`
-  height: 30%;
+  padding: 2rem;
 `;
 
 const ImgBox = styled.div`
@@ -183,25 +272,18 @@ const ImgBox = styled.div`
   }
 `;
 const SpanDiv = styled.div`
-  margin-left: 100px;
-  display: flex;
-  flex-direction: column;
-
+  padding-left: 5%;
   & span {
-    font-size: 24px;
-    height: 80px;
-  }
-  & span span {
-    padding: 8px;
-    border-radius: 5px;
+    display: inline-block;
+    font-size: 1rem;
+    margin: 0.5rem 0;
+    width: 8rem;
   }
 `;
 
 const DescriptionBox = styled.div`
   height: 10%;
   font-size: 18px;
-  margin-top: 30px;
-  margin-left: 30px;
 `;
 
 export default RecruitByGuDetail;
