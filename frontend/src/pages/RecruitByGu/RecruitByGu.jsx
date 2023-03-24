@@ -149,14 +149,15 @@ const VolunteerDetail = styled.div`
   margin: 0.8rem;
   position: relative;
   background-color: whitesmoke;
-  width: 30%;
+  width: 27%;
   height: 25vh;
   border-radius: 20px;
   margin: 0.8rem;
-  display: flex;
+  padding: 0.8rem;
+  /* display: flex;
   flex-direction: column;
   justify-content: space-around;
-  align-items: center;
+  align-items: center; */
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   cursor: pointer;
 `;
@@ -165,8 +166,8 @@ const MeetingStatus = styled.span`
   height: 15px;
   background-color: white;
   position: absolute;
-  top: 22px;
-  left: 20px;
+  bottom: 22px;
+  right: 20px;
   font-size: 14px;
   border-radius: 5px;
   padding: 5px;
@@ -176,7 +177,14 @@ const MeetingStatus = styled.span`
 `;
 
 const VolunteerMessage = styled.div`
-  font-size: 20px;
+  text-align: left;
+  margin: 1rem 0;
+  font-size: 1rem;
+
+  &:first-child {
+    font-size: 1.5rem;
+    font-style: bold;
+  }
 `;
 
 const PaginationBox = styled.div`

@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import img from '../../assets/images/66112.jpg';
 import axios from 'axios';
 import Header from '../../components/Header/Header';
 import BackGround from '../../components/Background/Background';
+import VolunteerComment from '../MyVolunteer/VolunteerComment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { useSelector } from 'react-redux';
+
 const RecruitByGuDetail = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
@@ -218,7 +219,12 @@ const RecruitByGuDetail = () => {
             </SpanDiv>
           </BodyBox>
         </ContentDiv>
-        <ChatDiv>댓글 div</ChatDiv>
+        {/* <ChatDiv>댓글 div</ChatDiv> */}
+        {/* <VolunteerComment
+          recruitmentId={recruitmentId}
+          comment={comment}
+          deleteCommentHandler={deleteCommentHandler}
+        /> */}
       </VolunteerDetailBox>
     </BackGround>
   );
