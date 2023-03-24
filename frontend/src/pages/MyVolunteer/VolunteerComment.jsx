@@ -48,13 +48,11 @@ function VolunteerComment({
   return (
     <>
       <Form onSubmit={handleSubmit}>
-        <NicknameDiv>
+        {/* <NicknameDiv>
           <div>작성자: {user.nickname}</div>
-          {/* // 현재 유저의 닉네임 표시 */}
-        </NicknameDiv>
+        </NicknameDiv> */}
         <ContentDiv>
-          <span>내용: </span>
-          <input
+          <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)} // 댓글 내용 변경
             required
@@ -69,9 +67,13 @@ function VolunteerComment({
             : comment.map((item) => (
                 <div
                   key={item._id}
-                  style={{ display: 'flex', alignItems: 'center' }}
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
                 >
-                  <div>{item.writer.nickname}</div>
+                  <CommentAuthor>{item.writer.nickname}</CommentAuthor>
                   <CommentLi>{item.content}</CommentLi>
                   <CommentDeleteButton onClick={() => handleDelete(item._id)}>
                     삭제
@@ -97,8 +99,10 @@ function VolunteerComment({
 }
 
 const Form = styled.form`
+  width: 100%;
+  text-align: center;
   display: flex;
-  align-items: center;
+  justify-content: center;
 `;
 const NicknameDiv = styled.div`
   font-size: 20px;
@@ -106,42 +110,51 @@ const NicknameDiv = styled.div`
 `;
 
 const ContentDiv = styled.div`
-  width: 50%;
+  width: 80%;
   font-size: 20px;
-  input {
+  textarea {
     border: none;
-    border-radius: 20px;
-    width: 80%;
-    font-size: 20px;
+    border-radius: 10px;
+    width: 90%;
+    padding: 1rem;
+    font-size: 0.8rem;
+    resize: none;
   }
 `;
 
 const Button = styled.button`
-  font-size: 16px;
+  font-size: 0.8rem;
   padding: 5px 15px;
   border: none;
+  border-radius: 10px;
   background-color: #64bd57;
-
   color: white;
 `;
 
 //--list
 
 const CommentDiv = styled.div`
+  width: 90%;
+  margin: 0 auto;
   margin-top: 2%;
+  font-size: 0.8rem;
+`;
+
+const CommentAuthor = styled.div`
+  width: 15%;
 `;
 const CommentLi = styled.li`
   padding: 5px 20px;
   border-radius: 10px;
   background-color: white;
-  width: 30%;
+  width: 80%;
   text-align: center;
   margin-bottom: 1%;
 `;
 const CommentDeleteButton = styled.button`
-  margin-left: 1%;
-  margin-bottom: 1%;
+  width: 7%;
   border: none;
+  border-radius: 5px;
   background-color: #ff5065;
   color: white;
   padding: 3px 8px;

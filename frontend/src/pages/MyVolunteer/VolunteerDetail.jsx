@@ -140,18 +140,22 @@ const VolunteerDetail = () => {
               <img src={img === null ? baseImg : img} alt="volunteer-IMG" />
             </ImgBox>
             <SpanDiv>
-              <span>
-                주소: <span>{address}</span>
-              </span>
-              <span>
-                기간: <span>{volunteerTime}</span>
-              </span>
-              <span>
-                모집인원:{' '}
-                <span>
-                  {recruit}명 / {recruitments}명
-                </span>
-              </span>
+              <p>
+                <span>주소:</span>
+                {address}
+              </p>
+              <p>
+                <span>기간:</span>
+                {volunteerTime}
+              </p>
+              <p>
+                <span>모집인원: </span>
+                {recruit}명 / {recruitments}명
+              </p>
+              <p>
+                <span>간단소개: </span>
+                {content}
+              </p>
               {/* <span
                 style={{
                   display: 'flex',
@@ -196,76 +200,75 @@ const VolunteerDetail = () => {
 };
 
 const VolunteerDetailBox = styled.div`
-  margin: 20px 0;
+  margin-top: 4rem;
   position: relative;
-  width: 75%;
-  height: 85%;
+  width: 60%;
+  height: auto;
+  max-height: 70%;
+  padding: 2rem;
   background-color: whitesmoke;
   border-radius: 20px;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 `;
 const ContentDiv = styled.div`
-  height: 50%;
+  /* height: 50%; */
 `;
 const HeadDiv = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin: 35px 30px;
-
   & span {
+    width: 50%;
+    min-width: 350px;
     font-size: 30px;
     font-weight: 400;
   }
   & button {
+    margin: 0 0.3rem;
     border: none;
+    border-radius: 20px;
     font-weight: 500;
-    padding: 5px 15px;
+    padding: 0.5rem 1rem;
     color: white;
-    font-size: 20px;
+    font-size: 1rem;
     background-color: #ff5065;
     cursor: pointer;
+
+    &:hover {
+      background-color: #fb324a;
+    }
   }
 `;
 const BodyBox = styled.div`
-  margin: 0px 30px;
+  width: 90%;
   display: flex;
-  align-items: center;
+  justify-content: space-around;
+  height: auto;
+  padding: 2rem;
 `;
 const ChatDiv = styled.div`
-  height: 40%;
-  margin-left: 30px;
+  padding: 2rem;
 `;
 
 const ImgBox = styled.div`
+  width: 40%;
+  height: auto;
   & img {
     border-radius: 10px;
-    width: 400px;
-    height: 10%;
+    width: 100%;
   }
 `;
 const SpanDiv = styled.div`
-  margin-top: 5%;
-  margin-left: 18%;
-  display: flex;
-  flex-direction: column;
-
+  width: 50%;
+  padding-left: 5%;
   & span {
-    font-size: 24px;
-    height: 80px;
-  }
-  & span span {
-    padding: 8px;
-    border-radius: 5px;
+    display: inline-block;
+    font-size: 1rem;
+    margin: 0.5rem 0;
+    width: 8rem;
   }
 `;
 
 const DescriptionBox = styled.div`
   height: 10%;
   font-size: 18px;
-  margin-top: 5%;
-  margin-left: 30px;
-  margin-bottom: 3%;
-  font-size: 20px;
 `;
 
 export default VolunteerDetail;

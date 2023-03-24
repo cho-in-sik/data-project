@@ -9,7 +9,7 @@ const MyVolunteer = ({
   address,
   author,
   meetingStatus,
-
+  createdAt,
   recruitmentId,
 }) => {
   const user = useSelector((state) => state.user);
@@ -32,51 +32,37 @@ const MyVolunteer = ({
       >
         {meetingStatus}
       </MeetingStatus>
-      <VolunteerMessage
-        style={{
-          backgroundColor: '#74DD63',
-          padding: '8px 12px',
-          borderRadius: '10px',
-          color: 'white',
-        }}
-      >
-        {title}
-      </VolunteerMessage>
-      <VolunteerMessage>{volunteerTime}</VolunteerMessage>
-      <VolunteerMessage>{address}</VolunteerMessage>
-      <VolunteerMessage>
-        {author === user.id ? user.nickname : author}
-      </VolunteerMessage>
+      <VolunteerMessage>{title}</VolunteerMessage>
+      <VolDateLoc>장소 | {address}</VolDateLoc>
+      <VolDateLoc>시간 | {volunteerTime}</VolDateLoc>
+      <VolCreated bottom="40px">
+        {author === user.id ? user.nickname : 'by ' + author}
+      </VolCreated>
+      <VolCreated>{createdAt}</VolCreated>
     </VolunteerDetail>
   );
 };
 
 const VolunteerDetail = styled.div`
+  margin: 0.8rem;
   position: relative;
   background-color: whitesmoke;
-
-  width: 25%;
-  height: 28vh;
+  width: 27%;
+  height: 25vh;
   border-radius: 20px;
-  margin-top: 5px;
-  margin-bottom: 20px;
-  margin-right: 20px;
-  margin-left: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
+  margin: 0.8rem;
+  padding: 0.8rem;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   cursor: pointer;
 `;
 const MeetingStatus = styled.span`
-  width: 50px;
+  width: auto;
   height: 15px;
   background-color: white;
   position: absolute;
-  top: 22px;
+  bottom: 22px;
   left: 20px;
-  font-size: 14px;
+  font-size: 1rem;
   border-radius: 5px;
   padding: 5px;
   text-align: center;
@@ -85,7 +71,24 @@ const MeetingStatus = styled.span`
 `;
 
 const VolunteerMessage = styled.div`
-  font-size: 20px;
+  text-align: center;
+  margin: 3.5rem 0;
+  font-size: 1.4rem;
+`;
+
+const VolDateLoc = styled.div`
+  width: 70%;
+  margin: 0.5rem auto;
+  font-size: 0.8rem;
+`;
+
+const VolCreated = styled.div`
+  position: absolute;
+  bottom: ${(props) => props.bottom};
+  right: 20px;
+  font-style: italic;
+  color: #999;
+  font-size: 0.8rem;
 `;
 
 export default MyVolunteer;

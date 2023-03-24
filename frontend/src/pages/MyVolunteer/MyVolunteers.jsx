@@ -140,13 +140,15 @@ const VolunteerBox = styled.div`
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 `;
 const Span = styled.span`
-  font-size: 25px;
+  font-size: 1.5rem;
   font-weight: 400;
-  padding-left: 50px;
+  padding-left: 3rem;
   cursor: pointer;
 `;
 
 const VB = styled.div`
+  width: 95%;
+  margin: 0 auto;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;

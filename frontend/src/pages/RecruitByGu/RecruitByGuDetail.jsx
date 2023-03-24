@@ -32,18 +32,8 @@ const RecruitByGuDetail = () => {
         console.log(e);
       }
     }
-    async function getParticipants() {
-      try {
-        debugger;
-        const res = await axios.get(`api/v1/recruitment/${id}/participants`);
-        console.log(res);
-      } catch (e) {
-        console.log(e);
-      }
-    }
     fetchData();
-    // getParticipants();
-  }, [meetingStatus, isUserApplied]);
+  }, [meetingStatus, isUserApplied, comment]);
 
   // 참가신청 버튼 클릭 이벤트
   const handleApply = async () => {
@@ -68,12 +58,9 @@ const RecruitByGuDetail = () => {
   // 참가 신청 취소 버튼 클릭 이벤트
   const handleCancel = async () => {
     try {
-      const res = await axios.delete(
-        `/api/v1/recruitment/${id}/participants/${user.id}`,
-        {
-          participantId: user.id,
-        },
-      );
+      const res = await axios.delete(`/api/v1/recruitment/${id}/participants`, {
+        participantId: user.id,
+      });
       if (res.statusText === 'OK') {
         setRecruit((prev) => prev - 1);
         setIsUserApplied(false);
@@ -139,9 +126,8 @@ const RecruitByGuDetail = () => {
 
   // 로그인한 유저가 현재 페이지 모집글에 참가 신청했는지 여부 체크.
   const checkApply = (id) => {
-    debugger;
     const checkApplied = data.participants?.filter(
-      (elem) => elem.participantId === id,
+      (elem) => elem.participantId._id === id,
     );
     if (checkApplied?.length !== 0) {
       console.log('현재 참가한 상태입니다.');
@@ -215,10 +201,10 @@ const RecruitByGuDetail = () => {
                 <span>모집 인원</span>
                 {recruit}명 / {data.recruitments}명
               </p>
-              <p>
+              {/* <p>
                 <span>참여자</span>
-                {/* {data.participants} */}
-              </p>
+                {getParticipants(data)}
+              </p> */}
               <p>
                 <span>모집 상태</span>
                 {meetingStatus}
@@ -255,10 +241,9 @@ const ContentDiv = styled.div`
   /* height: 60%; */
 `;
 const HeadDiv = styled.div`
-  /* display: flex; */
-  /* justify-content: space-between; */
   & span {
     width: 50%;
+    min-width: 350px;
     font-size: 30px;
     font-weight: 400;
   }
@@ -294,6 +279,7 @@ const ImgBox = styled.div`
   height: auto;
   & img {
     border-radius: 10px;
+    width: 100%;
   }
 `;
 const SpanDiv = styled.div`
@@ -305,11 +291,6 @@ const SpanDiv = styled.div`
     margin: 0.5rem 0;
     width: 8rem;
   }
-`;
-
-const DescriptionBox = styled.div`
-  height: 10%;
-  font-size: 18px;
 `;
 
 export default RecruitByGuDetail;

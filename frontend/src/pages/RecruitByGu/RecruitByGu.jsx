@@ -46,17 +46,35 @@ const RecruitByGu = (props) => {
     return setPage(page);
   };
 
+  //모집상태가 "모집완료" 이면 모집상태 색변경
+
   const list = data.map((item) => {
+    const meetingStatusFinishedColor =
+      item.meetingStatus === '모집완료' && '#ff5065';
     return (
       <VolunteerDetail
         key={item._id}
         onClick={() => navigate(`/recruitment/${id}/${item._id}`)}
       >
-        <MeetingStatus>{item.meetingStatus}</MeetingStatus>
+        <MeetingStatus
+          style={{
+            color: meetingStatusFinishedColor,
+            borderColor: meetingStatusFinishedColor,
+          }}
+        >
+          {item.meetingStatus}
+        </MeetingStatus>
         <VolunteerMessage>{item.title}</VolunteerMessage>
-        <VolunteerMessage>{item.volunteerTime}</VolunteerMessage>
-        <VolunteerMessage>{item.address}</VolunteerMessage>
-        <VolunteerMessage>{item.author.nickname}</VolunteerMessage>
+        <VolDateLoc>
+          <span>장소 | {item.address}</span>
+        </VolDateLoc>
+        <VolDateLoc>
+          <span>시간 | {item.volunteerTime}</span>
+        </VolDateLoc>
+        <VolCreated bottom="40px">by {item.author.nickname}</VolCreated>
+        <VolCreated bottom="20px">
+          {item.createdAt.slice(0, 10)} {item.createdAt.slice(11, 19)} 에 작성
+        </VolCreated>
       </VolunteerDetail>
     );
   });
@@ -90,9 +108,16 @@ const RecruitByGu = (props) => {
             </button>
           )}
         </div>
-        <VB>{data.length === 0 ? <p>'작성된 게시물이 없습니다.'</p> : list}</VB>
-        <div>
-          {/* {data.length < 7 ? null : ( */}
+        <VB>
+          {data.length === 0 ? (
+            <Span style={{ lineHeight: '30rem' }}>
+              '작성된 게시물이 없습니다.'
+            </Span>
+          ) : (
+            list
+          )}
+        </VB>
+        {total < 7 ? null : (
           <PaginationBox>
             <Pagination
               activePage={page}
@@ -102,8 +127,7 @@ const RecruitByGu = (props) => {
               onChange={handlePageChange}
             />
           </PaginationBox>
-          {/* )} */}
-        </div>
+        )}
       </VolunteerBox>
     </BackGround>
   );
@@ -132,7 +156,7 @@ const VolunteerBox = styled.div`
   }
 `;
 const Span = styled.span`
-  font-size: 1.5rem;
+  font-size: 1rem;
   font-weight: 400;
   padding-left: 3rem;
 `;
@@ -154,21 +178,18 @@ const VolunteerDetail = styled.div`
   border-radius: 20px;
   margin: 0.8rem;
   padding: 0.8rem;
-  /* display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center; */
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   cursor: pointer;
 `;
+
 const MeetingStatus = styled.span`
-  width: 50px;
+  width: auto;
   height: 15px;
   background-color: white;
   position: absolute;
   bottom: 22px;
-  right: 20px;
-  font-size: 14px;
+  left: 20px;
+  font-size: 1rem;
   border-radius: 5px;
   padding: 5px;
   text-align: center;
@@ -177,20 +198,31 @@ const MeetingStatus = styled.span`
 `;
 
 const VolunteerMessage = styled.div`
-  text-align: left;
-  margin: 1rem 0;
-  font-size: 1rem;
+  text-align: center;
+  margin: 3.5rem 0;
+  font-size: 1.4rem;
+`;
 
-  &:first-child {
-    font-size: 1.5rem;
-    font-style: bold;
-  }
+const VolDateLoc = styled.div`
+  width: 70%;
+  margin: 0.5rem auto;
+  font-size: 0.8rem;
+`;
+
+const VolCreated = styled.div`
+  position: absolute;
+  bottom: ${(props) => props.bottom};
+  right: 20px;
+  font-style: italic;
+  color: #999;
+  font-size: 0.8rem;
 `;
 
 const PaginationBox = styled.div`
   position: absolute;
   bottom: 2rem;
   left: calc(50% - 64px);
+
   .pagination {
     display: flex;
     justify-content: center;
