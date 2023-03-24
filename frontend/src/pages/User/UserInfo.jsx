@@ -97,16 +97,24 @@ const UserInfo = (props) => {
 
     const isNameValid = nameValidate(name);
 
+    if (pw !== pw1) {
+      setFormValid('비밀번호가 일치하지 않습니다.');
+      return;
+    }
+
     if (!isNameValid) {
       setFormValid('이름 형식이 올바르지 않습니다.');
+      return;
     }
     const isNicknameValid = nicknameValidate(nickname);
     if (!isNicknameValid) {
       setFormValid('닉네임 형식이 올바르지 않습니다.');
+      return;
     }
     const isPWValid = passwordValidate(pw);
     if (!isPWValid) {
-      setFormValid('비밀번호 형식이 올바르지 않습니다.');
+      setFormValid('비밀번호는 영문숫자특수문자혼합 8자리 이상');
+      return;
     }
 
     const submitHandler = async () => {
