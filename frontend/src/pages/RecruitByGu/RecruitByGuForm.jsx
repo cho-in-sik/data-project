@@ -71,6 +71,11 @@ const RecruitByGuForm = () => {
     return formData;
   };
 
+  const handleCategory = (event) => {
+    const value = event.target.value;
+    setCategory(value);
+  };
+
   return (
     <BackGround>
       <Header />
@@ -141,12 +146,22 @@ const RecruitByGuForm = () => {
             </FormGroup>
             <FormGroup>
               <FormLabel htmlFor="category">장/단기 구분</FormLabel>
-              <FormInput
-                type="text"
-                value={category}
-                onChange={(event) => setCategory(event.target.value)}
-                required
-              />
+              <FormDiv>
+                <input
+                  type="radio"
+                  name="category"
+                  value="단기"
+                  onChange={(event) => handleCategory(event)}
+                />
+                단기
+                <input
+                  type="radio"
+                  name="category"
+                  value="장기"
+                  onChange={(event) => handleCategory(event)}
+                />
+                장기
+              </FormDiv>
             </FormGroup>
           </FormGroupBox>
           <FormButton type="submit">작성하기</FormButton>
@@ -249,4 +264,12 @@ const FormButton = styled.button`
   &:hover {
     background-color: #2f9564;
   }
+`;
+
+const FormDiv = styled.div`
+  width: 65%;
+  font-size: 1rem;
+  margin-right: 1rem;
+  padding: 0 1rem;
+  line-height: 2.2rem;
 `;
