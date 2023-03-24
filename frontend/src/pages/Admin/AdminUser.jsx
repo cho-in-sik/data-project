@@ -13,7 +13,7 @@ const AdminUser = (props) => {
   const [page, setPage] = useState(1);
   const perPage = 10;
   const [total, setTotal] = useState(0);
-  const [UserType, setUserType] = useState('');
+  const [userId, setUserId] = useState('');
   const navigate = useNavigate();
 
   const handlePageChange = (page) => {
@@ -33,7 +33,7 @@ const AdminUser = (props) => {
       }
     };
     getAllUsers();
-  }, [page, perPage]);
+  }, [page, perPage, userId]);
 
   // 아래 두 이벤트함수를 실행했을 때 각각의 target 회원에 해당하는 id를 가져와서 서버로 요청을 해야할텐데 어떤 방법으로 해야할까요?
 
@@ -49,12 +49,12 @@ const AdminUser = (props) => {
 
   // 회원탈퇴 onClick
   const handleDelete = async (e) => {
-    const id = e.target.parentElement.parentElement.firstChild.textContent;
-    const res = await axios.delete(`/api/v1/admin/users/${id}`);
+    setUserId(e.target.parentElement.parentElement.firstChild.textContent);
+    const res = await axios.delete(`/api/v1/admin/users/${userId}`);
     console.log(res);
     if (res.data !== '') {
       alert(res.data);
-      window.location.reload();
+      // window.location.reload();
     } else {
       alert('오류가 발생했습니다.');
       return false;

@@ -233,9 +233,9 @@ const RecruitByGuDetail = () => {
 };
 
 const VolunteerDetailBox = styled.div`
-  margin-top: 4rem;
+  margin: 4rem 0;
   position: relative;
-  width: 60%;
+  width: 80%;
   height: auto;
   max-height: 70%;
   padding: 2rem;
@@ -249,19 +249,19 @@ const ContentDiv = styled.div`
 const HeadDiv = styled.div`
   & span {
     width: 50%;
-    min-width: 350px;
+    min-width: 380px;
     font-size: 30px;
     font-weight: 400;
   }
   & button {
-    margin: 0 0.3rem;
+    margin: 0px 0.3rem;
     border: none;
-    border-radius: 20px;
+    border-radius: 5px;
     font-weight: 500;
-    padding: 0.5rem 1rem;
+    padding: 3px 8px;
     color: white;
     font-size: 1rem;
-    background-color: #ff5065;
+    background-color: rgb(255, 80, 101);
     cursor: pointer;
 
     &:hover {
@@ -281,7 +281,7 @@ const ChatDiv = styled.div`
 `;
 
 const ImgBox = styled.div`
-  width: 40%;
+  width: 50%;
   height: auto;
   & img {
     border-radius: 10px;

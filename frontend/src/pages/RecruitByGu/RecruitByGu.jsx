@@ -83,7 +83,7 @@ const RecruitByGu = (props) => {
     <BackGround>
       <Header />
       <VolunteerBox>
-        <div style={{ paddingTop: '50px', paddingBottom: '30px' }}>
+        <div style={{ margin: '1rem' }}>
           <Span>
             <FontAwesomeIcon
               icon={faArrowLeft}
@@ -137,11 +137,13 @@ const VolunteerBox = styled.div`
   margin-top: 30px;
   max-width: 1350px;
   width: 90%;
-  height: 85%;
+  height: auto;
   border-radius: 20px;
   background-color: white;
   position: relative;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  padding: 1rem;
+  padding-bottom: 5rem;
 
   button {
     border: none;
@@ -174,7 +176,8 @@ const VolunteerDetail = styled.div`
   position: relative;
   background-color: whitesmoke;
   width: 27%;
-  height: 25vh;
+  height: 30%;
+  min-height: 170px;
   border-radius: 20px;
   margin: 0.8rem;
   padding: 0.8rem;
@@ -199,7 +202,7 @@ const MeetingStatus = styled.span`
 
 const VolunteerMessage = styled.div`
   text-align: center;
-  margin: 3.5rem 0;
+  margin: 30px 0;
   font-size: 1.4rem;
 `;
 

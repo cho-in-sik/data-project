@@ -76,6 +76,7 @@ function VolunteerComment({
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
+                    margin: '0.5rem 0',
                   }}
                 >
                   <CommentAuthor>
@@ -155,8 +156,6 @@ const CommentLi = styled.li`
   border-radius: 10px;
   background-color: white;
   width: 80%;
-  text-align: center;
-  margin-bottom: 1%;
 `;
 const CommentDeleteButton = styled.button`
   width: 7%;
@@ -165,6 +164,7 @@ const CommentDeleteButton = styled.button`
   background-color: #ff5065;
   color: white;
   padding: 3px 8px;
+  margin-left: 1rem;
 `;
 
 export default VolunteerComment;

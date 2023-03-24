@@ -16,6 +16,7 @@ const RecruitByGuForm = () => {
   const [address, setAddress] = useState('');
   const [category, setCategory] = useState('');
   const [modal, setModal] = useState(false);
+  const [flag, setFlag] = useState(false);
 
   // 페이지 이동을 위한 useNavigate 훅
   const navigate = useNavigate();
@@ -45,13 +46,23 @@ const RecruitByGuForm = () => {
       alert('게시글 작성에 실패했습니다.');
     }
   };
-  const handleMouseOver = () => {
+  /*  const handleMouseOver = () => {
     setModal(true);
   };
   const handleMouseLeave = () => {
     setModal(false);
-  };
+  }; */
 
+  const handleClick = () => {
+    if (flag === false) {
+      setFlag(true);
+      setModal(true);
+      console.log(flag);
+    } else {
+      setModal(false);
+      setFlag(false);
+    }
+  };
   // 이미지 핸들러
   const profileImgHandler = async (e) => {
     debugger;
@@ -101,9 +112,7 @@ const RecruitByGuForm = () => {
                 placeholder="예) 23년 3월 22일 16시 - 18시"
                 required
               />
-              <p onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave}>
-                가이드
-              </p>
+              <p onClick={handleClick}>가이드</p>
               {modal && <TimeOfAccident />}
             </FormGroup>
             <FormGroup>
@@ -164,10 +173,22 @@ const RecruitByGuForm = () => {
               </FormDiv>
             </FormGroup>
           </FormGroupBox>
-          <FormButton type="submit">작성하기</FormButton>
-          <FormButton type="button" onClick={() => navigate(-1)}>
-            작성 취소
-          </FormButton>
+          <div
+            style={{
+              margin: '2rem 0',
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+          >
+            <FormButton type="submit">작성하기</FormButton>
+            <FormButton
+              type="button"
+              onClick={() => navigate(-1)}
+              style={{ backgroundColor: '#888' }}
+            >
+              작성 취소
+            </FormButton>
+          </div>
         </form>
       </FormWrapper>
     </BackGround>
@@ -177,15 +198,14 @@ const RecruitByGuForm = () => {
 export default RecruitByGuForm;
 
 const FormWrapper = styled.div`
-  margin: 0 auto;
+  margin: 40px auto;
   max-width: 1350px;
-  width: 60%;
+  width: 50%;
   height: auto;
-  padding: 20px;
+  padding: 0 20px;
   background-color: white;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 20px;
-  margin-top: 40px;
 `;
 
 const FormTitle = styled.h1`
@@ -202,8 +222,9 @@ const FormGroupBox = styled.div`
 const FormGroup = styled.div`
   width: 75%;
   margin: 2rem auto;
-
+  padding-left: 5rem;
   p {
+    cursor: pointer;
     display: inline-block;
     color: #fff;
     background-color: #ff5065;
@@ -215,6 +236,7 @@ const FormGroup = styled.div`
 const FormLabel = styled.label`
   font-size: 1rem;
   width: 15%;
+  min-width: 85px;
   float: left;
   line-height: 1.8rem;
 `;
@@ -249,10 +271,10 @@ const FormTextarea = styled.textarea`
 `;
 
 const FormButton = styled.button`
-  margin: 1rem auto;
-  width: 50%;
+  margin: 1rem;
+  width: 20%;
   padding: 1rem 1.5rem;
-  display: block;
+  display: inline-block;
   background-color: #47b781;
   color: #fff;
   font-size: 18px;

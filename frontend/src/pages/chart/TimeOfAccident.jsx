@@ -40,7 +40,7 @@ const TimeOfAccident = () => {
       },
       title: {
         display: true,
-        text: '2021년 시간대별 교통사고로 인한 사상자 발생 시각화 자료',
+        text: '2021년 시간대별 교통사고 사상자 발생 건수',
       },
       tooltip: {
         // 툴팁 스타일
@@ -87,9 +87,16 @@ const TimeOfAccident = () => {
     ],
   };
   return (
-    <div style={{ width: '60%', margin: '1rem auto' }}>
+    <div style={{ width: '60%', margin: '1rem auto', transition: 'all 2s' }}>
       <Bar options={options} data={data} height={350} width={350} />
-      <span style={{ fontSize: '0.7rem', margin: '1.5rem 0' }}>
+      <span
+        style={{
+          display: 'inline-block',
+          minWidth: '430px',
+          fontSize: '0.7rem',
+          margin: '1.5rem 0',
+        }}
+      >
         * 그래프에 따라 사고가 더 많이 발생하는 시간대에 봉사 모임을 가질 것을
         권장해요 🙂
       </span>
