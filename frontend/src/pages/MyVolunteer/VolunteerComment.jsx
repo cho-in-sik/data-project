@@ -3,7 +3,12 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 
-function VolunteerComment({ recruitmentId, comment, deleteCommentHandler }) {
+function VolunteerComment({
+  recruitmentId,
+  comment,
+  deleteCommentHandler,
+  // postCommentHandler,
+}) {
   const [content, setContent] = useState(''); // 댓글 내용
   const user = useSelector((state) => state.user); // Redux의 useSelector hook을 이용해 현재 유저 정보 가져오기
 
@@ -17,6 +22,7 @@ function VolunteerComment({ recruitmentId, comment, deleteCommentHandler }) {
           content,
         },
       );
+      console.log(res.data);
       // postCommentHandler(res.data);
 
       setContent('');

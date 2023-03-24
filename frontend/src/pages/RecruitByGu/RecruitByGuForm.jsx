@@ -34,6 +34,7 @@ const RecruitByGuForm = () => {
       content,
       address,
       category,
+      image,
     };
     try {
       const res = await axios.post('/api/v1/recruitment', body);

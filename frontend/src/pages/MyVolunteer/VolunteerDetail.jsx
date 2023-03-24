@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import img from '../../assets/images/66112.jpg';
+import baseImg from '../../assets/images/66112.jpg';
 import axios from 'axios';
 import BackGround from '../../components/Background/Background';
 import { useSelector } from 'react-redux';
@@ -29,6 +29,7 @@ const VolunteerDetail = () => {
   const [meetingStatus, setMeetingStatus] = useState('');
   const [recruit, setRecruit] = useState(0);
   const [recruitments, setRecruiments] = useState(0);
+  const [img, setImg] = useState('');
 
   //get으로 상세페이지 데이터 불러오기..
   useEffect(() => {
@@ -46,6 +47,7 @@ const VolunteerDetail = () => {
         setRecruit(res.data.data.plainRecruitment.participants.length);
         setRecruiments(res.data.data.plainRecruitment.recruitments);
         setNickname(res.data.data.plainRecruitment.author.nickname);
+        setImg(res.data.data.plainRecruitment.image);
       } catch (error) {
         console.error(error);
       }
@@ -113,9 +115,6 @@ const VolunteerDetail = () => {
   };
 
   //props로 넘겨줄 함수 (댓글 post하고 setComment바꾸기)
-  const postCommentHandler = (data) => {
-    setComment({ ...comment, comments: data });
-  };
 
   return (
     <BackGround>
@@ -138,7 +137,7 @@ const VolunteerDetail = () => {
           </HeadDiv>
           <BodyBox>
             <ImgBox>
-              <img src={img} alt="volunteer-IMG" />
+              <img src={img === null ? baseImg : img} alt="volunteer-IMG" />
             </ImgBox>
             <SpanDiv>
               <span>
@@ -188,7 +187,7 @@ const VolunteerDetail = () => {
             recruitmentId={recruitmentId}
             comment={comment.length === 0 ? '' : comment}
             deleteCommentHandler={deleteCommentHandler}
-            postCommentHandler={postCommentHandler}
+            // postCommentHandler={postCommentHandler}
           />
         </ChatDiv>
       </VolunteerDetailBox>
