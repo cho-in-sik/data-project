@@ -33,11 +33,16 @@ function VolunteerComment({
   };
 
   //댓글 delete
-  const handleDelete = async (commentId) => {
+  const handleDelete = async (comment) => {
+    //본인댓글만 삭제하게 거르는 작업
+    if (comment.writer !== user.id) {
+      alert('본인의 댓글만 삭제 가능합니다.');
+      return;
+    }
     try {
-      deleteCommentHandler(commentId);
+      deleteCommentHandler(comment._id);
       const res = await axios.delete(
-        `/api/v1/recruitment/${recruitmentId}/comment/${commentId}`,
+        `/api/v1/recruitment/${recruitmentId}/comment/${comment._id}`,
       );
     } catch (error) {
       console.error('댓글 삭제에 실패하였습니다.', error);
@@ -77,7 +82,7 @@ function VolunteerComment({
                     {item.writer.nickname || user.nickname}
                   </CommentAuthor>
                   <CommentLi>{item.content}</CommentLi>
-                  <CommentDeleteButton onClick={() => handleDelete(item._id)}>
+                  <CommentDeleteButton onClick={() => handleDelete(item)}>
                     삭제
                   </CommentDeleteButton>
                 </div>
