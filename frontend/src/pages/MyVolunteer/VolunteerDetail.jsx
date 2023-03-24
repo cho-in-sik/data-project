@@ -36,7 +36,6 @@ const VolunteerDetail = () => {
     const getData = async () => {
       try {
         const res = await axios.get(`/api/v1/recruitment/${recruitmentId}`);
-        console.log(res);
         setComment(res.data.data.comments);
         setTitle(res.data.data.plainRecruitment.title);
         setAddress(res.data.data.plainRecruitment.address);
@@ -53,7 +52,7 @@ const VolunteerDetail = () => {
       }
     };
     getData();
-  }, [recruitmentId, comment]);
+  }, [recruitmentId]);
 
   // 참가 신청 취소 버튼 클릭 이벤트
   const handleClick = async () => {
@@ -115,7 +114,10 @@ const VolunteerDetail = () => {
   };
 
   //props로 넘겨줄 함수 (댓글 post하고 setComment바꾸기)
-
+  const postCommentHandler = (newComment) => {
+    setComment((prevComments) => [...prevComments, newComment]);
+  };
+  console.log(comment);
   return (
     <BackGround>
       <Header />
@@ -191,7 +193,7 @@ const VolunteerDetail = () => {
             recruitmentId={recruitmentId}
             comment={comment.length === 0 ? '' : comment}
             deleteCommentHandler={deleteCommentHandler}
-            // postCommentHandler={postCommentHandler}
+            postCommentHandler={postCommentHandler}
           />
         </ChatDiv>
       </VolunteerDetailBox>
