@@ -131,12 +131,10 @@ const Span = styled.span`
   font-weight: 500;
 `;
 const NicknameSpan = styled.span`
-  font-size: 28px;
+  font-size: 26px;
   margin-left: 15px;
   margin-right: 10px;
   cursor: pointer;
-  font-weight: 500;
-  font-family: 'Cute Font', cursive;
 `;
 
 export default Header;

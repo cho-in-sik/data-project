@@ -15,6 +15,7 @@ import {
   ButtonWrapper,
   PaginationWrapper,
 } from './styles/CommunityListStyle';
+import styled from 'styled-components';
 
 function CommunityList() {
   const [boards, setBoards] = useState([]); // 게시글 목록
@@ -55,7 +56,7 @@ function CommunityList() {
   };
 
   return (
-    <BackGround>
+    <BackColor>
       <Header />
       <Container>
         <Title>
@@ -92,8 +93,16 @@ function CommunityList() {
         </Table>
         <PaginationWrapper>{renderPageButtons()}</PaginationWrapper>
       </Container>
-    </BackGround>
+    </BackColor>
   );
 }
+const BackColor = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: #47b781;
+`;
 
 export default CommunityList;
