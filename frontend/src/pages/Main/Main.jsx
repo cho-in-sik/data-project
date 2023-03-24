@@ -9,8 +9,11 @@ import TypeOfAccident from '../chart/TypeOfAccident';
 import PieMortality from '../chart/PieMortality';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSun, faArrowUp } from '@fortawesome/free-solid-svg-icons';
-import { Scale } from 'chart.js';
+import {
+  faSun,
+  faArrowUp,
+  faSeedling,
+} from '@fortawesome/free-solid-svg-icons';
 
 const Main = () => {
   const navigate = useNavigate();
@@ -31,7 +34,10 @@ const Main = () => {
         </Fade>
         <FontAwesomeIcon className="sun" icon={faSun} size="10x" />
 
-        <span>청소년을 지키는 파릇파릇</span>
+        <span>
+          <FontAwesomeIcon icon={faSeedling} className="sprout" />
+          자라나는 청소년을 지키는 파릇파릇
+        </span>
         <div>당신이 함께해주세요</div>
         <Button onClick={() => navigate('/recruitment/main')}>
           봉사신청 하러가기
@@ -69,9 +75,19 @@ const Main = () => {
           >
             20세 이하 교통사고 사망자 수
           </div>
-          <div>20세 이하 사망원인 무려 3위, 교통사고</div>
-          <div>asdfasdfasdf</div>
-          <div>sadfasdfsdfsdf</div>
+
+          <div style={{ color: '#215220' }}>
+            20세 이하 사망원인 무려 3위, 교통사고
+          </div>
+          <div style={{ color: '#215220' }}>
+            청소년 10명 중 1명이 교통사고로 허무하게 목숨을 잃고 있습니다.
+          </div>
+          <div style={{ color: '#215220' }}>
+            이는 자살(43.7%), 암(14.2%)을 제외하면 가장 큰 수치입니다.
+          </div>
+          <div style={{ fontSize: '14px', color: '#a1a1a1' }}>
+            출처: 경찰청,「경찰접수교통사고현황」, 2021.03.24, 연령층별 사상자
+          </div>
         </div>
       </Section3>
 
@@ -82,12 +98,16 @@ const Main = () => {
             <div style={{ marginTop: '7%' }}>
               <h3>사고 유형 별 사망자 수</h3>
             </div>
-            <div className="div">dfasd fasdfa ewfdsfads fsdfasd fasd asd</div>
             <div className="div">
-              sa fas dfadsfd sfsdfa sdfasd fasdf asd fasdfa sdfd
+              대부분의 교통사고는 보행자가 차도를 통행 중이거나 횡단 중일때
+              발생합니다.
             </div>
             <div className="div">
-              sa fas dfadsfd sfsdfa sdfasd fasdf asd fasdfa sdfd
+              교통지도 봉사로 우리는 많은 교통사고를 막을 가능성을 만들 수
+              있습니다.
+            </div>
+            <div className="div">
+              당신의 작은 한 걸음이 더 많은 새싹들을 구합니다.
             </div>
           </div>
         </Fade>
@@ -127,6 +147,10 @@ const Section1 = styled.section`
     top: 100px;
     animation: zoom 1s infinite alternate;
   }
+  .sprout {
+    margin-right: 5px;
+    font-size: larger;
+  }
 
   img {
     width: 100%;
@@ -135,16 +159,16 @@ const Section1 = styled.section`
     opacity: 0.6;
   }
   span {
-    color: #48b26f;
-    font-size: 36px;
+    color: #5ab248;
+    font-size: 42px;
     font-weight: 700;
     position: absolute;
-    top: 24%;
+    top: 22%;
     left: 50%;
     transform: translateX(-50%);
   }
   div {
-    color: #48b26f;
+    color: #5ab248;
     font-size: 36px;
     font-weight: 700;
     position: absolute;
@@ -205,7 +229,7 @@ const Section3 = styled.section`
   align-items: center;
   margin-bottom: 250px;
   div {
-    margin-left: -10%;
+    margin-left: 0%;
   }
   div div {
     font-size: 20px;
@@ -228,7 +252,8 @@ const Section4 = styled.section`
   }
   .div {
     font-size: 20px;
-    margin-bottom: 1%;
+    margin-bottom: 3%;
+    color: #215220;
   }
 `;
 const Button = styled.button`
