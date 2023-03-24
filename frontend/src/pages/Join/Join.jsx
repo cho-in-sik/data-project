@@ -18,7 +18,6 @@ const Join = () => {
     pwConfirm: '',
     address: '',
   });
-  const [profileImage, setProfileImage] = useState('');
 
   const { email, name, nickname, phone, pw, pwConfirm, address } = inputs;
   const navigate = useNavigate();
@@ -123,25 +122,6 @@ const Join = () => {
     }
   };
 
-  // 이미지 핸들러
-  const profileImgHandler = async (e) => {
-    debugger;
-    const img = e.target.files[0];
-    const formData = new FormData();
-    formData.append('image', img);
-
-    axios
-      .post('/api/v1/image/upload', formData)
-      .then((res) => {
-        setProfileImage(res.data.image);
-        alert('성공');
-      })
-      .catch((err) => {
-        alert('실패');
-      });
-    return formData;
-  };
-
   // api에 전달
   const submitData = async () => {
     const data = {
@@ -162,7 +142,8 @@ const Join = () => {
         return false;
       }
     } catch (e) {
-      console.log(e);
+      alert(e.response.data.error);
+      return false;
     }
   };
 
@@ -254,17 +235,6 @@ const Join = () => {
               value={address}
               onChange={handleChange}
               ref={(i) => (inputRef.current[6] = i)}
-            />
-          </JoinItem>
-          <JoinItem>
-            <p>프로필 이미지</p>
-            <input
-              type="file"
-              name="image"
-              accept=".png, .jpeg, .jpg"
-              ref={(i) => (inputRef.current[7] = i)}
-              onChange={profileImgHandler}
-              style={{ border: 'none', fontSize: '0.5rem' }}
             />
           </JoinItem>
           {!validBlank ? null : <span> * 모든 항목을 입력해주세요.</span>}
