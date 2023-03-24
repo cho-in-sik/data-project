@@ -7,7 +7,7 @@ function VolunteerComment({
   recruitmentId,
   comment,
   deleteCommentHandler,
-  // postCommentHandler,
+  postCommentHandler,
 }) {
   const [content, setContent] = useState(''); // 댓글 내용
   const user = useSelector((state) => state.user); // Redux의 useSelector hook을 이용해 현재 유저 정보 가져오기
@@ -22,8 +22,8 @@ function VolunteerComment({
           content,
         },
       );
-      console.log(res.data);
-      // postCommentHandler(res.data);
+
+      postCommentHandler(res.data);
 
       setContent('');
     } catch (error) {
@@ -73,7 +73,9 @@ function VolunteerComment({
                     alignItems: 'center',
                   }}
                 >
-                  <CommentAuthor>{item.writer.nickname}</CommentAuthor>
+                  <CommentAuthor>
+                    {item.writer.nickname || user.nickname}
+                  </CommentAuthor>
                   <CommentLi>{item.content}</CommentLi>
                   <CommentDeleteButton onClick={() => handleDelete(item._id)}>
                     삭제

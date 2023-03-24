@@ -33,7 +33,7 @@ const RecruitByGuDetail = () => {
       }
     }
     fetchData();
-  }, [meetingStatus, isUserApplied, comment]);
+  }, [meetingStatus, isUserApplied]);
 
   // 참가신청 버튼 클릭 이벤트
   const handleApply = async () => {
@@ -53,6 +53,11 @@ const RecruitByGuDetail = () => {
       console.log(e);
       alert(e.response.data.error);
     }
+  };
+
+  //props로 넘겨줄 함수 (댓글 post하고 setComment바꾸기)
+  const postCommentHandler = (newComment) => {
+    setComment((prevComments) => [...prevComments, newComment]);
   };
 
   // 참가 신청 취소 버튼 클릭 이벤트
@@ -220,6 +225,7 @@ const RecruitByGuDetail = () => {
           recruitmentId={id}
           comment={comment}
           deleteCommentHandler={deleteCommentHandler}
+          postCommentHandler={postCommentHandler}
         />
       </VolunteerDetailBox>
     </BackGround>
