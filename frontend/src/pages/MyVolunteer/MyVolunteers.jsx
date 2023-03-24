@@ -114,19 +114,41 @@ const MyVolunteers = (props) => {
   const user = useSelector((state) => state.user);
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
-  const [total, setTotal] = useState(20);
+  const [total, setTotal] = useState(0);
   const navigate = useNavigate();
   const items = 6;
+
+  const [type, setType] = useState(0);
 
   const handlePageChange = (page) => {
     return setPage(page);
   };
 
+  //맨처음 렌더링화면 참여한 모집글
+  useEffect(() => {
+    const call = async () => {
+      try {
+        const res = await axios.get('/api/v1/my/participantRecruitments');
+        setData(res.data.data.myParticipants);
+        setTotal(res.data.data.recruitmentCount);
+        setType(false);
+        console.log(res);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    call();
+  }, []);
+
   //참여한 모집글 조회
   const handleParticipated = async () => {
     try {
-      const res = await axios.get('/');
-      setData(res.data);
+      const res = await axios.get('/api/v1/my/participantRecruitments');
+
+      console.log(res.data.data.myParticipants);
+      setData(res.data.data.myParticipants);
+      setTotal(res.data.data.recruitmentCount);
+      setType(false);
     } catch (error) {
       console.error(error);
     }
@@ -135,36 +157,15 @@ const MyVolunteers = (props) => {
   const handleMade = async () => {
     try {
       const res = await axios.get('/api/v1/my/authorRecruitments');
-      console.log(res.data.data);
-      setData(res.data.data);
+      setTotal(res.data.data.recruitmentCount);
+      console.log(res.data.data.myRecruitments);
+      setData(res.data.data.myRecruitments);
+      setType(true);
     } catch (error) {
       console.error(error);
     }
   };
-
-  // // 게시글 목록을 가져오는 함수
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     try {
-  //       const response = await axios.get(
-  //         `http://localhost:3000/api/v1/board?page=${page}&perPage=${items}`,
-  //       );
-  //       const pageData = {
-  //         page: response.data.page,
-  //         perPage: response.data.perPage,
-  //         total: response.data.total,
-  //         totalPage: Response.data.totalPage,
-  //       };
-  //       // 응답 데이터에서 boards 배열만 추출하여 setData로 업데이트
-  //       setData(response.data.boards);
-  //       setTotal(pageData.total);
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   }
-  //   fetchData();
-  // }, [page, items]); //page, perPage가 변경될 때마다 useEffect가 실행
-
+  console.log(data);
   return (
     <BackGround>
       <Header />
@@ -173,31 +174,56 @@ const MyVolunteers = (props) => {
           <Span onClick={handleParticipated}>참여한 봉사내역</Span>
           <Span onClick={handleMade}>개설한 봉사내역</Span>
         </div>
+
         <VB>
-          {data
-            .slice(items * (page - 1), items * (page - 1) + items)
-            .map((value, i) => {
-              return (
-                <MyVolunteer
-                  key={i}
-                  title={value.title}
-                  volunteerTime={value.volunteerTime}
-                  address={value.address}
-                  author={value.author}
-                  content={value.content}
-                  participants={value.participants}
-                  meetingStatus={value.meetingStatus}
-                  userId={value.userId}
-                  recruitmentId={value._id}
-                />
-              );
-            })}
+          {data.length === 0
+            ? null
+            : data
+                .slice(items * (page - 1), items * (page - 1) + items)
+                .map((value, i) => {
+                  return (
+                    <MyVolunteer
+                      key={i}
+                      title={type ? value.title : value.recruitmentId.title}
+                      volunteerTime={
+                        type
+                          ? value.volunteerTime
+                          : value.recruitmentId.volunteerTime
+                      }
+                      address={
+                        type ? value.address : value.recruitmentId.address
+                      }
+                      author={
+                        type
+                          ? value.author.nickname
+                          : value.recruitmentId.author.nickname
+                      }
+                      content={
+                        type ? value.content : value.recruitmentId.content
+                      }
+                      participants={
+                        type
+                          ? value.participants
+                          : value.recruitmentId.participants
+                      }
+                      meetingStatus={
+                        type
+                          ? value.meetingStatus
+                          : value.recruitmentId.meetingStatus
+                      }
+                      // recruitmentId={value._id}
+                      recruitmentId={type ? value._id : value.recruitmentId._id}
+                    />
+                  );
+                })}
         </VB>
         <div>
           <Paging
-            page={page}
-            handlePageChange={handlePageChange}
-            total={total}
+            onChange={handlePageChange}
+            activePage={page}
+            itemsCountPerPage={items}
+            pageRangeDisplayed={5}
+            totalItemsCount={total}
           />
         </div>
       </VolunteerBox>

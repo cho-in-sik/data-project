@@ -15,30 +15,37 @@ const VolunteerDetail = () => {
   const navigate = useNavigate();
 
   const user = useSelector((state) => state.user);
-  // //useLocation 으로 navigate로 온 상태 받기
-
-  // const userId = location.state.userId;
+  // useLocation 으로 navigate로 온 상태 받기
 
   const recruitmentId = location.state.recruitmentId;
 
+  const [nickname, setNickname] = useState('');
   const [comment, setComment] = useState([]);
   const [title, setTitle] = useState('');
   const [address, setAddress] = useState('');
   const [volunteerTime, setVolunteerTime] = useState('');
   const [participants, setParticipants] = useState([]);
   const [content, setContent] = useState('');
+  const [meetingStatus, setMeetingStatus] = useState('');
+  const [recruit, setRecruit] = useState(0);
+  const [recruitments, setRecruiments] = useState(0);
 
   //get으로 상세페이지 데이터 불러오기..
   useEffect(() => {
     const getData = async () => {
       try {
         const res = await axios.get(`/api/v1/recruitment/${recruitmentId}`);
+        console.log(res);
         setComment(res.data.data.comments);
         setTitle(res.data.data.plainRecruitment.title);
         setAddress(res.data.data.plainRecruitment.address);
         setVolunteerTime(res.data.data.plainRecruitment.volunteerTime);
         setParticipants(res.data.data.plainRecruitment.participants);
         setContent(res.data.data.plainRecruitment.content);
+        setMeetingStatus(res.data.data.plainRecruitment.meetingStatus);
+        setRecruit(res.data.data.plainRecruitment.participants.length);
+        setRecruiments(res.data.data.plainRecruitment.recruitments);
+        setNickname(res.data.data.plainRecruitment.author.nickname);
       } catch (error) {
         console.error(error);
       }
@@ -46,14 +53,56 @@ const VolunteerDetail = () => {
     getData();
   }, [recruitmentId, comment]);
 
-  //참가자 탈퇴 핸들러
+  // 참가 신청 취소 버튼 클릭 이벤트
   const handleClick = async () => {
     try {
-      await axios.delete(
-        `http://localhost:3000/recruitment/${user.id}/participaints`,
+      const res = await axios.delete(
+        `/api/v1/recruitment/${recruitmentId}/participants/${user.id}`,
+        {
+          participantId: user.id,
+        },
       );
-    } catch (error) {
-      console.error(error);
+      if (res.statusText === 'OK') {
+        setRecruit((prev) => prev - 1);
+        alert('참가 신청이 취소되었습니다.');
+      } else {
+        alert('참가 신청에 실패하였습니다.)');
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  // 모집완료 버튼 클릭 이벤트
+  const toggleRecruitComplete = async () => {
+    try {
+      let soonMeetingStatus = '';
+      // 현재 모집 상황이 '모집중'이면 곧 바뀔 모집 상태는 '모집완료', 아니면 '모집중'
+      meetingStatus === '모집중'
+        ? (soonMeetingStatus = '모집완료')
+        : (soonMeetingStatus = '모집중');
+
+      // 곧 바뀔 상태로 수정하는 요청 보내기
+      const res = await axios.put(`/api/v1/recruitment/${recruitmentId}`, {
+        meetingStatus: soonMeetingStatus,
+      });
+
+      // 그래서
+      console.log(
+        '모집 상태는 ',
+        res.data.data.meetingStatus,
+        '(으)로 바뀝니다.',
+      );
+
+      // 통신에 성공하면
+      if (res.statusText === 'OK') {
+        alert(`상태를 ${soonMeetingStatus}(으)로 변경하였습니다.`);
+        // 바뀐 상태로 렌더링하기.
+        setMeetingStatus(soonMeetingStatus);
+        console.log(res);
+      }
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -81,7 +130,11 @@ const VolunteerDetail = () => {
               style={{ marginRight: '5%', cursor: 'pointer' }}
             />
             <span>{title}</span>
-            <button onClick={handleClick}>참가취소</button>
+            {nickname !== user.nickname ? (
+              <button onClick={handleClick}>참가취소</button>
+            ) : (
+              <button onClick={toggleRecruitComplete}>모집상태 변경</button>
+            )}
           </HeadDiv>
           <BodyBox>
             <ImgBox>
@@ -94,7 +147,13 @@ const VolunteerDetail = () => {
               <span>
                 기간: <span>{volunteerTime}</span>
               </span>
-              <span
+              <span>
+                모집인원:{' '}
+                <span>
+                  {recruit}명 / {recruitments}명
+                </span>
+              </span>
+              {/* <span
                 style={{
                   display: 'flex',
                 }}
@@ -116,23 +175,10 @@ const VolunteerDetail = () => {
                       }}
                     >
                       <span>{person}</span>
-
-                      {/* {user.id === userId && (
-                        <button
-                          onClick={() => console.log(1)}
-                          style={{
-                            height: '30px',
-                            width: '30px',
-                            marginTop: '5px',
-                          }}
-                        >
-                          X
-                        </button>
-                      )} */}
                     </div>
                   ))}
                 </div>
-              </span>
+              </span> */}
             </SpanDiv>
           </BodyBox>
         </ContentDiv>
@@ -140,7 +186,7 @@ const VolunteerDetail = () => {
         <ChatDiv>
           <VolunteerComment
             recruitmentId={recruitmentId}
-            comment={comment}
+            comment={comment.length === 0 ? '' : comment}
             deleteCommentHandler={deleteCommentHandler}
             postCommentHandler={postCommentHandler}
           />

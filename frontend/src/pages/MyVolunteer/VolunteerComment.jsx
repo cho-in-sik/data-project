@@ -58,7 +58,21 @@ function VolunteerComment({ recruitmentId, comment, deleteCommentHandler }) {
       </Form>
       <CommentDiv>
         <ul>
-          {comment.map((item) => (
+          {comment === ''
+            ? null
+            : comment.map((item) => (
+                <div
+                  key={item._id}
+                  style={{ display: 'flex', alignItems: 'center' }}
+                >
+                  <div>{item.writer.nickname}</div>
+                  <CommentLi>{item.content}</CommentLi>
+                  <CommentDeleteButton onClick={() => handleDelete(item._id)}>
+                    삭제
+                  </CommentDeleteButton>
+                </div>
+              ))}
+          {/* {comment.map((item) => (
             <div
               key={item._id}
               style={{ display: 'flex', alignItems: 'center' }}
@@ -69,7 +83,7 @@ function VolunteerComment({ recruitmentId, comment, deleteCommentHandler }) {
                 삭제
               </CommentDeleteButton>
             </div>
-          ))}
+          ))} */}
         </ul>
       </CommentDiv>
     </>

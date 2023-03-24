@@ -8,15 +8,13 @@ const MyVolunteer = ({
   volunteerTime,
   address,
   author,
-
   meetingStatus,
-  userId,
+
   recruitmentId,
 }) => {
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
   const data = {
-    userId,
     recruitmentId,
   };
   //모집상태가 "모집완료" 이면 모집상태 색변경
