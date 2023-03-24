@@ -50,8 +50,7 @@ const CommunityPostForm = () => {
         content,
         image,
       });
-      console.log(response.data);
-      navigate('/board/:id');
+      navigate(`/board`);
     } catch (error) {
       console.error(error);
       alert('게시글 작성에 실패하였습니다.');

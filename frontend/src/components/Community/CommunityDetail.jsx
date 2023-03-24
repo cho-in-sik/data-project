@@ -32,7 +32,7 @@ function CommunityDetail() {
         const response = await axios.get(`/api/v1/board/${id}`);
         setCommunity(response.data.board); // 게시글 정보
         setComments(response.data.comments); // 댓글 정보
-        // console.log(response.data.comments);
+        // console.log(response.data.board);
       } catch (error) {
         console.error('게시글을 불러오는데 실패하였습니다.', error);
         navigate('/board');
@@ -57,7 +57,7 @@ function CommunityDetail() {
     if (user.id === community.author._id) {
       navigate(`/board/edit/${community._id}`);
     } else {
-      alert('본인의 게시글만 수정할 수 있습니다.');
+      alert('You can only edit your own posts.');
     }
   };
 
@@ -107,8 +107,12 @@ function CommunityDetail() {
         )}
         <CommunityDetailContent>{community.content}</CommunityDetailContent>
         <ButtonContainer>
-          <button onClick={handleEditClick}>수정</button>
-          <button onClick={handleDeleteClick}>삭제</button>
+          {user.id === community.author._id ? (
+            <>
+              <button onClick={handleEditClick}>수정</button>
+              <button onClick={handleDeleteClick}>삭제</button>
+            </>
+          ) : null}
           <button onClick={() => navigate('/board')}>목록으로</button>
         </ButtonContainer>
         <CommunityDetailDivider />
