@@ -17,14 +17,17 @@ const RecruitByGuDetail = () => {
   const [recruit, setRecruit] = useState(0);
   const [meetingStatus, setMeetingStatus] = useState('');
   const [isUserApplied, setIsUserApplied] = useState('참가신청');
+  const [comment, setComment] = useState([]);
+
   useEffect(() => {
     async function fetchData() {
       try {
         const res = await axios.get(`/api/v1/recruitment/${id}`);
         console.log(res);
-        setData(res.data.data);
-        setRecruit(res.data.data.participants.length);
-        setMeetingStatus(res.data.data.meetingStatus);
+        setData(res.data.data.plainRecruitment);
+        setRecruit(res.data.data.plainRecruitment.participants.length);
+        setMeetingStatus(res.data.data.plainRecruitment.meetingStatus);
+        setComment(res.data.data.comments);
       } catch (e) {
         console.log(e);
       }
@@ -58,6 +61,7 @@ const RecruitByGuDetail = () => {
       }
     } catch (e) {
       console.log(e);
+      alert(e.response.data.error);
     }
   };
 
@@ -135,6 +139,7 @@ const RecruitByGuDetail = () => {
 
   // 로그인한 유저가 현재 페이지 모집글에 참가 신청했는지 여부 체크.
   const checkApply = (id) => {
+    debugger;
     const checkApplied = data.participants?.filter(
       (elem) => elem.participantId === id,
     );
@@ -142,6 +147,12 @@ const RecruitByGuDetail = () => {
       console.log('현재 참가한 상태입니다.');
       return true; // true = 참가한 상태입니다.
     }
+  };
+
+  //
+  const deleteCommentHandler = (commentId) => {
+    const updatedComments = comment.filter((item) => item._id !== commentId);
+    setComment(updatedComments);
   };
 
   return (
@@ -219,12 +230,11 @@ const RecruitByGuDetail = () => {
             </SpanDiv>
           </BodyBox>
         </ContentDiv>
-        {/* <ChatDiv>댓글 div</ChatDiv> */}
-        {/* <VolunteerComment
-          recruitmentId={recruitmentId}
+        <VolunteerComment
+          recruitmentId={id}
           comment={comment}
           deleteCommentHandler={deleteCommentHandler}
-        /> */}
+        />
       </VolunteerDetailBox>
     </BackGround>
   );
