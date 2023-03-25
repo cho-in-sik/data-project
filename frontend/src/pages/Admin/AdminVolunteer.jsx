@@ -51,7 +51,7 @@ const AdminUser = (props) => {
       <TableCell width="5%" style={{ display: 'none' }}>
         {item._id}
       </TableCell>
-      <TableCell width="15%">{item.author.nickname}</TableCell>
+      <TableCell width="15%">{item.author?.nickname}</TableCell>
       <TableCell width="15%">{item.borough.borough}</TableCell>
       <TableCell width="15%">
         {item.createdAt.slice(0, 10)} {item.createdAt.slice(11, 19)}
