@@ -52,7 +52,7 @@ const AdminUser = (props) => {
       <TableCell style={{ display: 'none' }}>{item._id}</TableCell>
       <TableCell width="30%">{item.title}</TableCell>
       <TableCell width="15%">{item.createdAt}</TableCell>
-      <TableCell width="15%">{item.author.nickname}</TableCell>
+      <TableCell width="15%">{item.author?.nickname}</TableCell>
       <TableCell width="10%">
         <button onClick={handleDelete}>삭제</button>
       </TableCell>
