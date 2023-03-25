@@ -68,90 +68,98 @@ const MyVolunteers = (props) => {
     <BackGround>
       <Header />
       <VolunteerBox>
-        <div style={{ paddingTop: '50px', paddingBottom: '30px' }}>
+        <div style={{ margin: '1rem' }}>
           <Span onClick={handleParticipated}>참여한 봉사내역</Span>
-          <Span onClick={handleMade}>개설한 봉사내역</Span>
+          <Span onClick={handleMade} style={{ borderLeft: '1px solid' }}>
+            개설한 봉사내역
+          </Span>
         </div>
 
         <VB>
-          {data.length === 0
-            ? null
-            : data
-                .slice(items * (page - 1), items * (page - 1) + items)
-                .map((value, i) => {
-                  return (
-                    <MyVolunteer
-                      key={i}
-                      title={type ? value.title : value.recruitmentId.title}
-                      volunteerTime={
-                        type
-                          ? value.volunteerTime
-                          : value.recruitmentId.volunteerTime
-                      }
-                      address={
-                        type ? value.address : value.recruitmentId.address
-                      }
-                      author={
-                        type
-                          ? value.author.nickname
-                          : value.recruitmentId.author.nickname
-                      }
-                      content={
-                        type ? value.content : value.recruitmentId.content
-                      }
-                      participants={
-                        type
-                          ? value.participants
-                          : value.recruitmentId.participants
-                      }
-                      meetingStatus={
-                        type
-                          ? value.meetingStatus
-                          : value.recruitmentId.meetingStatus
-                      }
-                      // recruitmentId={value._id}
-                      recruitmentId={type ? value._id : value.recruitmentId._id}
-                    />
-                  );
-                })}
+          {data.length === 0 ? (
+            <NoVolunteer>봉사 내역이 존재하지 않습니다</NoVolunteer>
+          ) : (
+            data
+              .slice(items * (page - 1), items * (page - 1) + items)
+              .map((value, i) => {
+                return (
+                  <MyVolunteer
+                    key={i}
+                    title={type ? value.title : value.recruitmentId.title}
+                    volunteerTime={
+                      type
+                        ? value.volunteerTime
+                        : value.recruitmentId.volunteerTime
+                    }
+                    address={type ? value.address : value.recruitmentId.address}
+                    author={
+                      type
+                        ? value.author.nickname
+                        : value.recruitmentId.author.nickname
+                    }
+                    content={type ? value.content : value.recruitmentId.content}
+                    participants={
+                      type
+                        ? value.participants
+                        : value.recruitmentId.participants
+                    }
+                    meetingStatus={
+                      type
+                        ? value.meetingStatus
+                        : value.recruitmentId.meetingStatus
+                    }
+                    // recruitmentId={value._id}
+                    recruitmentId={type ? value._id : value.recruitmentId._id}
+                  />
+                );
+              })
+          )}
         </VB>
-        <div>
-          <Paging
-            onChange={handlePageChange}
-            activePage={page}
-            itemsCountPerPage={items}
-            pageRangeDisplayed={5}
-            totalItemsCount={total}
-          />
-        </div>
+        {total < 7 ? null : (
+          <div>
+            <Paging
+              onChange={handlePageChange}
+              activePage={page}
+              itemsCountPerPage={items}
+              pageRangeDisplayed={5}
+              totalItemsCount={total}
+            />
+          </div>
+        )}
       </VolunteerBox>
     </BackGround>
   );
 };
 
 const VolunteerBox = styled.div`
-  max-width: 1440px;
   margin-top: 30px;
+  max-width: 1350px;
   width: 90%;
-  height: 85%;
+  height: auto;
   border-radius: 20px;
   background-color: white;
   position: relative;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  padding: 1rem;
+  padding-bottom: 5rem;
 `;
 const Span = styled.span`
   font-size: 1.5rem;
   font-weight: 400;
-  padding-left: 3rem;
+  padding: 0 1.5rem;
   cursor: pointer;
 `;
 
 const VB = styled.div`
   width: 95%;
-  margin: 0 auto;
+  margin: 3rem auto 0;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+`;
+const NoVolunteer = styled.span`
+  padding: 15% 0;
+  font-size: 20px;
 `;
 
 export default MyVolunteers;
