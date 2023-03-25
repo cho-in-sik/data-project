@@ -70,7 +70,7 @@ const UserDelete = (props) => {
 const WithdrawBox = styled.div`
   margin-top: 10%;
   width: 40%;
-  height: 35%;
+  height: 300px;
   background-color: white;
   border-radius: 20px;
   position: relative;
