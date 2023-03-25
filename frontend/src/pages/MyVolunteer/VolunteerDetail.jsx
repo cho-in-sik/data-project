@@ -58,14 +58,16 @@ const VolunteerDetail = () => {
   const handleClick = async () => {
     try {
       const res = await axios.delete(
-        `/api/v1/recruitment/${recruitmentId}/participants/${user.id}`,
+        `/api/v1/recruitment/${recruitmentId}/participants`,
         {
           participantId: user.id,
         },
       );
+
       if (res.statusText === 'OK') {
         setRecruit((prev) => prev - 1);
         alert('참가 신청이 취소되었습니다.');
+        navigate('/mypage');
       } else {
         alert('참가 신청에 실패하였습니다.)');
       }
