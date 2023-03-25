@@ -39,7 +39,7 @@ const AdminUser = (props) => {
     const id = e.target.parentElement.parentElement.firstChild.textContent;
     const res = await axios.delete(`/api/v1/admin/recruitment/${id}`);
     if (res.data !== '') {
-      alert(res.data);
+      alert('삭제가 완료되었습니다.');
       window.location.reload();
     } else {
       alert('오류가 발생했습니다.');
