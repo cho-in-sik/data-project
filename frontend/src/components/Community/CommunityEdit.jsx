@@ -92,7 +92,7 @@ const CommunityEditForm = () => {
         </FormGroup>
         <FormGroup>
           <FormLabel htmlFor="author">작성자</FormLabel>
-          <div>{user.nickname}</div>
+          <div>{user?.nickname}</div>
         </FormGroup>
         <FormGroup>
           <FormLabel htmlFor="content">내용</FormLabel>

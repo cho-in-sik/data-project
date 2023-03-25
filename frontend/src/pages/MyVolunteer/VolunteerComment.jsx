@@ -80,7 +80,7 @@ function VolunteerComment({
                   }}
                 >
                   <CommentAuthor>
-                    {item.writer.nickname || user.nickname}
+                    {item.writer?.nickname || user?.nickname}
                   </CommentAuthor>
                   <CommentLi>{item.content}</CommentLi>
                   <CommentDeleteButton onClick={() => handleDelete(item)}>

@@ -119,7 +119,7 @@ const VolunteerDetail = () => {
   const postCommentHandler = (newComment) => {
     setComment((prevComments) => [...prevComments, newComment]);
   };
-  console.log(comment);
+
   return (
     <BackGround>
       <Header />

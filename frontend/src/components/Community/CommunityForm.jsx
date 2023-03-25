@@ -76,7 +76,7 @@ const CommunityPostForm = () => {
         </FormGroup>
         <FormGroup>
           <FormLabel htmlFor="author">작성자</FormLabel>
-          <div>{user.nickname}</div>
+          <div>{user?.nickname}</div>
           {/* 현재 유저의 닉네임 표시 */}
         </FormGroup>
         <FormGroup>

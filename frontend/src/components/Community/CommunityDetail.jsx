@@ -97,7 +97,7 @@ function CommunityDetail() {
         <CommunityDetailHeader>
           <CommunityDetailTitle>{community.title}</CommunityDetailTitle>
           <CommunityDetailAuthor>
-            {community.author.nickname}
+            {community.author?.nickname}
           </CommunityDetailAuthor>
         </CommunityDetailHeader>
         <CommunityDetailDivider />
@@ -125,7 +125,7 @@ function CommunityDetail() {
           {comments && comments.length > 0 ? (
             comments.map((comment) => (
               <div key={comment._id}>
-                <h4>{comment.writer.nickname}</h4>
+                <h4>{comment.writer?.nickname}</h4>
                 <p>{comment.content}</p>
                 <button onClick={() => handleDeleteComment(comment._id)}>
                   삭제
