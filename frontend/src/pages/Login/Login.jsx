@@ -21,6 +21,8 @@ function Login() {
     setPassword(e.target.value);
   };
 
+  let errorMessage = '';
+
   const handleClick = async () => {
     if (email === '' || password === '') {
       alert('이메일과 패스워드를 입력해주세요.');
@@ -34,15 +36,21 @@ function Login() {
       });
       console.log(res);
       dispatch(loginUser(res.data));
+
       if (res.statusText === 'OK') {
-        navigate('/mypage');
+        navigate('/');
       } else {
         alert('아이디와 비밀번호를 확인하세요.');
       }
     } catch (e) {
-      console.log(e);
+      alert(e.response.data.error);
     }
   };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') handleClick();
+  };
+
   return (
     <BackGround>
       <Header />
@@ -65,6 +73,7 @@ function Login() {
               name="password"
               value={password}
               onChange={handlePwChange}
+              onKeyDown={handleKeyDown}
             />
           </LoginItem>
         </LoginWrapper>

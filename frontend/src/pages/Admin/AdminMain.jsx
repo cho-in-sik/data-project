@@ -44,7 +44,7 @@ const AdminBox = styled.div`
   align-items: center;
   position: relative;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-  margin-top: 4rem;
+  margin-top: 5rem;
 `;
 
 const AdminUser = styled.div`

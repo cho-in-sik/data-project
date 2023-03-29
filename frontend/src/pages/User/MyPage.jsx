@@ -49,8 +49,8 @@ const MypageBox = styled.div`
 
 const MyVolunteer = styled.div`
   color: #46b780;
-  width: 230px;
-  height: 230px;
+  width: 30%;
+  height: 40%;
   cursor: pointer;
   display: flex;
   flex-direction: column;

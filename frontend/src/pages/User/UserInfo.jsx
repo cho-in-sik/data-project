@@ -1,20 +1,15 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import Header from '../../components/Header/Header.jsx';
 import styled from 'styled-components';
 import BackGround from '../../components/Background/Background';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { loginUser } from '../../redux/userSlice';
 
 //유효성 검사
 //오류메시지를 상태로 관리하기?
 
-//이메일 형식
-const emailValidate = (email) => {
-  const regExp =
-    /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
-  return regExp.test(email);
-};
 // 이름 : 2자 이상 10자 이하
 const nameValidate = (name) => {
   const regExp = /^[가-힣a-zA-Z]{2,10}$/i;
@@ -33,13 +28,49 @@ const passwordValidate = (pw) => {
 
 const UserInfo = (props) => {
   const user = useSelector((state) => state.user);
-  const [userInfo, setUserInfo] = useState();
+  const dispatch = useDispatch();
+
+  //디비에 보내는 이미지( 이미지 서버에서 온걸 img1에 저장
+  const [img1, setImg1] = useState('');
+
+  //state로 상태관리
+  const [name, setName] = useState();
+  const [nickname, setNickname] = useState();
+  const [pw, setPw] = useState();
+  const [pw1, setPw1] = useState();
+  const [address, setAddress] = useState();
+  const [phoneNumber, setPhoneNumber] = useState();
+
+  //이미지 통신 함수
+  const profileImgHandler = async (e) => {
+    //이미지 파일 이미지 서버에 보내기
+    const img = e.target.files[0];
+    const formData1 = new FormData();
+    formData1.append('image', img);
+
+    axios
+      .post('api/v1/image/upload', formData1)
+      .then((res) => {
+        setImg1(res.data.image);
+      })
+      .catch((err) => {
+        alert('실패');
+      });
+    return formData1;
+  };
+
+  const [formValid, setFormValid] = useState([]);
+  //상태관리
+
+  const navigate = useNavigate();
   useEffect(() => {
     async function userData() {
       try {
-        const res = await axios.get(`/api/v1/users/${user.id}`);
-        console.log(res.data.data);
-        setUserInfo(res.data.data);
+        const res = await axios.get(`/api/v1/my/${user.id}`);
+        setName(res.data.data.name);
+        setNickname(res.data.data.nickname);
+        setAddress(res.data.data.address);
+        setPhoneNumber(res.data.data.phoneNumber);
       } catch (error) {
         console.log(error);
       }
@@ -47,59 +78,61 @@ const UserInfo = (props) => {
     userData();
   }, [user.id]);
 
-  const [formValid, setFormValid] = useState([]);
-  //상태관리
-  const nameRef = useRef();
-  const nicknameRef = useRef();
-  const phoneNumRef = useRef();
-  const emailRef = useRef();
-  const pwRef = useRef();
-  const pw1Ref = useRef();
-  const addressRef = useRef();
-
-  const navigate = useNavigate();
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const name = nameRef.current.value;
-    const email = emailRef.current.value;
-    const nickname = nicknameRef.current.value;
-    const pw = pwRef.current.value;
-    const pw1 = pw1Ref.current.value;
-
-    //요처어 데이터 formdata에 모으기
+    //요청 데이터 formdata에 모으기
     const formData = {
       name,
-      nickname,
-      email,
       pw,
       pw1,
+      address,
+      profileImage: img1,
     };
 
-    const isEmailValid = emailValidate(email);
-    if (!isEmailValid) {
-      setFormValid('이메일 형식이 올바르지 않습니다.');
+    //닉네임이 상태에 저장돼있는 닉네임과 다르면 폼데이터에 추가
+    if (nickname !== user.nickname) {
+      formData.nickname = nickname;
     }
+
     const isNameValid = nameValidate(name);
+
+    if (pw !== pw1) {
+      setFormValid('비밀번호가 일치하지 않습니다.');
+      return;
+    }
 
     if (!isNameValid) {
       setFormValid('이름 형식이 올바르지 않습니다.');
+      return;
     }
     const isNicknameValid = nicknameValidate(nickname);
     if (!isNicknameValid) {
       setFormValid('닉네임 형식이 올바르지 않습니다.');
+      return;
     }
     const isPWValid = passwordValidate(pw);
     if (!isPWValid) {
-      setFormValid('비밀번호 형식이 올바르지 않습니다.');
+      setFormValid('비밀번호는 영문숫자특수문자혼합 8자리 이상');
+      return;
     }
 
     const submitHandler = async () => {
       try {
-        await axios.put(`/api/v1/users/${user.id}`, {
+        const res = await axios.put(`/api/v1/my/${user.id}`, {
           ...formData,
         });
+        console.log(res.data.data);
+
+        const userInfoChange = {
+          email: res.data.data.email,
+          id: res.data.data._id,
+          nickname: res.data.data.nickname,
+          userType: res.data.data.userType,
+          profileImage: res.data.data.profileImage,
+        };
+        // profileImage: res.data.data.profileImage,
+        dispatch(loginUser(userInfoChange));
         alert('정보수정에 성공했습니다.');
         navigate('/');
       } catch (error) {
@@ -107,6 +140,7 @@ const UserInfo = (props) => {
         console.error(error);
       }
     };
+
     submitHandler();
   };
 
@@ -114,18 +148,14 @@ const UserInfo = (props) => {
     <BackGround>
       <Header />
       <UserInfoBox>
-        {/* <UserImg
-          src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMjEyMjBfMTQw%2FMDAxNjcxNDY4MTY4Njgw._6Iq_FzSz5PQMdBty_qIUevQTeUrZidr8ghFutUlxs0g.cerzr-evHCcr1pkNlF2Ug9o2iAv-D86LpkyIDRssZkgg.JPEG.ovrcomnow%2F6.jpg&type=a340"
-          style={{ width: '100px' }}
-        /> */}
         <UserForm>
           <InfoItem style={{ marginTop: '50px' }}>
             <p>이름</p>
             <input
               name="name"
               type="text"
-              ref={nameRef}
-              value={userInfo.name}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
           </InfoItem>
           <InfoItem>
@@ -133,8 +163,8 @@ const UserInfo = (props) => {
             <input
               name="nickname"
               type="text"
-              ref={nicknameRef}
-              value={userInfo.nickname}
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
             />
           </InfoItem>
           <InfoItem>
@@ -142,34 +172,44 @@ const UserInfo = (props) => {
             <input
               name="phonenumber"
               type="text"
-              ref={phoneNumRef}
-              value={userInfo.phoneNumber}
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
             />
           </InfoItem>
-          <InfoItem>
-            <p>이메일</p>
-            <input
-              name="email"
-              type="email"
-              ref={emailRef}
-              value={userInfo.email}
-            />
-          </InfoItem>
+
           <InfoItem>
             <p>비밀번호</p>
-            <input name="password" type="password" ref={pwRef} />
+            <input
+              name="password"
+              type="password"
+              onChange={(e) => setPw(e.target.value)}
+            />
           </InfoItem>
           <InfoItem>
             <p>비밀번호 확인</p>
-            <input name="password1" type="password" ref={pw1Ref} />
+            <input
+              name="password1"
+              type="password"
+              onChange={(e) => setPw1(e.target.value)}
+            />
           </InfoItem>
           <InfoItem>
             <p>주소</p>
             <input
               name="address"
               type="text"
-              ref={addressRef}
-              value={userInfo.address}
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+            />
+          </InfoItem>
+          <InfoItem>
+            <p>이미지</p>
+            <input
+              name="image"
+              type="file"
+              accept=".png, .jpeg, .jpg"
+              style={{ border: 'none' }}
+              onChange={profileImgHandler}
             />
           </InfoItem>
 
@@ -182,16 +222,14 @@ const UserInfo = (props) => {
 };
 
 const UserInfoBox = styled.div`
-  margin-top: 50px;
+  margin: 50px 0;
   position: relative;
   width: 50%;
-  height: 80%;
+  height: 90%;
   background-color: white;
   border-radius: 20px;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 `;
-
-const UserImg = styled.img``;
 
 const UserForm = styled.form`
   width: 90%;

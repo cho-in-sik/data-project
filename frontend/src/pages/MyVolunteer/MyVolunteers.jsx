@@ -8,233 +8,124 @@ import MyVolunteer from './MyVolunteer';
 import Paging from '../../components/Pagination/Pagination';
 import { useSelector } from 'react-redux';
 
-const list = [
-  {
-    title: '서울봉사',
-    volunteerTime: '2023-03-12',
-    address: '놀이터',
-    participation: ['조인식 '],
-    author: '조인식',
-    content:
-      '안녕하세요 어디어디 봉사하는 모임입니다. 잘부탁드립니다 파이팅파이팅',
-    meetingStatus: '모집중',
-    userId: 1,
-  },
-  {
-    title: '광주봉사',
-    volunteerTime: '2024-08-12',
-    address: '초등학교',
-    participation: ['안정민 '],
-    author: '조인식',
-    content:
-      '안녕하세요 어디어디 봉사하는 모임입니다. 잘부탁드립니다 파이팅파이팅',
-    meetingStatus: '모집완료',
-    userId: 2,
-  },
-  {
-    title: '부산봉사',
-    volunteerTime: '2021-03-12',
-    address: '중학교',
-    participation: ['최중현 '],
-    author: '조인식',
-    content:
-      '안녕하세요 어디어디 봉사하는 모임입니다. 잘부탁드립니다 파이팅파이팅',
-    meetingStatus: '모집중',
-    userId: 3,
-  },
-  {
-    title: '인천봉사',
-    volunteerTime: '2023-12-12',
-    address: '고등학교',
-    participation: ['조인식 ', '안정민', '최중현'],
-    author: '조인식',
-    content:
-      '안녕하세요 어디어디 봉사하는 모임입니다. 잘부탁드립니다 파이팅파이팅',
-    meetingStatus: '모집완료',
-    userId: 4,
-  },
-  {
-    title: '대구봉사',
-    volunteerTime: '2023-03-12',
-    address: '횡단보도',
-    participation: ['조인식 ', '최중현'],
-    author: '조인식',
-    content:
-      '안녕하세요 어디어디 봉사하는 모임입니다. 잘부탁드립니다 파이팅파이팅',
-    meetingStatus: '모집중',
-    userId: 5,
-  },
-  {
-    title: '대전봉사',
-    volunteerTime: '2000-03-12',
-    address: '공원',
-    participation: ['조인식 '],
-    author: '조인식',
-    content:
-      '안녕하세요 어디어디 봉사하는 모임입니다. 잘부탁드립니다 파이팅파이팅',
-    meetingStatus: '모집중',
-    userId: 6,
-  },
-  {
-    title: '제주도봉사',
-    volunteerTime: '2023-03-12',
-    address: '공원2',
-    participation: ['조인식 '],
-    author: '조인식',
-    content:
-      '안녕하세요 어디어디 봉사하는 모임입니다. 잘부탁드립니다 파이팅파이팅',
-    meetingStatus: '모집완료',
-    userId: 6,
-  },
-  {
-    title: '서울봉사',
-    volunteerTime: '2023-03-12',
-    address: '놀이터',
-    participation: ['조인식 '],
-    author: '조인식',
-    content:
-      '안녕하세요 어디어디 봉사하는 모임입니다. 잘부탁드립니다 파이팅파이팅',
-    meetingStatus: '모집중',
-    userId: 7,
-  },
-  {
-    title: '울산봉사',
-    volunteerTime: '2023-03-12',
-    address: '공원3',
-    participation: ['조인 '],
-    author: '조인식',
-    content:
-      '안녕하세요 어디어디 봉사하는 모임입니다. 잘부탁드립니다 파이팅파이팅',
-    meetingStatus: '모집완료',
-    userId: 8,
-  },
-];
-
 const MyVolunteers = (props) => {
   const user = useSelector((state) => state.user);
-  const [data, setData] = useState(list);
+  const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
-  const [total, setTotal] = useState(20);
+  const [total, setTotal] = useState(0);
   const navigate = useNavigate();
   const items = 6;
-  const [volunteerState, setVolunteerState] = useState('');
+
+  const [type, setType] = useState(0);
 
   const handlePageChange = (page) => {
     return setPage(page);
   };
 
-  //참여한 봉사내역
-  const handleParticipatedVolunteer = () => {
-    setVolunteerState('participate');
-  };
-  //참여한 봉사만 필터하는 함수
-  const participateVolunteer = data
-    .slice(items * (page - 1), items * (page - 1) + items)
-    .filter((item) => item.userId !== user.id);
+  //맨처음 렌더링화면 참여한 모집글
+  useEffect(() => {
+    const call = async () => {
+      try {
+        const res = await axios.get('/api/v1/my/participantRecruitments');
+        setData(res.data.data.myParticipants);
 
-  //개설한 봉사내역
-  const handleMadeVolunteer = () => {
-    setVolunteerState('made');
-  };
-  //개설한 봉사만 필터하는 함수
-  const joinVolunteer = data
-    .slice(items * (page - 1), items * (page - 1) + items)
-    .filter((item) => item.userId === user.id);
+        setTotal(res.data.data.totalPage);
+        setType(false);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    call();
+  }, []);
 
-  // 게시글 목록을 가져오는 함수
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     try {
-  //       const response = await axios.get(
-  //         `http://localhost:3000/api/v1/board?page=${page}&perPage=${items}`,
-  //       );
-  //       const pageData = {
-  //         page: response.data.page,
-  //         perPage: response.data.perPage,
-  //         total: response.data.total,
-  //         totalPage: Response.data.totalPage,
-  //       };
-  //       // 응답 데이터에서 boards 배열만 추출하여 setData로 업데이트
-  //       setData(response.data.boards);
-  //       setTotal(pageData.total);
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   }
-  //   fetchData();
-  // }, [page, items]); //page, perPage가 변경될 때마다 useEffect가 실행
+  //참여한 모집글 조회
+  const handleParticipated = async () => {
+    try {
+      const res = await axios.get('/api/v1/my/participantRecruitments');
+
+      setData(res.data.data.myParticipants);
+
+      setTotal(res.data.data.totalPage);
+      setType(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  //개설한 모집글 조회
+  const handleMade = async () => {
+    try {
+      const res = await axios.get('/api/v1/my/authorRecruitments');
+      setTotal(res.data.data.totalPage);
+
+      setData(res.data.data.myRecruitments);
+      setType(true);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <BackGround>
       <Header />
       <VolunteerBox>
-        <div style={{ paddingTop: '50px', paddingBottom: '30px' }}>
-          <Span onClick={handleParticipatedVolunteer}>참여한 봉사내역</Span>
-          <Span onClick={handleMadeVolunteer}>개설한 봉사내역</Span>
+        <div style={{ margin: '1rem' }}>
+          <Span onClick={handleParticipated}>참여한 봉사내역</Span>
+          <Span onClick={handleMade} style={{ borderLeft: '1px solid' }}>
+            개설한 봉사내역
+          </Span>
         </div>
+
         <VB>
-          {volunteerState === ''
-            ? data
-                .slice(items * (page - 1), items * (page - 1) + items)
-                .map((value, i) => {
-                  return (
-                    <MyVolunteer
-                      key={i}
-                      title={value.title}
-                      volunteerTime={value.volunteerTime}
-                      address={value.address}
-                      author={value.author}
-                      content={value.content}
-                      participation={value.participation}
-                      meetingStatus={value.meetingStatus}
-                      userId={value.userId}
-                    />
-                  );
-                })
-            : (volunteerState === 'participate'
-                ? participateVolunteer
-                : joinVolunteer
-              ).map((value, i) => {
+          {data.length === 0 ? (
+            <NoVolunteer>봉사 내역이 존재하지 않습니다</NoVolunteer>
+          ) : (
+            data
+              .slice(items * (page - 1), items * (page - 1) + items)
+              .map((value, i) => {
                 return (
                   <MyVolunteer
                     key={i}
-                    title={value.title}
-                    volunteerTime={value.volunteerTime}
-                    address={value.address}
-                    author={value.author}
-                    content={value.content}
-                    participation={value.participation}
-                    meetingStatus={value.meetingStatus}
-                    userId={value.userId}
+                    title={type ? value.title : value.recruitmentId.title}
+                    volunteerTime={
+                      type
+                        ? value.volunteerTime
+                        : value.recruitmentId.volunteerTime
+                    }
+                    address={type ? value.address : value.recruitmentId.address}
+                    author={
+                      type
+                        ? value.author.nickname
+                        : value.recruitmentId.author.nickname
+                    }
+                    content={type ? value.content : value.recruitmentId.content}
+                    participants={
+                      type
+                        ? value.participants
+                        : value.recruitmentId.participants
+                    }
+                    meetingStatus={
+                      type
+                        ? value.meetingStatus
+                        : value.recruitmentId.meetingStatus
+                    }
+                    // recruitmentId={value._id}
+                    recruitmentId={type ? value._id : value.recruitmentId._id}
                   />
                 );
-              })}
-
-          {/* {data
-            .slice(items * (page - 1), items * (page - 1) + items)
-            .map((value, i) => {
-              return (
-                <MyVolunteer
-                  key={i}
-                  title={value.title}
-                  volunteerTime={value.volunteerTime}
-                  address={value.address}
-                  author={value.author}
-                  content={value.content}
-                  participation={value.participation}
-                  meetingStatus={value.meetingStatus}
-                  userId={value.userId}
-                />
-              );
-            })} */}
+              })
+          )}
         </VB>
-        <div>
-          <Paging
-            page={page}
-            handlePageChange={handlePageChange}
-            total={total}
-          />
-        </div>
+        {total < 7 ? null : (
+          <div>
+            <Paging
+              onChange={handlePageChange}
+              activePage={page}
+              itemsCountPerPage={items}
+              pageRangeDisplayed={5}
+              totalItemsCount={total}
+            />
+          </div>
+        )}
       </VolunteerBox>
     </BackGround>
   );
@@ -242,24 +133,33 @@ const MyVolunteers = (props) => {
 
 const VolunteerBox = styled.div`
   margin-top: 30px;
+  max-width: 1350px;
   width: 90%;
-  height: 650px;
+  height: auto;
   border-radius: 20px;
   background-color: white;
   position: relative;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  padding: 1rem;
+  padding-bottom: 5rem;
 `;
 const Span = styled.span`
-  font-size: 25px;
+  font-size: 1.5rem;
   font-weight: 400;
-  padding-left: 50px;
+  padding: 0 1.5rem;
   cursor: pointer;
 `;
 
 const VB = styled.div`
+  width: 95%;
+  margin: 3rem auto 0;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+`;
+const NoVolunteer = styled.span`
+  padding: 15% 0;
+  font-size: 20px;
 `;
 
 export default MyVolunteers;

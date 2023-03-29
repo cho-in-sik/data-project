@@ -25,7 +25,7 @@ const UserDelete = (props) => {
 
     try {
       await axios.delete(
-        `/api/v1/users/${user.id}`,
+        `/api/v1/auth/${user.id}`,
         {
           data: { ...formData },
         },
@@ -68,9 +68,9 @@ const UserDelete = (props) => {
 };
 
 const WithdrawBox = styled.div`
-  margin-top: 200px;
+  margin-top: 10%;
   width: 40%;
-  height: 250px;
+  height: 300px;
   background-color: white;
   border-radius: 20px;
   position: relative;
