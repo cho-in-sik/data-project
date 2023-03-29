@@ -9,8 +9,11 @@ import TypeOfAccident from '../chart/TypeOfAccident';
 import PieMortality from '../chart/PieMortality';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSun, faArrowUp } from '@fortawesome/free-solid-svg-icons';
-import { Scale } from 'chart.js';
+import {
+  faSun,
+  faArrowUp,
+  faSeedling,
+} from '@fortawesome/free-solid-svg-icons';
 
 const Main = () => {
   const navigate = useNavigate();
@@ -31,8 +34,40 @@ const Main = () => {
         </Fade>
         <FontAwesomeIcon className="sun" icon={faSun} size="10x" />
 
-        <span>청소년을 지키는 파릇파릇</span>
-        <div>당신이 함께해주세요</div>
+        <div className="ani">
+          <span>
+            <FontAwesomeIcon icon={faSeedling} className="sprout" />
+          </span>
+
+          <span>청</span>
+          <span>소</span>
+          <span>년</span>
+          <span>을</span>
+          <span> </span>
+          <span>지</span>
+          <span>키</span>
+          <span>는</span>
+          <span> </span>
+          <span>파</span>
+          <span>릇</span>
+          <span>파</span>
+          <span>릇</span>
+        </div>
+
+        <div className="ani2">
+          <span>당</span>
+          <span>신</span>
+          <span>이</span>
+          <span> </span>
+          <span>함</span>
+          <span>께</span>
+          <span> </span>
+          <span>해</span>
+          <span>주</span>
+          <span>세</span>
+          <span>요</span>
+        </div>
+
         <Button onClick={() => navigate('/recruitment/main')}>
           봉사신청 하러가기
         </Button>
@@ -69,9 +104,19 @@ const Main = () => {
           >
             20세 이하 교통사고 사망자 수
           </div>
-          <div>20세 이하 사망원인 무려 3위, 교통사고</div>
-          <div>asdfasdfasdf</div>
-          <div>sadfasdfsdfsdf</div>
+
+          <div style={{ color: '#215220' }}>
+            20세 이하 사망원인 무려 3위, 교통사고
+          </div>
+          <div style={{ color: '#215220' }}>
+            청소년 10명 중 1명이 교통사고로 허무하게 목숨을 잃고 있습니다.
+          </div>
+          <div style={{ color: '#215220' }}>
+            이는 자살(43.7%), 암(14.2%)을 제외하면 가장 큰 수치입니다.
+          </div>
+          <div style={{ fontSize: '14px', color: '#a1a1a1' }}>
+            출처: 경찰청,「경찰접수교통사고현황」, 2021.03.24, 연령층별 사상자
+          </div>
         </div>
       </Section3>
 
@@ -82,12 +127,16 @@ const Main = () => {
             <div style={{ marginTop: '7%' }}>
               <h3>사고 유형 별 사망자 수</h3>
             </div>
-            <div className="div">dfasd fasdfa ewfdsfads fsdfasd fasd asd</div>
             <div className="div">
-              sa fas dfadsfd sfsdfa sdfasd fasdf asd fasdfa sdfd
+              대부분의 교통사고는 보행자가 차도를 통행 중이거나 횡단 중일때
+              발생합니다.
             </div>
             <div className="div">
-              sa fas dfadsfd sfsdfa sdfasd fasdf asd fasdfa sdfd
+              교통지도 봉사로 우리는 많은 교통사고를 막을 가능성을 만들 수
+              있습니다.
+            </div>
+            <div className="div">
+              당신의 작은 한 걸음이 더 많은 새싹들을 구합니다.
             </div>
           </div>
         </Fade>
@@ -112,7 +161,18 @@ const Main = () => {
           <FontAwesomeIcon icon={faArrowUp} size="3x" />
         </UpButton>
       </Section5>
-      <Footer>@파릇파릇</Footer>
+      <Footer>
+        <div>© 2023 Parup Parup. All rights reserved.</div>
+        <div>
+          파릇파릇에서 제공하는 자료는 공익목적입니다. 상업목적으로 사용할 경우
+          저작권을 침해합니다
+        </div>
+        <div>
+          (주) 파릇파릇 | 주소: 서울특별시 강남구 선릉로 433 (역삼동, 세방빌딩)
+          6층, 16층
+        </div>
+        <div>이메일 imsif42@naver.com</div>
+      </Footer>
     </div>
   );
 };
@@ -120,6 +180,7 @@ const Main = () => {
 const Section1 = styled.section`
   height: 100vh;
   width: 100%;
+
   .sun {
     color: yellow;
     position: absolute;
@@ -127,37 +188,97 @@ const Section1 = styled.section`
     top: 100px;
     animation: zoom 1s infinite alternate;
   }
+  .sprout {
+    margin-right: 5px;
+    font-size: larger;
+  }
 
   img {
+    margin-top: 25%;
     width: 100%;
-    height: 100%;
+    height: 80%;
     position: relative;
     opacity: 0.6;
   }
-  span {
-    color: #48b26f;
-    font-size: 36px;
-    font-weight: 700;
+  .ani {
     position: absolute;
-    top: 24%;
-    left: 50%;
-    transform: translateX(-50%);
+    top: 22%;
   }
-  div {
-    color: #48b26f;
-    font-size: 36px;
-    font-weight: 700;
+  .ani2 {
     position: absolute;
-    top: 34%;
+    top: 43%;
+    span {
+      font-size: 50px;
+    }
+  }
+
+  span {
+    color: #65d244;
+    font-size: 85px;
+    font-weight: 700;
+
+    transform: translateX(-50%);
+    position: relative;
+    top: 3px;
+    font-family: 'Cute Font', cursive;
+    animation: bounce 0.4s ease infinite alternate;
+    text-shadow: 0 1px 0 #e1e1e1, 0 1px 0 #e1e1e1, 0 2px 0 #e1e1e1,
+      0 3px 0 #e1e1e1, 0 4px 0 #e1e1e1, 0 5px 0 transparent, 0 6px 0 transparent,
+      0 7px 0 transparent, 0 8px 0 transparent, 0 10px 10px rgba(0, 0, 0, 0.1);
+    :nth-child(2) {
+      animation-delay: 0.1s;
+    }
+    :nth-child(3) {
+      animation-delay: 0.2s;
+    }
+    :nth-child(4) {
+      animation-delay: 0.3s;
+    }
+    :nth-child(5) {
+      animation-delay: 0.4s;
+    }
+    /* :nth-child(6) {
+      animation-delay: 0.5s;
+    } */
+    :nth-child(7) {
+      animation-delay: 0.5s;
+    }
+    :nth-child(8) {
+      animation-delay: 0.5s;
+    }
+    :nth-child(9) {
+      animation-delay: 0.7s;
+    }
+    /* :nth-child(10) {
+      animation-delay: 0.9s;
+    } */
+    :nth-child(11) {
+      animation-delay: 0.8s;
+    }
+    :nth-child(12) {
+      animation-delay: 0.9s;
+    }
+    :nth-child(13) {
+      animation-delay: 1s;
+    }
+  }
+
+  div {
     left: 50%;
     transform: translateX(-50%);
   }
   button {
     position: absolute;
-    top: 47%;
+    top: 57%;
     left: 50%;
     transform: translateX(-50%);
-    :hover {
+  }
+  @keyframes bounce {
+    100% {
+      top: -5px;
+      text-shadow: 0 1px 0 #ccc, 0 2px 0 #ccc, 0 3px 0 #ccc, 0 4px 0 #ccc,
+        0 5px 0 #ccc, 0 6px 0 #ccc, 0 7px 0 #ccc, 0 8px 0 #ccc, 0 9px 0 #ccc,
+        0 50px 25px rgba(0, 0, 0, 0);
     }
   }
   @keyframes zoom {
@@ -171,15 +292,15 @@ const Section1 = styled.section`
   }
 `;
 const Section2 = styled.section`
-  margin-top: 200px;
-  margin-bottom: 300px;
+  margin-top: 300px;
+  margin-bottom: 200px;
   width: 100%;
   height: 300px;
   display: flex;
   flex-direction: column;
 
   div {
-    margin-bottom: 200px;
+    margin-bottom: 120px;
     font-size: 36px;
     display: flex;
     flex-direction: column;
@@ -199,13 +320,13 @@ const Section2 = styled.section`
 const Section3 = styled.section`
   background-color: #2ccc6427;
   width: 100%;
-  height: 500px;
+  height: 550px;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  margin-bottom: 250px;
+  margin-bottom: 120px;
   div {
-    margin-left: -10%;
+    margin-left: 0%;
   }
   div div {
     font-size: 20px;
@@ -219,7 +340,7 @@ const Section4 = styled.section`
   justify-content: space-evenly;
   align-items: center;
   justify-content: center;
-  margin-bottom: 250px;
+  margin-bottom: 100px;
   h3 {
     font-size: 24px;
     margin-bottom: 10%;
@@ -228,7 +349,8 @@ const Section4 = styled.section`
   }
   .div {
     font-size: 20px;
-    margin-bottom: 1%;
+    margin-bottom: 3%;
+    color: #215220;
   }
 `;
 const Button = styled.button`
@@ -238,13 +360,13 @@ const Button = styled.button`
   font-size: 24px;
   border: none;
   border-radius: 20px;
-  background-color: #47b781;
+  background-color: #47bd84;
 `;
 
 const Section5 = styled.section`
   position: relative;
   width: 100%;
-  height: 300px;
+  height: 350px;
   background-color: #2ccc6427;
   display: flex;
   flex-direction: column;
@@ -268,11 +390,17 @@ const UpButton = styled.button`
 `;
 const Footer = styled.footer`
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  align-items: center;
+  color: white;
+  align-items: flex-start;
   width: 100%;
-  height: 40px;
+  height: 150px;
   background-color: #47b781;
+  div {
+    margin-left: 20px;
+    margin-bottom: 5px;
+  }
 `;
 
 export default Main;

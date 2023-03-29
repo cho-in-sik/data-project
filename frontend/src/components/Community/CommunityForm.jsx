@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
 import {
   FormWrapper,
   FormTitle,
@@ -12,38 +14,52 @@ import {
 } from './styles/CommunityFormStyle';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUsers } from '@fortawesome/free-solid-svg-icons';
-//게시글 작성 폼
+
 const CommunityPostForm = () => {
-  const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
-  const [content, setContent] = useState('');
-  const [image, setImage] = useState('');
-  // 페이지 이동을 위한 useNavigate 훅
+  const [title, setTitle] = useState(''); // 게시글 제목
+  const [content, setContent] = useState(''); // 게시글 내용
+  const [image, setImage] = useState(null);
+  // 게시글 이미지 null값으로 해놓는 이유는 이미지를 업로드 하지 않아도 게시글을 작성할 수 있기 때문
   const navigate = useNavigate();
-  // 게시글 작성을 위한 함수
+
+  const user = useSelector((state) => state.user);
+  // Redux의 useSelector hook을 이용해 현재 유저 정보 가져오기
+
+  //이미지 업로드
+  const handleImageUpload = async (event) => {
+    const file = event.target.files[0];
+    const formData = new FormData();
+    formData.append('image', file);
+    try {
+      const response = await axios.post('/api/v1/image/upload', formData);
+      // console.log(response.data);
+      setImage(response.data.image); // 이미지 업로드 성공 시 이미지 URL을 image 상태에 저장
+      alert('이미지 업로드 성공!');
+    } catch (error) {
+      console.error(error);
+      alert('이미지 업로드 실패!');
+    }
+  };
+
+  // 게시글 작성
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     try {
-      // 게시글 작성 API 호출
       const response = await axios.post('/api/v1/board', {
         title,
-        author,
         content,
         image,
-      }); // 게시글 작성 후 게시글 목록 페이지로 이동
-      console.log(response.data);
-      navigate('/board/all');
+      });
+      navigate(`/board`);
     } catch (error) {
       console.error(error);
-      // 오류 메시지 표시
-      alert('게시글 작성에 실패했습니다.');
+      alert('게시글 작성에 실패하였습니다.');
     }
   };
 
   return (
     <FormWrapper>
       <FormTitle>
-        {' '}
         <FontAwesomeIcon icon={faUsers} style={{ color: '#47b781' }} /> 게시글
         작성하기
       </FormTitle>
@@ -60,35 +76,30 @@ const CommunityPostForm = () => {
         </FormGroup>
         <FormGroup>
           <FormLabel htmlFor="author">작성자</FormLabel>
-          <FormInput
-            type="text"
-            id="author"
-            value={author}
-            onChange={(event) => setAuthor(event.target.value)}
-            required
-          />
+          <div>{user?.nickname}</div>
+          {/* 현재 유저의 닉네임 표시 */}
         </FormGroup>
         <FormGroup>
           <FormLabel htmlFor="content">내용</FormLabel>
           <FormTextarea
             id="content"
             value={content}
+            // 댓글 내용
             onChange={(event) => setContent(event.target.value)}
             required
           />
         </FormGroup>
         <FormGroup>
           <FormLabel htmlFor="image">이미지</FormLabel>
-          {/* 이미지 삽입 기능은 추후에 */}
           <FormInput
             type="file"
-            id="image"
-            value={image}
-            onChange={(event) => setImage(event.target.value)}
+            accept=".png, .jpeg, .jpg"
+            style={{ border: 'none' }}
+            onChange={handleImageUpload} // 이미지 업로드
           />
         </FormGroup>
-        <FormButton type="submit">작성</FormButton>
-        <FormButton type="button" onClick={() => navigate('/board/all')}>
+        <FormButton type="submit">작성 완료</FormButton>
+        <FormButton type="button" onClick={() => navigate('/board')}>
           취소
         </FormButton>
       </form>

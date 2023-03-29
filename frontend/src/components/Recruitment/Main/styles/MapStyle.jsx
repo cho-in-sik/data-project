@@ -1,22 +1,22 @@
 import styled from 'styled-components';
 
 export const Wrapper = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 1000px;
-  height: 800px;
+  height: 80%;
+  position: relative;
+  flex: 7;
+  overflow: hidden;
+  height: 100vh;
 `;
 
 export const MapSvg = styled.svg`
   display: block;
-  height: 100%;
-  width: 100%;
+  max-width: 100%;
+  max-height: 100%;
   opacity: 0.8;
   fill: #a59a9a;
   stroke: #dad8d8;
   stroke-width: 0.5px;
+  cursor: pointer;
 
   .gu:hover {
     stroke: white;

@@ -131,11 +131,9 @@ const Join = () => {
       address: address,
       phoneNumber: phone,
       nickname: nickname,
-      profileImage: '',
-      type: '',
     };
     try {
-      const res = await axios.post('/api/v1/users/join', data);
+      const res = await axios.post('/api/v1/auth/join', data);
       if (res.statusText === 'Created') {
         alert('회원가입이 완료되었습니다.');
         navigate('/login');
@@ -144,7 +142,8 @@ const Join = () => {
         return false;
       }
     } catch (e) {
-      console.log(e);
+      alert(e.response.data.error);
+      return false;
     }
   };
 
@@ -277,8 +276,8 @@ const JoinBox = styled.div`
 
 const JoinTitle = styled.div`
   width: 50%;
-  font-size: 2rem;
-  margin: 1rem auto;
+  font-size: 1.5rem;
+  margin: 0rem auto 1rem;
 `;
 
 const JoinWrapper = styled.div`
@@ -294,7 +293,7 @@ const JoinWrapper = styled.div`
 
 const JoinItem = styled.div`
   width: 90%;
-  margin: 1rem;
+  margin: 0.8rem;
   p {
     font-size: 0.8rem;
     text-align: left;
@@ -321,4 +320,7 @@ const JoinItem = styled.div`
     color: #ff0000;
     font-size: 0.7rem;
   }
+`;
+const ImgTag = styled.input`
+  border: none;
 `;

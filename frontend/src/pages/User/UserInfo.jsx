@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import Header from '../../components/Header/Header.jsx';
@@ -28,14 +28,22 @@ const passwordValidate = (pw) => {
 
 const UserInfo = (props) => {
   const user = useSelector((state) => state.user);
-  const [userInfo, setUserInfo] = useState();
-
   const dispatch = useDispatch();
 
+  //디비에 보내는 이미지( 이미지 서버에서 온걸 img1에 저장
   const [img1, setImg1] = useState('');
+
+  //state로 상태관리
+  const [name, setName] = useState();
+  const [nickname, setNickname] = useState();
+  const [pw, setPw] = useState();
+  const [pw1, setPw1] = useState();
+  const [address, setAddress] = useState();
+  const [phoneNumber, setPhoneNumber] = useState();
 
   //이미지 통신 함수
   const profileImgHandler = async (e) => {
+    //이미지 파일 이미지 서버에 보내기
     const img = e.target.files[0];
     const formData1 = new FormData();
     formData1.append('image', img);
@@ -44,7 +52,6 @@ const UserInfo = (props) => {
       .post('api/v1/image/upload', formData1)
       .then((res) => {
         setImg1(res.data.image);
-        alert('성공');
       })
       .catch((err) => {
         alert('실패');
@@ -52,12 +59,18 @@ const UserInfo = (props) => {
     return formData1;
   };
 
+  const [formValid, setFormValid] = useState([]);
+  //상태관리
+
+  const navigate = useNavigate();
   useEffect(() => {
     async function userData() {
       try {
         const res = await axios.get(`/api/v1/my/${user.id}`);
-        console.log(res.data.data);
-        setUserInfo(res.data.data);
+        setName(res.data.data.name);
+        setNickname(res.data.data.nickname);
+        setAddress(res.data.data.address);
+        setPhoneNumber(res.data.data.phoneNumber);
       } catch (error) {
         console.log(error);
       }
@@ -65,50 +78,43 @@ const UserInfo = (props) => {
     userData();
   }, [user.id]);
 
-  const [formValid, setFormValid] = useState([]);
-  //상태관리
-  const nameRef = useRef();
-  const nicknameRef = useRef();
-  const phoneNumRef = useRef();
-
-  const pwRef = useRef();
-  const pw1Ref = useRef();
-  const addressRef = useRef();
-
-  const navigate = useNavigate();
-
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const name = nameRef.current.value;
-    const nickname = nicknameRef.current.value;
-    const pw = pwRef.current.value;
-    const pw1 = pw1Ref.current.value;
-    const address = addressRef.current.value;
-    // const image = imgRef.current.value;
 
     //요청 데이터 formdata에 모으기
     const formData = {
       name,
-      nickname,
       pw,
       pw1,
       address,
       profileImage: img1,
     };
 
+    //닉네임이 상태에 저장돼있는 닉네임과 다르면 폼데이터에 추가
+    if (nickname !== user.nickname) {
+      formData.nickname = nickname;
+    }
+
     const isNameValid = nameValidate(name);
+
+    if (pw !== pw1) {
+      setFormValid('비밀번호가 일치하지 않습니다.');
+      return;
+    }
 
     if (!isNameValid) {
       setFormValid('이름 형식이 올바르지 않습니다.');
+      return;
     }
     const isNicknameValid = nicknameValidate(nickname);
     if (!isNicknameValid) {
       setFormValid('닉네임 형식이 올바르지 않습니다.');
+      return;
     }
     const isPWValid = passwordValidate(pw);
     if (!isPWValid) {
-      setFormValid('비밀번호 형식이 올바르지 않습니다.');
+      setFormValid('비밀번호는 영문숫자특수문자혼합 8자리 이상');
+      return;
     }
 
     const submitHandler = async () => {
@@ -118,15 +124,15 @@ const UserInfo = (props) => {
         });
         console.log(res.data.data);
 
-        dispatch(
-          loginUser({
-            email: res.data.data.email,
-            id: res.data.data._id,
-            nickname: res.data.data.nickname,
-            userType: res.data.data.userType,
-            profileImage: res.data.data.profileImage,
-          }),
-        );
+        const userInfoChange = {
+          email: res.data.data.email,
+          id: res.data.data._id,
+          nickname: res.data.data.nickname,
+          userType: res.data.data.userType,
+          profileImage: res.data.data.profileImage,
+        };
+        // profileImage: res.data.data.profileImage,
+        dispatch(loginUser(userInfoChange));
         alert('정보수정에 성공했습니다.');
         navigate('/');
       } catch (error) {
@@ -145,37 +151,55 @@ const UserInfo = (props) => {
         <UserForm>
           <InfoItem style={{ marginTop: '50px' }}>
             <p>이름</p>
-            <input name="name" type="text" ref={nameRef} />
+            <input
+              name="name"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
           </InfoItem>
           <InfoItem>
             <p>닉네임</p>
-            <input name="nickname" type="text" ref={nicknameRef} />
+            <input
+              name="nickname"
+              type="text"
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
+            />
           </InfoItem>
           <InfoItem>
             <p>전화번호</p>
             <input
               name="phonenumber"
               type="text"
-              ref={phoneNumRef}
-              // value={userInfo.phoneNumber}
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
             />
           </InfoItem>
 
           <InfoItem>
             <p>비밀번호</p>
-            <input name="password" type="password" ref={pwRef} />
+            <input
+              name="password"
+              type="password"
+              onChange={(e) => setPw(e.target.value)}
+            />
           </InfoItem>
           <InfoItem>
             <p>비밀번호 확인</p>
-            <input name="password1" type="password" ref={pw1Ref} />
+            <input
+              name="password1"
+              type="password"
+              onChange={(e) => setPw1(e.target.value)}
+            />
           </InfoItem>
           <InfoItem>
             <p>주소</p>
             <input
               name="address"
               type="text"
-              ref={addressRef}
-              // value={userInfo.address}
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
             />
           </InfoItem>
           <InfoItem>

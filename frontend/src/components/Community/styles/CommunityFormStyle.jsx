@@ -10,6 +10,9 @@ export const FormWrapper = styled.div`
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 20px;
   margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `;
 
 export const FormTitle = styled.h1`
@@ -44,9 +47,14 @@ export const FormTextarea = styled.textarea`
   border-radius: 5px;
 `;
 
+export const FormButtonWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+`;
+
 export const FormButton = styled.button`
-  display: block;
-  margin-top: 20px;
+  margin-left: 10px;
   padding: 10px 20px;
   background-color: #47b781;
   color: #fff;
@@ -55,6 +63,10 @@ export const FormButton = styled.button`
   border-radius: 5px;
   border: none;
   cursor: pointer;
+
+  &:hover {
+    background-color: #269c5d;
+  }
 `;
 
 export const FormError = styled.p`

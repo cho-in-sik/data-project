@@ -37,7 +37,7 @@ const MyPage = (props) => {
 const MypageBox = styled.div`
   margin-top: 80px;
   width: 80%;
-  height: 70%;
+  height: 550px;
   background-color: white;
   border-radius: 20px;
   display: flex;

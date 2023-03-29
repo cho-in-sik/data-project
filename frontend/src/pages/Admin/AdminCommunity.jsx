@@ -38,10 +38,10 @@ const AdminUser = (props) => {
   const handleDelete = async (e) => {
     debugger;
     const id = e.target.parentElement.parentElement.firstChild.textContent;
-    const res = await axios.delete(`/api/v1/admin/users/${id}`);
+    const res = await axios.delete(`/api/v1/admin/board/${id}`);
     console.log(res);
     if (res.data !== '') {
-      alert(res.data);
+      alert('삭제되었습니다..');
     } else {
       alert('오류가 발생했습니다.');
       return false;
@@ -52,7 +52,7 @@ const AdminUser = (props) => {
       <TableCell style={{ display: 'none' }}>{item._id}</TableCell>
       <TableCell width="30%">{item.title}</TableCell>
       <TableCell width="15%">{item.createdAt}</TableCell>
-      <TableCell width="15%">{item.author}</TableCell>
+      <TableCell width="15%">{item.author?.nickname}</TableCell>
       <TableCell width="10%">
         <button onClick={handleDelete}>삭제</button>
       </TableCell>

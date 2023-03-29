@@ -2,7 +2,8 @@ import styled from 'styled-components';
 import background1 from '../../assets/images/background.png';
 
 const BackGround = styled.div`
-  height: 100vh;
+  min-height: 100vh;
+  height: auto;
   position: relative;
 
   display: flex;

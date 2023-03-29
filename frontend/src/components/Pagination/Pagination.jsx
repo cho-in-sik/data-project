@@ -25,6 +25,10 @@ const Paging = ({ page, handlePageChange, total }) => {
 };
 
 const PaginationBox = styled.div`
+  position: absolute;
+  bottom: 2rem;
+  left: calc(50% - 64px);
+
   .pagination {
     display: flex;
     justify-content: center;

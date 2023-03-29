@@ -36,7 +36,7 @@ const Header = () => {
         <Logo onClick={() => navigate('/')}>
           <img
             src={logo}
-            style={{ width: '110px', height: '90px' }}
+            style={{ width: '140px', height: '95px' }}
             alt="logo"
           />
         </Logo>
@@ -46,9 +46,11 @@ const Header = () => {
             <img
               alt="backgroundimg"
               src={baseimg}
-              style={{ width: '45px', height: '45px', borderRadius: '50%' }}
+              style={{ width: '55px', height: '55px', borderRadius: '50%' }}
             />
-            <Span onClick={() => navigate('/admin')}>관리자님</Span>
+            <NicknameSpan onClick={() => navigate('/admin')}>
+              관리자님
+            </NicknameSpan>
           </>
         ) : (
           //유저면 이렇게 표시
@@ -58,17 +60,39 @@ const Header = () => {
               src={user.profileImage ? user.profileImage : baseimg}
               style={{ width: '45px', height: '45px', borderRadius: '50%' }}
             />
-            <Span onClick={() => navigate('/mypage')}>{user.nickname}님</Span>
+            <NicknameSpan onClick={() => navigate('/mypage')}>
+              {user.nickname}님
+            </NicknameSpan>
           </>
         )}
         {/* //로그인 되있으면 로그아웃표시 아니면 로그인표시 */}
         {user.id !== '' ? (
-          <Span onClick={logoutHandler}>로그아웃</Span>
+          <Span
+            style={{ fontSize: '18px', fontWeight: '400', color: '#5d5d5d' }}
+            onClick={logoutHandler}
+          >
+            로그아웃
+          </Span>
         ) : (
-          <Span onClick={() => navigate('/login')}>로그인</Span>
+          <Span
+            style={{ fontSize: '18px', fontWeight: '400', color: '#5d5d5d' }}
+            onClick={() => navigate('/login')}
+          >
+            로그인
+          </Span>
         )}
-        <Span onClick={() => navigate('/board')}>커뮤니티</Span>
-        <Span onClick={() => navigate('/recruitment/main')}>봉사신청</Span>
+        <Span
+          style={{ fontSize: '18px', fontWeight: '400', color: '#5d5d5d' }}
+          onClick={() => navigate('/board')}
+        >
+          커뮤니티
+        </Span>
+        <Span
+          style={{ fontSize: '18px', fontWeight: '400', color: '#5d5d5d' }}
+          onClick={() => navigate('/recruitment/main')}
+        >
+          봉사신청
+        </Span>
       </ContentHeader>
     </PositionHeader>
   );
@@ -76,15 +100,14 @@ const Header = () => {
 
 const PositionHeader = styled.header`
   background-color: white;
+  padding: 10px 0;
   margin-top: -10px;
   z-index: 1;
-
   position: relative;
-
   top: 0px;
   width: 100%;
   height: 80px;
-  box-shadow: 2px 3px 3px 2px rgba(0, 0, 0, 0.25);
+  box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.25);
 `;
 
 const ContentHeader = styled.div`
@@ -102,10 +125,16 @@ const Spacer = styled.div`
 `;
 
 const Span = styled.span`
-  font-size: 20px;
+  font-size: 22px;
   margin-left: 15px;
   cursor: pointer;
   font-weight: 500;
+`;
+const NicknameSpan = styled.span`
+  font-size: 26px;
+  margin-left: 15px;
+  margin-right: 10px;
+  cursor: pointer;
 `;
 
 export default Header;
